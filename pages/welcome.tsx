@@ -3,19 +3,23 @@ import MultiStepProgressBar from "../components/multiStepBar";
 import CustomTextBox from "../components/customTextBox";
 import { useRouter } from "next/router";
 import Logo from "../components/logo";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function Home({ users }) {
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
+  const { t } = useTranslation("common");
+
   const btnText = [
-    "Start",
-    "Continue",
-    "Continue",
-    "Pledge",
-    "View Badge",
-    "Nice!",
-    "Goodbye!",
+    t("start"),
+    "continue",
+    "continue",
+    "pledge",
+    "viewBadge",
+    "nice",
+    "goodbye",
   ];
   useEffect(() => {
     setMounted(true);
@@ -53,7 +57,7 @@ export default function Home({ users }) {
               }}
             >
               <button type="button" className="bttn " onClick={onCLick}>
-                {btnText[currentStep]}
+                {t(btnText[currentStep])}
               </button>
               <br />
               {currentStep > 2 && currentStep < 5 && (
@@ -64,7 +68,7 @@ export default function Home({ users }) {
                     onCLick(event, true);
                   }}
                 >
-                  Exit
+                  {t("exit")}
                 </button>
               )}
             </div>
@@ -86,3 +90,9 @@ export default function Home({ users }) {
     setCurrentStep(currentStep + 1);
   }
 }
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"])),
+  },
+});
