@@ -8,7 +8,7 @@ module.exports = {
       //   defaultLocale: "en",
       // },
       // {
-      //   domain: "example.hi",
+      //   domain: "example.in",
       //   defaultLocale: "hi",
       // },
       // {

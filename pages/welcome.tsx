@@ -6,7 +6,7 @@ import Logo from "../components/logo";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-export default function Home({ users }) {
+export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
