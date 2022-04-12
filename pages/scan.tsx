@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { QrReader } from "react-qr-reader";
+import { useTranslation } from "next-i18next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function Scan() {
   const [mounted, setMounted] = useState(false);
   const [isScan, setIsScan] = useState(false);
 
   const [data, setData] = useState("");
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     setMounted(true);
@@ -14,16 +17,19 @@ export default function Scan() {
   return (
     mounted && (
       <div className="container">
+        <h3>{isScan ? t("explainShowQRCode") : t("explainScanQRCode")}</h3>
         <div
           style={{
             justifyContent: "end",
             flexDirection: "column",
-            height: "80vh",
+            height: "75vh",
             display: "flex",
           }}
         >
           <div style={{ width: 320, height: "55vh", alignSelf: "center" }}>
-            {!isScan && <QRCodeSVG value="https://operatest.ixo.earth/"  size={250}/>}
+            {!isScan && (
+              <QRCodeSVG value="https://operatest.ixo.earth/" size={250} />
+            )}
             {isScan && (
               <>
                 <QrReader
@@ -47,10 +53,13 @@ export default function Scan() {
             <button
               className="bttn"
               onClick={() => {
+                if (!!data) {
+                  setData(null);
+                }
                 setIsScan(!isScan);
               }}
             >
-              {isScan ? "Generate QR code" : "Scan QR code"}
+              {isScan ? t("showQRCode") : t("scanQRCode")}
             </button>
           </div>
         </div>
@@ -58,3 +67,8 @@ export default function Scan() {
     )
   );
 }
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"])),
+  },
+});

@@ -15,5 +15,9 @@
   "supportGoals": "...support the goals of Earth Day?",
   "awesome": "Awesome!",
   "here'sNFT": "Here's an NFT badge to show that you are an Earth Hero!",
-  "thankYou": "Thank you for taking part in our Earth Day fun!"
+  "thankYou": "Thank you for taking part in our Earth Day fun!",
+  "showQRCode": "Show QR code",
+  "scanQRCode": "Scan QR code",
+  "explainShowQRCode": "Explain about Showing Qr code for scan",
+  "explainScanQRCode": "Explain about Scanning Qr code for scan"
 }
