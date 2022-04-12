@@ -4,7 +4,7 @@ import { QrReader } from "react-qr-reader";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-export default function Scan() {
+export default function Scan({ pubKey }) {
   const [mounted, setMounted] = useState(false);
   const [isScan, setIsScan] = useState(false);
 
@@ -27,9 +27,7 @@ export default function Scan() {
           }}
         >
           <div style={{ width: 320, height: "55vh", alignSelf: "center" }}>
-            {!isScan && (
-              <QRCodeSVG value="https://operatest.ixo.earth/" size={250} />
-            )}
+            {!isScan && <QRCodeSVG value={pubKey} size={250} />}
             {isScan && (
               <>
                 <QrReader
@@ -67,8 +65,15 @@ export default function Scan() {
     )
   );
 }
-export const getStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["common"])),
-  },
-});
+
+export async function getServerSideProps({ locale, query }) {
+  const didId = query.didId ?? "LNJA";
+  const res = await fetch(`https://jsonkeeper.com/b/${didId}`);
+  const data = await res.json();
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+      pubKey: data?.result?.value?.pubKey ?? "https://operatest.ixo.earth/",
+    },
+  };
+}

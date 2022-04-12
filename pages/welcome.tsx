@@ -89,7 +89,13 @@ export default function Home() {
       return;
     }
     if (currentStep >= 6) {
-      router.push("/scan");
+      router.push(
+        {
+          pathname: "/scan",
+          query: { didId: "LNJA" },
+        },
+        "/scan"
+      );
       return;
     }
     setCurrentStep(currentStep + 1);
