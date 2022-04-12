@@ -5,15 +5,20 @@ import { useRouter } from "next/router";
 import Logo from "../components/logo";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
+declare global {
+  interface Window {
+    interchain: any;
+  }
+}
 export default function Home() {
+  //
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+
   const router = useRouter();
   const { t } = useTranslation("common");
-
   const btnText = [
-    t("start"),
+    "start",
     "continue",
     "continue",
     "pledge",
@@ -23,7 +28,7 @@ export default function Home() {
   ];
   useEffect(() => {
     setMounted(true);
-  }, []);
+  });
   return (
     mounted && (
       <div className="container">
@@ -84,7 +89,7 @@ export default function Home() {
       return;
     }
     if (currentStep >= 6) {
-      router.push("/");
+      router.push("/scan");
       return;
     }
     setCurrentStep(currentStep + 1);
