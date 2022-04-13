@@ -2,7 +2,7 @@ module.exports = {
   i18n: {
     defaultLocale: "en",
     locales: ["en", "hi"],
-    domains: [
+    // domains: [
       // {
       //   domain: "example.com",
       //   defaultLocale: "en",
@@ -16,6 +16,6 @@ module.exports = {
       //   defaultLocale: "hi",
       //   http: true,
       // },
-    ],
+    // ],
   },
 };

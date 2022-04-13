@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MultiStepProgressBar from "../components/multiStepBar";
 import CustomTextBox from "../components/customTextBox";
-import { useRouter } from "next/router";
+import { useRouter, withRouter } from "next/router";
 import Logo from "../components/logo";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -11,10 +11,13 @@ declare global {
     interchain: any;
   }
 }
-export default function Home({ page, pubKey }) {
+export default function Home() {
   const [mounted, setMounted] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
+
   const { t } = useTranslation("common");
   const btnText = [
     "start",
@@ -29,8 +32,9 @@ export default function Home({ page, pubKey }) {
   ];
   useEffect(() => {
     setMounted(true);
+    const page = new URL(location.href)?.searchParams?.get("page") ?? 0;
     setCurrentStep(Number(page));
-  }, [page]);
+  });
   return (
     mounted && (
       <div className="container">
@@ -53,7 +57,7 @@ export default function Home({ page, pubKey }) {
           >
             <div>
               {currentStep === 6 ? (
-                <CustomQRCode isScan={false} pubKey={pubKey} />
+                <CustomQRCode isScan={false} />
               ) : currentStep === 7 ? (
                 <CustomQRCode isScan={true} />
               ) : (
@@ -148,7 +152,7 @@ export default function Home({ page, pubKey }) {
   }
 
   async function onShowQR() {
-    onContinue(currentStep + 1, { didId: "LNJA" });
+    onContinue(currentStep + 1);
   }
 
   async function onScanQR() {
@@ -156,23 +160,14 @@ export default function Home({ page, pubKey }) {
   }
 
   async function onExit() {
-    onContinue(currentStep + 2);
+    onContinue(8);
   }
 }
 
-export async function getServerSideProps({ locale, query }) {
-  const didId = query?.didId;
-  let pubKey = null;
-  if (didId != null) {
-    const res = await fetch(`https://jsonkeeper.com/b/${didId}`);
-    const data = await res.json();
-    pubKey = data?.result?.value?.pubKey;
-  }
+export async function getStaticProps({ locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common"])),
-      page: query?.page ?? 0,
-      pubKey: pubKey,
     },
   };
 }

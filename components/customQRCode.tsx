@@ -1,9 +1,19 @@
 import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 
-export default function CustomQRCode({ isScan = true, pubKey = null }) {
+export default function CustomQRCode({ isScan = true }) {
   const [data, setData] = useState("");
+  const [pubKey, setPubKey] = useState("");
+
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    if (isScan) {
+      setIsLoading(false);
+    } else {
+      getPubkey();
+    }
+  }, []);
 
   return (
     <div
@@ -14,12 +24,15 @@ export default function CustomQRCode({ isScan = true, pubKey = null }) {
         display: "inline-table",
       }}
     >
-      {!isScan && (
-        <QRCodeSVG
-          value={pubKey ?? "https://operatest.ixo.earth/"}
-          size={200}
-        />
-      )}
+      {!isScan &&
+        (isLoading ? (
+          <div></div>
+        ) : (
+          <QRCodeSVG
+            value={pubKey ?? "https://operatest.ixo.earth/"}
+            size={200}
+          />
+        ))}
       {isScan && (
         <>
           <QrReader
@@ -41,4 +54,12 @@ export default function CustomQRCode({ isScan = true, pubKey = null }) {
       )}
     </div>
   );
+  async function getPubkey() {
+    const res = await fetch(`https://jsonkeeper.com/b/LNJA`);
+    const data = await res.json();
+    const pubKey =
+      data?.result?.value?.pubKey ?? "https://operatest.ixo.earth/";
+    setPubKey(pubKey);
+    setIsLoading(false);
+  }
 }
