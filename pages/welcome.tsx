@@ -5,16 +5,15 @@ import { useRouter } from "next/router";
 import Logo from "../components/logo";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import CustomQRCode from "../components/customQRCode";
 declare global {
   interface Window {
     interchain: any;
   }
 }
-export default function Home() {
-  //
+export default function Home({ page, pubKey }) {
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-
   const router = useRouter();
   const { t } = useTranslation("common");
   const btnText = [
@@ -22,17 +21,20 @@ export default function Home() {
     "continue",
     "continue",
     "pledge",
-    "viewBadge",
-    "nice",
+    "playGame",
+    "show",
+    "playGame",
+    "playGame",
     "goodbye",
   ];
   useEffect(() => {
     setMounted(true);
-  });
+    setCurrentStep(Number(page));
+  }, [page]);
   return (
     mounted && (
       <div className="container">
-        <div style={{ height: "35vh", display: "inline-table" }}>
+        <div style={{ height: "30vh", display: "inline-table" }}>
           {currentStep > 0 && currentStep < 5 && (
             <MultiStepProgressBar currentStep={currentStep - 1} />
           )}
@@ -46,11 +48,14 @@ export default function Home() {
               flexDirection: "column",
               height: "50vh",
               display: "flex",
+              marginBottom: "5vh",
             }}
           >
             <div>
-              {currentStep === 5 ? (
-                <Logo />
+              {currentStep === 6 ? (
+                <CustomQRCode isScan={false} pubKey={pubKey} />
+              ) : currentStep === 7 ? (
+                <CustomQRCode isScan={true} />
               ) : (
                 <CustomTextBox currentStep={currentStep} />
               )}
@@ -65,7 +70,7 @@ export default function Home() {
                 {t(btnText[currentStep])}
               </button>
               <br />
-              {currentStep > 2 && currentStep < 5 && (
+              {currentStep > 4 && currentStep < 8 && (
                 <button
                   type="button"
                   className="bttn "
@@ -73,7 +78,7 @@ export default function Home() {
                     onCLick(event, true);
                   }}
                 >
-                  {t("exit")}
+                  {currentStep === 5 ? t("scan") : t("done")}
                 </button>
               )}
             </div>
@@ -85,25 +90,89 @@ export default function Home() {
   function onCLick(event, isExit = false) {
     event.preventDefault();
     if (isExit) {
-      setCurrentStep(6);
+      if (currentStep === 5) {
+        onScanQR();
+        return;
+      }
+      onExit();
       return;
     }
-    if (currentStep >= 6) {
-      router.push(
-        {
-          pathname: "/scan",
-          query: { didId: "LNJA" },
+    switch (currentStep) {
+      case 0:
+      case 1:
+      case 2:
+      case 4:
+        onContinue();
+        break;
+      case 3:
+        onPledge();
+        break;
+      case 5:
+        onShowQR();
+        break;
+      case 6:
+      case 7:
+        onPlayGame();
+        break;
+      default:
+        router.push("/");
+        break;
+    }
+  }
+
+  function onContinue(step = currentStep + 1, props = {}) {
+    // setCurrentStep(currentStep + 1);
+    router.push(
+      {
+        pathname: "/welcome",
+        query: {
+          page: step,
+          ...props,
         },
-        "/scan"
-      );
-      return;
-    }
-    setCurrentStep(currentStep + 1);
+      },
+      {
+        pathname: "/welcome",
+        query: {
+          page: step,
+        },
+      }
+    );
+  }
+
+  async function onPledge() {
+    onContinue();
+  }
+
+  async function onPlayGame() {
+    onExit();
+  }
+
+  async function onShowQR() {
+    onContinue(currentStep + 1, { didId: "LNJA" });
+  }
+
+  async function onScanQR() {
+    onContinue(currentStep + 2);
+  }
+
+  async function onExit() {
+    onContinue(currentStep + 2);
   }
 }
 
-export const getStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["common"])),
-  },
-});
+export async function getServerSideProps({ locale, query }) {
+  const didId = query?.didId;
+  let pubKey = null;
+  if (didId != null) {
+    const res = await fetch(`https://jsonkeeper.com/b/${didId}`);
+    const data = await res.json();
+    pubKey = data?.result?.value?.pubKey;
+  }
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+      page: query?.page ?? 0,
+      pubKey: pubKey,
+    },
+  };
+}

@@ -5,8 +5,10 @@ export default function CustomTextBox({ currentStep }) {
     ["explainsAboutApp", "takeChallenge"],
     ["doYouKnow", "firstEarthDay"],
     ["doYouKnow", "20MillionPeople"],
-    ["doYouPledge", "supportGoals"],
-    ["awesome", "here'sNFT"],
+    ["doYouPledge"],
+    ["awesome", "youHaveReceived"],
+    ["explainShowQRCode", "or", "explainScanQRCode"],
+    ["", ""],
     ["", ""],
     ["thankYou", ""],
   ];
@@ -21,10 +23,11 @@ export default function CustomTextBox({ currentStep }) {
           display: "inline-block",
         }}
       >
-        <p className="txt">{t(data[currentStep][0]) ?? ""}</p>
-        <div>
-          <p className="txt">{t(data[currentStep][1]) ?? ""}</p>
-        </div>
+        {data[currentStep].map((item, index) => (
+          <p key={index} className="txt">
+            {t(item) ?? ""}
+          </p>
+        ))}
       </div>
     </div>
   );
