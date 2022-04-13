@@ -16,14 +16,7 @@ export default function CustomQRCode({ isScan = true }) {
   }, []);
 
   return (
-    <div
-      style={{
-        width: 255,
-        height: 255,
-        alignSelf: "center",
-        display: "inline-table",
-      }}
-    >
+    <div className="qr-code">
       {!isScan &&
         (isLoading ? (
           <div></div>

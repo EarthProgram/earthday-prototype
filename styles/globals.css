@@ -53,7 +53,7 @@ body {
 .container {
   margin-right: 3rem;
   margin-left: 3rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   line-height: 1.5;
   text-align: center;
 }
@@ -73,7 +73,7 @@ body {
   position: absolute;
   background: lightseagreen;
   height: 5px;
-  transition: width .3s ease;
+  transition: width 0.3s ease;
   top: 50%;
   left: 0;
 }
@@ -93,4 +93,40 @@ body {
   height: 5px;
   width: 100%;
   z-index: -1;
+}
+.block {
+  display: block;
+  text-align: start;
+}
+
+.inLine {
+  display: inline-table;
+}
+
+.txt-header {
+  justify-content: space-between;
+  flex-direction: column;
+  height: 55vh;
+  display: flex;
+  margin-bottom: 5vh;
+}
+
+.btn-column {
+  justify-content: space-between;
+  flex-direction: column;
+}
+.radio-btn {
+  display: grid;
+  justify-content: center;
+}
+.qr-code {
+  width: 255px;
+  height: 255px;
+  align-self: center;
+  display: inline-table;
+}
+.txt-box {
+  width: 225px;
+  text-align: center;
+  display: inline-block;
 }
