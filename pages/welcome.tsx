@@ -36,8 +36,8 @@ export default function Home() {
     setMounted(true);
     // const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-color');
     // document.documentElement.style.setProperty('--bg-color', "white");
-    const page = new URL(location.href)?.searchParams?.get("page") ?? 0;
-    setCurrentStep(Number(page));
+    const page = Number(new URL(location.href)?.searchParams?.get("page") ?? 0);
+    setCurrentStep(page > 9 || isNaN(page) ? 0 : page);
   });
   return (
     mounted && (
@@ -161,7 +161,6 @@ export default function Home() {
   }
 
   async function onPlayGame() {
-    // onExit();
     onContinue(6, null, customLocale);
   }
 

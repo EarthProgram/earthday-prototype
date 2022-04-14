@@ -32,11 +32,13 @@ body {
   background-color: rgba(0, 116, 217, 1);
   animation: _JAh3L 400ms ease forwards;
   color: white;
+  z-index: 2;
 }
 .indexedStep.inProgress {
   background-color: rgb(0, 0, 0);
   animation: _JAh3L 400ms ease forwards;
   color: white;
+  z-index: 2;
 }
 .bttn {
   border: 1px solid transparent;
@@ -81,6 +83,7 @@ body {
   transition: width 0.3s ease;
   top: 50%;
   left: 0;
+  z-index: 1;
 }
 .progress-num {
   margin: 0;
@@ -97,7 +100,6 @@ body {
   left: 0;
   height: 5px;
   width: 100%;
-  z-index: -1;
 }
 .block {
   display: block;
