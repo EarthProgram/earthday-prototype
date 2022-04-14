@@ -7,6 +7,7 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import CustomQRCode from "../components/customQRCode";
 import SelectLanguage from "../components/selectLanguage";
+import Header from "../components/header";
 declare global {
   interface Window {
     interchain: any;
@@ -39,6 +40,7 @@ export default function Home() {
   return (
     mounted && (
       <div className="container">
+        <Header />
         <div className="inLine">
           {currentStep > 1 && currentStep < 6 && (
             <MultiStepProgressBar currentStep={currentStep - 2} />

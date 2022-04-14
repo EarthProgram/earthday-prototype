@@ -23,6 +23,7 @@
   "done": "Done",
   "youHaveReceived": "You have now received one EARTHDAY token. Play the Earth Day game to win the prize!",
   "chooseLanguage": "You may choose your language here. English is the default if we don't have any others.",
-  "select":"Select",
-  "sendToken":"Send 1 Token"
+  "select": "Select",
+  "sendToken": "Send 1 Token",
+  "title": "Earth Day"
 }
