@@ -34,6 +34,8 @@ export default function Home() {
   ];
   useEffect(() => {
     setMounted(true);
+    // const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-color');
+    // document.documentElement.style.setProperty('--bg-color', "white");
     const page = new URL(location.href)?.searchParams?.get("page") ?? 0;
     setCurrentStep(Number(page));
   });

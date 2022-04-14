@@ -5,18 +5,20 @@ import Image from "next/image";
 // };
 
 export default function Logo({
-  width = 600,
+  width = 400,
   height = 200,
   src = "/nextjs.png",
 }) {
   return (
-    <Image
-      alt="Next.js logo"
-      src={src}
-      // unoptimized={true}
-      width={width}
-      height={height}
-      // loader={customLoader}
-    />
+    <div className="logo">
+      <Image
+        alt="Next.js logo"
+        src={src}
+        // unoptimized={true}
+        width={width}
+        height={height}
+        // loader={customLoader}
+      />
+    </div>
   );
 }
