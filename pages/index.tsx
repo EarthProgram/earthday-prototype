@@ -10,20 +10,13 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       router.push("/welcome");
-    }, 3000);
+    }, 1500);
   }, []);
   return (
     <div>
       <div>
         <Header />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "800px",
-          }}
-        >
+        <div className="splash-screen">
           <Logo />
         </div>
       </div>

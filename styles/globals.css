@@ -138,3 +138,9 @@ body {
 .logo {
   margin-top: 1em;
 }
+.splash-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
