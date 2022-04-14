@@ -43,13 +43,17 @@ export default function Home() {
     mounted && (
       <div className="container">
         <Header />
-        <div className="inLine">
-          {currentStep > 1 && currentStep < 6 && (
-            <MultiStepProgressBar currentStep={currentStep - 2} />
-          )}
+
+        {currentStep > 1 && currentStep < 6 && (
+          <div>
+            <div className="inLine">
+              <MultiStepProgressBar currentStep={currentStep - 2} />
+            </div>
+          </div>
+        )}
+
+        <div className="main-header">
           <Logo />
-        </div>
-        <div>
           <div className="txt-header">
             <div>
               {currentStep === 7 ? (
@@ -59,32 +63,30 @@ export default function Home() {
               ) : (
                 <CustomTextBox currentStep={currentStep} />
               )}
+              {currentStep === 0 &&
+                SelectLanguage(
+                  (onselect = (code) => {
+                    customLocale = code;
+                  })
+                )}
             </div>
-
-            {currentStep === 0 &&
-              SelectLanguage(
-                (onselect = (code) => {
-                  customLocale = code;
-                })
-              )}
-
-            <div className="btn-column">
-              <button type="button" className="bttn " onClick={onCLick}>
-                {t(btnText[currentStep])}
+          </div>
+          <div className="btn-column">
+            <button type="button" className="bttn " onClick={onCLick}>
+              {t(btnText[currentStep])}
+            </button>
+            <br />
+            {currentStep > 5 && currentStep < 9 && (
+              <button
+                type="button"
+                className="bttn "
+                onClick={(event) => {
+                  onCLick(event, true);
+                }}
+              >
+                {currentStep === 6 ? t("scan") : t("exit")}
               </button>
-              <br />
-              {currentStep > 5 && currentStep < 9 && (
-                <button
-                  type="button"
-                  className="bttn "
-                  onClick={(event) => {
-                    onCLick(event, true);
-                  }}
-                >
-                  {currentStep === 6 ? t("scan") : t("exit")}
-                </button>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </div>

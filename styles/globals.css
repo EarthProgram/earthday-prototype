@@ -107,15 +107,17 @@ body {
 }
 
 .inLine {
-  display: inline-table;
+  max-width: 483px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .txt-header {
   justify-content: space-between;
   flex-direction: column;
-  height: 55vh;
+  /* height: 55vh; */
   display: flex;
-  margin-bottom: 5vh;
+  /* margin-bottom: 5vh; */
 }
 
 .btn-column {
@@ -125,6 +127,8 @@ body {
 .radio-btn {
   display: grid;
   justify-content: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 .qr-code {
   width: 255px;
@@ -145,4 +149,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+.main-header {
+  display: grid;
+  height: 90vh;
 }
