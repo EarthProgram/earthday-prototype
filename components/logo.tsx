@@ -13,7 +13,7 @@ export default function Logo({
     <Image
       alt="Next.js logo"
       src={src}
-      unoptimized={true}
+      // unoptimized={true}
       width={width}
       height={height}
       // loader={customLoader}
