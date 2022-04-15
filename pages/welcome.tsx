@@ -8,17 +8,28 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import CustomQRCode from "../components/customQRCode";
 import SelectLanguage from "../components/selectLanguage";
 import Header from "../components/header";
+import { getCountry, setCss } from "../components/setStyles";
+import constants from "../constants/constant.json";
+
 declare global {
   interface Window {
     interchain: any;
   }
 }
 export default function Home() {
+  const lis = {
+    in: ["en", "hi"],
+    br: ["en", "hi"],
+  };
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
   let customLocale;
 
+  useEffect(() => {
+    setMounted(true);
+    setCss();
+  }, []);
   const { t } = useTranslation("common");
   const btnText = [
     "select",
@@ -32,12 +43,16 @@ export default function Home() {
     "sendToken",
     "goodbye",
   ];
+
   useEffect(() => {
-    setMounted(true);
-    // const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-color');
-    // document.documentElement.style.setProperty('--bg-color', "white");
-    const page = Number(new URL(location.href)?.searchParams?.get("page") ?? 0);
-    setCurrentStep(page > 9 || isNaN(page) ? 0 : page);
+    const tempPage = Number(
+      new URL(location.href)?.searchParams?.get("page") ?? 0
+    );
+    let page = tempPage > 9 || isNaN(tempPage) ? 0 : tempPage;
+    if (page === 0 && constants[getCountry()].lang.length < 2) {
+      page = 1;
+    }
+    setCurrentStep(page);
   });
   return (
     mounted && (
@@ -79,7 +94,7 @@ export default function Home() {
             {currentStep > 5 && currentStep < 9 && (
               <button
                 type="button"
-                className="bttn "
+                className={"bttn " + (currentStep > 6 ? "sec" : null)}
                 onClick={(event) => {
                   onCLick(event, true);
                 }}

@@ -1,26 +1,39 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Logo from "../components/logo";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Header from "../components/header";
+import { getCountry, setCss } from "../components/setStyles";
+import constants from "../constants/constant.json";
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const [countryCode, setCountryCode] = useState("");
 
   useEffect(() => {
+    setMounted(true);
+    const tempCode = getCountry();
+    setCountryCode(tempCode);
+    setCss();
     setTimeout(() => {
-      router.push("/welcome");
+      router.push("/welcome", "/welcome", {
+        locale: constants[tempCode].lang[0].code,
+      });
     }, 1500);
   }, []);
+  console.log("countryCode", countryCode);
   return (
-    <div>
+    mounted && (
       <div>
-        <Header />
-        <div className="splash-screen">
-          <Logo />
+        <div>
+          <Header />
+          <div className="splash-screen">
+            <Logo />
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 }
 

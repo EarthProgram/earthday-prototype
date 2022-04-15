@@ -1,0 +1,58 @@
+{
+  "chimple": {
+    "lang": [
+      {
+        "name": "English",
+        "code": "en"
+      },
+      {
+        "name": "हिन्दी",
+        "code": "hi"
+      }
+    ],
+    "logo": "chimple.png",
+    "mainColor": "#F48E88",
+    "logoWidth": 100,
+    "secondaryColor": "#5A95CB",
+    "mainFont": "Varela Round",
+    "mainFontSize": "18px",
+    "mainFontColor": "#00000080",
+    "progressBarColor": "grey",
+    "priBtnColor": "#5A95CB",
+    "priBtnFontColor": "#fff",
+    "stepColor": "#e7eaf3;",
+    "secBtnColor": "#28a745",
+    "secBtnFontColor": "#fff",
+    "mainFontUrl": "https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"
+  },
+  "yoma": {
+    "lang": [
+      {
+        "name": "English",
+        "code": "en-af"
+      },
+      {
+        "name": "Swahili",
+        "code": "sw"
+      },
+      {
+        "name": "Xhosa",
+        "code": "xh"
+      }
+    ],
+    "logo": "green_yoma.png",
+    "logoWidth": 210,
+    "mainColor": "#F3F6FA",
+    "secondaryColor": "#387F6A",
+    "mainFont": "Montserrat",
+    "mainFontSize": "18px",
+    "mainFontColor": "#00000080",
+    "progressBarColor": "grey",
+    "priBtnColor": "#387F6A",
+    "priBtnFontColor": "#fff",
+    "secBtnColor": "#162A42",
+    "stepColor": "#e7eaf3;",
+    "secBtnFontColor": "#fff",
+    "mainFontUrl": "https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+  }
+}

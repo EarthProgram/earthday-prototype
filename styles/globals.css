@@ -1,7 +1,19 @@
 :root {
   --bg-color: white;
+  --step-color: #e7eaf3;
+  --step-accomplished: rgba(0, 116, 217, 1);
+  --step-inprogress: rgb(0, 0, 0);
+  --main-font: "Chilanka";
+  --main-font-size: 24px;
+  --main-font-color: rgba(0, 0, 0, 0.5);
+  --progress-bar-color: grey;
+  --btn-primary-color: #28a745;
+  --btn-secondary-color: rgba(0, 116, 217, 1);
+  --btn-primary-font-color: #fff;
+  --btn-secondary-font-color: #fff;
+  --btn-primary-font: "Chilanka";
+  --btn-secondary-font: "Chilanka";
 }
-
 html,
 body {
   padding: 0;
@@ -15,7 +27,7 @@ body {
   box-sizing: border-box;
 }
 .indexedStep {
-  background-color: #e7eaf3;
+  background-color: var(--step-color);
   color: var(--text-normal);
   border-radius: 50%;
   height: 2.5rem;
@@ -24,29 +36,34 @@ body {
   display: inline-flex;
   transform-origin: center;
   align-items: center;
+
   justify-content: center;
   z-index: 1;
 }
 
 .indexedStep.accomplished {
-  background-color: rgba(0, 116, 217, 1);
+  background-color: var(--step-accomplished);
   animation: _JAh3L 400ms ease forwards;
-  color: white;
+  border: solid;
+  border-width: 1px;
+  border-color: black;
+  /* color: white; */
   z-index: 2;
 }
 .indexedStep.inProgress {
-  background-color: rgb(0, 0, 0);
+  background-color: var(--step-inprogress);
   animation: _JAh3L 400ms ease forwards;
   color: white;
   z-index: 2;
 }
 .bttn {
   border: 1px solid transparent;
-  color: #fff;
-  background-color: #28a745;
-  border-color: #28a745;
+  color: var(--btn-primary-font-color);
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
   padding: 0.5rem 1rem;
   margin-right: 1rem;
+  font-family: var(--btn-primary-font);
   margin-left: 1rem;
   align-self: center;
   min-width: 175px;
@@ -57,6 +74,11 @@ body {
   padding-right: 1rem !important;
   padding-left: 1rem !important;
 }
+.bttn.sec {
+  color: var(--btn-secondary-font-color);
+  background-color: var(--btn-secondary-color);
+  border-color: var(--btn-secondary-color);
+}
 .container {
   margin-right: 3rem;
   margin-left: 3rem;
@@ -66,11 +88,11 @@ body {
 }
 
 .txt {
-  font-family: "Chilanka";
-  font-size: 24px;
+  font-family: var(--main-font);
+  font-size: var(--main-font-size);
   margin-bottom: 0;
   line-height: 26px;
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--main-font-color);
 }
 
 .progress {
@@ -78,7 +100,7 @@ body {
 }
 .progress-bar {
   position: absolute;
-  background: lightseagreen;
+  background: var(--progress-bar-color);
   height: 5px;
   transition: width 0.3s ease;
   top: 50%;
@@ -137,7 +159,7 @@ body {
   display: inline-table;
 }
 .txt-box {
-  max-width: 225px;
+  max-width: 350px;
   text-align: center;
   display: inline-block;
 }

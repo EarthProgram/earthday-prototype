@@ -1,24 +1,18 @@
 import Image from "next/image";
+import constants from "../constants/constant.json";
+import { getCountry } from "./setStyles";
 
-// const customLoader = ({ src }) => {
-//   return src;
-// };
-
-export default function Logo({
-  width = 400,
-  height = 200,
-  src = "/nextjs.png",
-}) {
+export default function Logo({ width = null, height = 100, src = null }) {
+  const countryCode = getCountry();
+  if (src == null) {
+    src = "/logos/" + constants[countryCode].logo;
+  }
+  if (width == null) {
+    width = constants[countryCode].logoWidth;
+  }
   return (
     <div className="logo">
-      <Image
-        alt="Next.js logo"
-        src={src}
-        // unoptimized={true}
-        width={width}
-        height={height}
-        // loader={customLoader}
-      />
+      <Image alt="Next.js logo" src={src} width={width} height={height} />
     </div>
   );
 }
