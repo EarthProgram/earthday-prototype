@@ -121,7 +121,7 @@ body {
   top: 50%;
   left: 0;
   height: 5px;
-  width: 100%;
+  width: 98%;
 }
 .block {
   display: block;
@@ -137,9 +137,7 @@ body {
 .txt-header {
   justify-content: space-between;
   flex-direction: column;
-  /* height: 55vh; */
   display: flex;
-  /* margin-bottom: 5vh; */
 }
 
 .btn-column {

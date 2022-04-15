@@ -17,7 +17,7 @@ export default function MultiStepProgressBar({ currentStep }) {
     <div className="progress">
       <div
         className="progress-bar"
-        style={{ width: stepPercentage + "%" }}
+        style={{ width: (stepPercentage > 98 ? 98 : stepPercentage) + "%" }}
       ></div>
       <ul className="progress-num">
         <li className={getClassName(0)}>1</li>

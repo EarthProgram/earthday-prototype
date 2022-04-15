@@ -20,8 +20,6 @@ export function setCss() {
     setProperty("--btn-secondary-font-color", data.secBtnFontColor)
     setProperty("--btn-primary-font", data.mainFont)
     setProperty("--step-color", data.stepColor)
-
-
 }
 
 export function getCountry(): string {

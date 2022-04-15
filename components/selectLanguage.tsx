@@ -17,7 +17,7 @@ export default function SelectLanguage(onSelect) {
             onChange={(e) => onSelect(e.target.value)}
             defaultChecked={index === 0}
           />
-          <label htmlFor="radio-item-1">{item.name}</label>
+          <label className="txt" htmlFor="radio-item-1">{item.name}</label>
         </div>
       ))}
     </form>
