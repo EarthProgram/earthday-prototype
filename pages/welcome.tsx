@@ -10,12 +10,15 @@ import SelectLanguage from "../components/selectLanguage";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
+const { makeWallet, makeClient } = require("@ixo/client-sdk");
 
 declare global {
   interface Window {
     interchain: any;
   }
 }
+let wallet;
+export let client;
 export default function Home() {
   const lis = {
     in: ["en", "hi"],
@@ -25,9 +28,12 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const router = useRouter();
   let customLocale;
+  let interchain;
 
   useEffect(() => {
+    interchain = window.interchain;
     setMounted(true);
+
     setCss();
   }, []);
   const { t } = useTranslation("common");
@@ -149,6 +155,7 @@ export default function Home() {
     locale = router.locale
   ) {
     // setCurrentStep(currentStep + 1);
+    // broadcastTransaction();
     router.push(
       {
         pathname: "/welcome",
@@ -170,6 +177,8 @@ export default function Home() {
   }
 
   async function onPledge() {
+    await getDidDoc();
+    await broadcastTransaction();
     onContinue();
   }
 
@@ -191,6 +200,50 @@ export default function Home() {
 
   async function onExit() {
     onContinue(9);
+  }
+  function getDidDoc() {
+    // did: FMZFSG1T36MGfC3wJYnD6W
+
+    if (!window["ixoKs"]) {
+      // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
+      console.log(interchain?.getDidDoc("m / 44' / 118' / 0' / 0'") ?? "null");
+    }
+    // if (window["ixoKs"]) {
+    //   ixoKsProvider.getDidDoc((error: any, response: any) => {
+    //     if (error) {
+    //       // handle error
+    //     } else {
+    //       setdidDoc(JSON.stringify(response));
+    //     }
+    //   });
+    // }
+  }
+  async function broadcastTransaction() {
+    // did: FMZFSG1T36MGfC3wJYnD6W
+    try {
+      //@ts-ignore
+      if (!wallet) {
+        wallet = await makeWallet(
+          "planet stomach collect august notice lend horse bread pudding hour travel main"
+          //@ts-ignore
+          // (didPrefix = "did:ixo:")
+        );
+      }
+      if (!client) {
+        client = makeClient(
+          wallet,
+          "https://testnet.ixo.world/rpc/",
+          "https://blocksync-pandora.ixo.world"
+        );
+        await client.register();
+      }
+
+      // wallet= wallet
+    } catch (error) {
+      console.info(error);
+    }
+    console.log("wallet", wallet);
+    console.log("client", client);
   }
 }
 
