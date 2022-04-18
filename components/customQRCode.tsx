@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { client } from "../pages/welcome";
 
-export default function CustomQRCode({ isScan = true }) {
+export default function CustomQRCode({ isScan = true, ondata = null }) {
   const [data, setData] = useState("");
   const [pubKey, setPubKey] = useState("");
 
@@ -35,9 +35,7 @@ export default function CustomQRCode({ isScan = true }) {
               if (!!result) {
                 console.log("on text", result.getText());
                 setData(result?.getText());
-                if (!result?.getText()) {
-                  await client.sendTokens(result?.getText(), 10);
-                }
+                ondata(result?.getText());
               }
 
               if (!!error) {

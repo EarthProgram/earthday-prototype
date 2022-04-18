@@ -29,6 +29,7 @@ export default function Home() {
   const router = useRouter();
   let customLocale;
   let interchain;
+  let qrData;
 
   useEffect(() => {
     interchain = window.interchain;
@@ -80,7 +81,12 @@ export default function Home() {
               {currentStep === 7 ? (
                 <CustomQRCode isScan={false} />
               ) : currentStep === 8 ? (
-                <CustomQRCode isScan={true} />
+                <CustomQRCode
+                  isScan={true}
+                  ondata={(data) => {
+                    qrData = data;
+                  }}
+                />
               ) : (
                 <CustomTextBox currentStep={currentStep} />
               )}
@@ -195,6 +201,9 @@ export default function Home() {
   }
 
   async function onScanQR() {
+    if (!qrData) {
+      await client.sendTokens(qrData, 10);
+    }
     onContinue(currentStep + 2);
   }
 
