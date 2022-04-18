@@ -79,6 +79,9 @@ body {
   background-color: var(--btn-secondary-color);
   border-color: var(--btn-secondary-color);
 }
+.bttn:disabled {
+  background: #dddddd;
+}
 .container {
   margin-right: 3rem;
   margin-left: 3rem;

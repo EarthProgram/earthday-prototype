@@ -18,18 +18,17 @@ declare global {
   }
 }
 let wallet;
-export let client;
+let client;
+export let didId;
 export default function Home() {
-  const lis = {
-    in: ["en", "hi"],
-    br: ["en", "hi"],
-  };
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [qrData, setQrData] = useState(null);
+  const [isScan, setIsScan] = useState(true);
+
   const router = useRouter();
   let customLocale;
   let interchain;
-  let qrData;
 
   useEffect(() => {
     interchain = window.interchain;
@@ -84,7 +83,7 @@ export default function Home() {
                 <CustomQRCode
                   isScan={true}
                   ondata={(data) => {
-                    qrData = data;
+                    setQrData(data);
                   }}
                 />
               ) : (
@@ -99,7 +98,12 @@ export default function Home() {
             </div>
           </div>
           <div className="btn-column">
-            <button type="button" className="bttn " onClick={onCLick}>
+            <button
+              type="button"
+              className="bttn "
+              disabled={currentStep === 8 && isScan && qrData == null}
+              onClick={onCLick}
+            >
               {t(btnText[currentStep])}
             </button>
             <br />
@@ -183,7 +187,7 @@ export default function Home() {
   }
 
   async function onPledge() {
-    await getDidDoc();
+    getDidDoc();
     await broadcastTransaction();
     onContinue();
   }
@@ -193,17 +197,25 @@ export default function Home() {
   }
 
   async function onPlayGame() {
+    if (isScan) {
+      if (!client) {
+        await broadcastTransaction();
+      }
+      if (qrData) {
+        const res = await client.sendTokens(qrData, 10);
+        console.log("result", res);
+      }
+    }
     onContinue(6, null, customLocale);
   }
 
   async function onShowQR() {
+    setIsScan(false);
     onContinue(currentStep + 1);
   }
 
   async function onScanQR() {
-    if (!qrData) {
-      await client.sendTokens(qrData, 10);
-    }
+    setIsScan(true);
     onContinue(currentStep + 2);
   }
 
@@ -215,7 +227,8 @@ export default function Home() {
 
     if (!window["ixoKs"]) {
       // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
-      console.log(interchain?.getDidDoc("m / 44' / 118' / 0' / 0'") ?? "null");
+      didId = interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+      console.log(didId ?? "interchain null");
     }
     // if (window["ixoKs"]) {
     //   ixoKsProvider.getDidDoc((error: any, response: any) => {

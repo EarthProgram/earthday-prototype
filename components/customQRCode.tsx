@@ -1,7 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
-import { client } from "../pages/welcome";
 
 export default function CustomQRCode({ isScan = true, ondata = null }) {
   const [data, setData] = useState("");
@@ -9,6 +8,13 @@ export default function CustomQRCode({ isScan = true, ondata = null }) {
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    //sample data
+    setTimeout(() => {
+      if (!data) {
+        setData("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
+        ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
+      }
+    }, 3000);
     if (isScan) {
       setIsLoading(false);
     } else {
