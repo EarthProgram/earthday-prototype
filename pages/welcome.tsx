@@ -9,7 +9,7 @@ import CustomQRCode from "../components/customQRCode";
 import SelectLanguage from "../components/selectLanguage";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
-import constants from "../constants/constant.json";
+import config from "../constants/config.json";
 
 declare global {
   interface Window {
@@ -49,7 +49,7 @@ export default function Home() {
       new URL(location.href)?.searchParams?.get("page") ?? 0
     );
     let page = tempPage > 9 || isNaN(tempPage) ? 0 : tempPage;
-    if (page === 0 && constants[getCountry()].lang.length < 2) {
+    if (page === 0 && config[getCountry()].lang.length < 2) {
       page = 1;
     }
     setCurrentStep(page);

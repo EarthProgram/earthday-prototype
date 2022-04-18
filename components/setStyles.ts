@@ -1,4 +1,4 @@
-import constants from "../constants/constant.json";
+import config from "../constants/config.json";
 
 export function setCss() {
     const setProperty = (key, value) => {
@@ -6,7 +6,7 @@ export function setCss() {
             document.documentElement.style.setProperty(key, value);
     };
     const countryCode = getCountry();
-    const data = constants[countryCode];
+    const data = config[countryCode];
     setProperty("--bg-color", data.mainColor);
     setProperty("--step-accomplished", data.mainColor)
     setProperty("--step-inprogress", data.secondaryColor)
@@ -24,5 +24,5 @@ export function setCss() {
 
 export function getCountry(): string {
     const host = location.host.substring(0, location.host.indexOf('.'));
-    return constants[host] != null ? host : "chimple";
+    return config[host] != null ? host : "chimple";
 }

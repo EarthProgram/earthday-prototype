@@ -1,12 +1,12 @@
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
-import constants from "../constants/constant.json";
+import config from "../constants/config.json";
 import { getCountry } from "./setStyles";
 
 export default function Header() {
   const { t } = useTranslation("common");
-  const mainFontUrl = constants[getCountry()].mainFontUrl;
-  const favIcon = "/logos/" + constants[getCountry()].favIcon;
+  const mainFontUrl = config[getCountry()].mainFontUrl;
+  const favIcon = "/logos/" + config[getCountry()].favIcon;
 
   return (
     <Head>

@@ -1,8 +1,8 @@
-import constants from "../constants/constant.json";
+import config from "../constants/config.json";
 import { getCountry } from "./setStyles";
 
 export default function SelectLanguage(onSelect) {
-  const languages = constants[getCountry()].lang;
+  const languages = config[getCountry()].lang;
 
   onSelect(languages[0].code);
 

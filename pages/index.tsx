@@ -4,7 +4,7 @@ import Logo from "../components/logo";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
-import constants from "../constants/constant.json";
+import config from "../constants/config.json";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -18,7 +18,7 @@ export default function Home() {
     setCss();
     setTimeout(() => {
       router.push("/welcome", "/welcome", {
-        locale: constants[tempCode].lang[0].code,
+        locale: config[tempCode].lang[0].code,
       });
     }, 1500);
   }, []);
