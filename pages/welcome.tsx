@@ -28,10 +28,8 @@ export default function Home() {
 
   const router = useRouter();
   let customLocale;
-  let interchain;
 
   useEffect(() => {
-    interchain = window.interchain;
     setMounted(true);
 
     setCss();
@@ -227,7 +225,7 @@ export default function Home() {
 
     if (!window["ixoKs"]) {
       // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
-      didId = interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+      didId = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
       console.log(didId ?? "interchain null");
     }
     // if (window["ixoKs"]) {
