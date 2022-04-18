@@ -10,6 +10,9 @@ export default function Logo({ width = null, height = 100, src = null }) {
   if (width == null) {
     width = constants[countryCode].logoWidth;
   }
+  if (height == null) {
+    height = constants[countryCode].logoHeight;
+  }
   return (
     <div className="logo">
       <Image alt="Next.js logo" src={src} width={width} height={height} />
