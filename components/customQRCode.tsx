@@ -13,10 +13,10 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     console.log("diddd ", didId);
     setTimeout(() => {
       if (!data) {
-        setData("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
-        ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
+        setData("Unable to read the QR code.");
+        // ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
       }
-    }, 3000);
+    }, 5000);
     if (isScan) {
       setIsLoading(false);
     } else {
@@ -42,8 +42,10 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
             onResult={async (result, error) => {
               if (!!result) {
                 console.log("on text", result.getText());
-                setData(result?.getText());
-                ondata(result?.getText());
+                if (result.getText() != null) {
+                  setData(result?.getText());
+                  ondata(result?.getText());
+                }
               }
 
               if (!!error) {
