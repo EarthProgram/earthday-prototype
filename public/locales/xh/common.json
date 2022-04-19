@@ -25,5 +25,7 @@
   "chooseLanguage": "Ungakhetha ulwimi lwakho apha. IsiNgesi silelona simiselweyo ukuba asinalo olunye.",
   "select": "Khetha",
   "sendToken": "Thumela uMqondiso om-1",
-  "title": "Usuku Lomhlaba"
+  "title": "Usuku Lomhlaba",
+  "unableToShowQR": "Unable to Show the QR code",
+  "unableToReadQR": "Unable to read the QR code"
 }

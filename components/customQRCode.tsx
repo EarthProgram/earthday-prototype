@@ -2,19 +2,21 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { didId } from "../pages/welcome";
+import { useTranslation } from "next-i18next";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
-  const [data, setData] = useState("");
+  const [data, setData] = useState(null);
   const [pubKey, setPubKey] = useState("");
   const [error, setError] = useState(null);
-
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation("common");
+
   useEffect(() => {
     //sample data
     console.log("diddd ", didId);
     setTimeout(() => {
-      if (!data) {
-        setError("Unable to read the QR code.");
+      if (data == null && isScan) {
+        setError(t("unableToReadQR"));
         // ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
       }
     }, 5000);
@@ -68,7 +70,8 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     // setError("Unable to Show the QR code");
 
     if (!didId) {
-      setError("Unable to Show the QR code");
+      setError(t("unableToShowQR"));
+
       return;
     }
     try {
@@ -84,7 +87,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
       setPubKey(pubKey);
       setIsLoading(false);
     } catch (error) {
-      setError("Unable to Show the QR code");
+      setError(t("unableToShowQR"));
     }
   }
 }

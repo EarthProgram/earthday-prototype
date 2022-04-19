@@ -25,5 +25,7 @@
   "chooseLanguage": "Unaweza kuchagua lugha yako hapa. Kiingereza ndicho chaguomsingi ikiwa hatuna nyinginezo.",
   "select": "Chagua",
   "sendToken": "Tuma Tokeni 1",
-  "title": "Siku ya Dunia"
+  "title": "Siku ya Dunia",
+  "unableToShowQR": "Unable to Show the QR code",
+  "unableToReadQR": "Unable to read the QR code"
 }
