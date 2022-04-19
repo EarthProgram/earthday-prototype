@@ -225,8 +225,9 @@ export default function Home() {
 
     if (!window["ixoKs"]) {
       // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
+      console.log("geting diddoc intercain", window.interchain);
       didId = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
-      console.log(didId ?? "interchain null");
+      console.log("didId", didId);
     }
     // if (window["ixoKs"]) {
     //   ixoKsProvider.getDidDoc((error: any, response: any) => {
