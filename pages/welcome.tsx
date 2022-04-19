@@ -226,7 +226,10 @@ export default function Home() {
     if (!window["ixoKs"]) {
       // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
       console.log("geting diddoc intercain", window.interchain);
-      didId = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+      didId =
+        window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'")?.id ??
+        "did:sov:FMZFSG1T36MGfC3wJYnD6W";
+
       console.log("didId", didId);
     }
     // if (window["ixoKs"]) {
@@ -244,11 +247,10 @@ export default function Home() {
     try {
       //@ts-ignore
       if (!wallet) {
-        wallet = await makeWallet(
-          "planet stomach collect august notice lend horse bread pudding hour travel main"
-          //@ts-ignore
-          // (didPrefix = "did:ixo:")
-        );
+        wallet = await makeWallet();
+        // "planet stomach collect august notice lend horse bread pudding hour travel main"
+        //@ts-ignore
+        // (didPrefix = "did:ixo:")
       }
       if (!client) {
         client = makeClient(

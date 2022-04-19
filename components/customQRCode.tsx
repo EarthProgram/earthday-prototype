@@ -1,14 +1,16 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
+import { didId } from "../pages/welcome";
 
-export default function CustomQRCode({ isScan = true, ondata = null }) {
+export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState("");
   const [pubKey, setPubKey] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     //sample data
+    console.log("diddd ", didId);
     setTimeout(() => {
       if (!data) {
         setData("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
@@ -56,9 +58,9 @@ export default function CustomQRCode({ isScan = true, ondata = null }) {
     </div>
   );
   async function getPubkey() {
-    const res = await fetch(
-      `https://testnet.ixo.world/did/did:sov:FMZFSG1T36MGfC3wJYnD6W`
-    );
+    console.log("fetching..");
+    console.log("didID", didId);
+    const res = await fetch(`https://testnet.ixo.world/did/${didId}`);
     const data = await res.json();
     const tempPubKey = data?.result?.value?.pubKey ?? "";
     const res1 = await fetch(
