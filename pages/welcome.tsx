@@ -226,10 +226,14 @@ export default function Home() {
     if (!window["ixoKs"]) {
       // setdidDoc(interchain.getDidDoc("m / 44' / 118' / 0' / 0'"));
       console.log("geting diddoc intercain", window.interchain);
-      didId =
-        window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'")?.id ??
-        "did:sov:FMZFSG1T36MGfC3wJYnD6W";
-
+      const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+      if (tempDid) {
+        const didJson = JSON.parse(tempDid);
+        didId = didJson?.id?.replace("did:key", "did:sov");
+      }
+      if (!didId) {
+        didId = "did:sov:FMZFSG1T36MGfC3wJYnD6W";
+      }
       console.log("didId", didId);
     }
     // if (window["ixoKs"]) {
