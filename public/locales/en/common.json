@@ -16,7 +16,7 @@
   "thankYou": "Thank you for taking part in our Earth Day fun!",
   "show": "Show",
   "scan": "Scan",
-  "explainShowQRCode": "Show your QR code to someone else to receive EARTHDAY tokens from them",
+  "explainShowQRCode": "Show your QR code to someone else to receive EARTHDAY tokens from them.",
   "explainScanQRCode": "Scan someone's QR code to send them EARTHDAY tokens.",
   "or": "or",
   "playGame": "Play Game",
@@ -26,6 +26,6 @@
   "select": "Select",
   "sendToken": "Send 1 Token",
   "title": "Earth Day",
-  "unableToShowQR": "Unable to Show the QR code",
-  "unableToReadQR": "Unable to read the QR code"
+  "unableToShowQR": "Unable to show the QR code.",
+  "unableToReadQR": "Unable to read the QR code."
 }
