@@ -251,7 +251,9 @@ export default function Home() {
     try {
       //@ts-ignore
       if (!wallet) {
-        wallet = await makeWallet();
+        wallet = await makeWallet(
+          "planet stomach collect august notice lend horse bread pudding hour travel main"
+        );
         // "planet stomach collect august notice lend horse bread pudding hour travel main"
         //@ts-ignore
         // (didPrefix = "did:ixo:")
