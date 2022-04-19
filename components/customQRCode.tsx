@@ -6,6 +6,7 @@ import { didId } from "../pages/welcome";
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState("");
   const [pubKey, setPubKey] = useState("");
+  const [error, setError] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     console.log("diddd ", didId);
     setTimeout(() => {
       if (!data) {
-        setData("Unable to read the QR code.");
+        setError("Unable to read the QR code.");
         // ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
       }
     }, 5000);
@@ -45,6 +46,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
                 if (result.getText() != null) {
                   setData(result?.getText());
                   ondata(result?.getText());
+                  setError(null);
                 }
               }
 
@@ -57,21 +59,32 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
           <p>{data}</p>
         </>
       )}
+      <p className="error">{error}</p>
     </div>
   );
   async function getPubkey() {
     console.log("fetching..");
     console.log("didID", didId);
-    const res = await fetch(`https://testnet.ixo.world/did/${didId}`);
-    const data = await res.json();
-    const tempPubKey = data?.result?.value?.pubKey ?? "";
-    const res1 = await fetch(
-      `https://testnet.ixo.world/pubKeyToAddr/${tempPubKey}`
-    );
-    const data1 = await res1.json();
-    const pubKey = data1.result;
-    console.log("piubkey", pubKey);
-    setPubKey(pubKey);
-    setIsLoading(false);
+    // setError("Unable to Show the QR code");
+
+    if (!didId) {
+      setError("Unable to Show the QR code");
+      return;
+    }
+    try {
+      const res = await fetch(`https://testnet.ixo.world/did/${didId}`);
+      const data = await res.json();
+      const tempPubKey = data?.result?.value?.pubKey ?? "";
+      const res1 = await fetch(
+        `https://testnet.ixo.world/pubKeyToAddr/${tempPubKey}`
+      );
+      const data1 = await res1.json();
+      const pubKey = data1.result;
+      console.log("piubkey", pubKey);
+      setPubKey(pubKey);
+      setIsLoading(false);
+    } catch (error) {
+      setError("Unable to Show the QR code");
+    }
   }
 }

@@ -188,3 +188,7 @@ body {
   cursor: pointer;
   display: flex;
 }
+.error{
+  color: red;
+  font-size: 16px;
+}
