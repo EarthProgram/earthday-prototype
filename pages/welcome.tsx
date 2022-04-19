@@ -25,6 +25,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState(0);
   const [qrData, setQrData] = useState(null);
   const [isScan, setIsScan] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   let customLocale;
@@ -99,7 +100,9 @@ export default function Home() {
             <button
               type="button"
               className="bttn "
-              disabled={currentStep === 8 && isScan && qrData == null}
+              disabled={
+                isLoading || (currentStep === 8 && isScan && qrData == null)
+              }
               onClick={onCLick}
             >
               {t(btnText[currentStep])}
@@ -108,6 +111,7 @@ export default function Home() {
             {currentStep > 5 && currentStep < 9 && (
               <button
                 type="button"
+                disabled={isLoading}
                 className={"bttn " + (currentStep > 6 ? "sec" : null)}
                 onClick={(event) => {
                   onCLick(event, true);
@@ -157,14 +161,14 @@ export default function Home() {
     }
   }
 
-  function onContinue(
+  async function onContinue(
     step = currentStep + 1,
     props = {},
     locale = router.locale
   ) {
     // setCurrentStep(currentStep + 1);
     // broadcastTransaction();
-    router.push(
+    await router.push(
       {
         pathname: "/welcome",
         query: {
@@ -185,9 +189,11 @@ export default function Home() {
   }
 
   async function onPledge() {
+    setIsLoading(true);
     getDidDoc();
     await broadcastTransaction();
-    onContinue();
+    await onContinue();
+    setIsLoading(false);
   }
 
   async function onLanguageSelect() {
@@ -195,6 +201,7 @@ export default function Home() {
   }
 
   async function onPlayGame() {
+    setIsLoading(true);
     if (isScan) {
       if (!client) {
         await broadcastTransaction();
@@ -204,17 +211,18 @@ export default function Home() {
         console.log("result", res);
       }
     }
-    onContinue(6, null, customLocale);
+    await onContinue(6, null, customLocale);
+    setIsLoading(false);
   }
 
   async function onShowQR() {
     setIsScan(false);
-    onContinue(currentStep + 1);
+    await onContinue(currentStep + 1);
   }
 
   async function onScanQR() {
     setIsScan(true);
-    onContinue(currentStep + 2);
+    await onContinue(currentStep + 2);
   }
 
   async function onExit() {

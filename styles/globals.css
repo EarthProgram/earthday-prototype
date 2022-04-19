@@ -81,6 +81,7 @@ body {
 }
 .bttn:disabled {
   background: #dddddd;
+  border-color: #dddddd;
 }
 .container {
   margin-right: 3rem;
