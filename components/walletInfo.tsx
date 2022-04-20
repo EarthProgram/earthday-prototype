@@ -33,6 +33,9 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
       const tempDidId = getDidId();
       // const tempSignEd25519 = await getSignEd25519();
       // const tempSignSecp256k1 = await getSignSecp256k1();
+      const tempAddress = await getAddress();
+      const tempBroadcast = await broadcastTransaction();
+
       if (
         !tempDidId
         //  || !tempSignEd25519 || !tempSignSecp256k1
