@@ -1,7 +1,11 @@
+import Airtable from "airtable";
+import { AIRTABLE_API_KEY, AIRTABLE_KEY } from "../pages/welcome";
+
 let didId;
 let pubKey;
 let signEd25519;
 let secp256k1;
+let address;
 
 export function getDidId() {
     // did: FMZFSG1T36MGfC3wJYnD6W
@@ -10,7 +14,7 @@ export function getDidId() {
         const tempJson = JSON.parse(tempDid ?? "{}")
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
-            const reqType = "EcdsaSecp256k1VerificationKey2019"
+            const reqType = "Ed25519VerificationKey2018"
             const verificationMethod = tempJson.verificationMethod.find(x => x.type == reqType)
             if (verificationMethod) {
                 pubKey = verificationMethod?.publicKeyBase58;
@@ -97,11 +101,27 @@ export async function getAddress() {
     if (!pubKey) {
         return null;
     }
+    if (address) {
+        return address;
+    }
     const res = await fetch(
         `https://testnet.ixo.world/pubKeyToAddr/${pubKey}`
     );
     const data1 = await res.json();
-    const addrs = data1.result;
-    return addrs;
+    address = data1.result;
+    if (address) {
+        const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_KEY);
+        base('Table 1').create({
+            "Wallet": address,
+        }
+            , (err, records) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log("records", records)
+            });
+    }
+    return address;
 
 }

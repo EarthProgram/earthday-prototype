@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDidId, getSignEd25519, getSignSecp256k1 } from "../utils/utils";
+import { getAddress, getDidId } from "../utils/utils";
 import { useTranslation } from "next-i18next";
 
 export default function WalletInfo({ onLoad = (isError) => {} }) {
@@ -42,6 +42,7 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
         onLoad(true);
         return;
       }
+      await getAddress();
       setDidId(tempDidId);
       // setSignEd25519(tempSignEd25519);
       // setSignSecp256k1(tempSignSecp256k1);
