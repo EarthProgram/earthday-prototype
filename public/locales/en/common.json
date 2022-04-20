@@ -27,5 +27,6 @@
   "sendToken": "Send 1 Token",
   "title": "Earth Day",
   "unableToShowQR": "Unable to show the QR code.",
-  "unableToReadQR": "Unable to read the QR code."
+  "unableToReadQR": "Unable to read the QR code.",
+  "walletError": "Please activate your Opera wallet."
 }

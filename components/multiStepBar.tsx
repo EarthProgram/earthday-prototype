@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function MultiStepProgressBar({ currentStep }) {
-  const totalSteps = 3;
+  const totalSteps = 4;
   const stepPercentage = (currentStep / totalSteps) * 100;
 
   const getClassName = (index: number) =>
@@ -24,6 +24,7 @@ export default function MultiStepProgressBar({ currentStep }) {
         <li className={getClassName(1)}>2</li>
         <li className={getClassName(2)}>3</li>
         <li className={getClassName(3)}>4</li>
+        <li className={getClassName(4)}>5</li>
       </ul>
     </div>
   );

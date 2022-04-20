@@ -27,5 +27,6 @@
   "sendToken": "Tuma Tokeni 1",
   "title": "Siku ya Dunia",
   "unableToShowQR": "Unable to Show the QR code",
-  "unableToReadQR": "Unable to read the QR code"
+  "unableToReadQR": "Unable to read the QR code",
+  "walletError": "Please activate your Opera wallet."
 }

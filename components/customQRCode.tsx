@@ -3,18 +3,17 @@ import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 // import { didId } from "../pages/welcome";
 import { useTranslation } from "next-i18next";
-import { didId, getPubkey } from "../utils/utils";
+import { getAddress } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
-  const [pubKey, setPubKey] = useState("");
+  const [address, setAddress] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation("common");
 
   useEffect(() => {
     //sample data
-    console.log("diddd ", didId);
     setTimeout(() => {
       if (data == null && isScan) {
         setError(t("unableToReadQR"));
@@ -34,10 +33,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
         (isLoading ? (
           <div></div>
         ) : (
-          <QRCodeSVG
-            value={pubKey ?? "https://operatest.ixo.earth/"}
-            size={200}
-          />
+          <QRCodeSVG value={address ?? ""} size={200} />
         ))}
       {isScan && (
         <>
@@ -67,16 +63,13 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   );
   async function getPubkey1() {
     console.log("fetching..");
-    console.log("didID", didId);
-    // setError("Unable to Show the QR code");
-
-    if (!didId) {
-      setError(t("unableToShowQR"));
-      return;
-    }
     try {
-      const pubKey = await getPubkey();
-      setPubKey(pubKey);
+      const addrss = await getAddress();
+      if (!addrss) {
+        setError(t("unableToShowQR"));
+        return;
+      }
+      setAddress(addrss);
       setIsLoading(false);
     } catch (error) {
       setError(t("unableToShowQR"));

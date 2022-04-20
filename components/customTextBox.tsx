@@ -7,6 +7,7 @@ export default function CustomTextBox({ currentStep }) {
     ["doYouKnow", "firstEarthDay"],
     ["doYouKnow", "20MillionPeople"],
     ["doYouPledge"],
+    [],
     ["awesome", "youHaveReceived"],
     ["explainShowQRCode", "or", "explainScanQRCode"],
     [],

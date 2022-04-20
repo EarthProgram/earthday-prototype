@@ -10,8 +10,7 @@ import SelectLanguage from "../components/selectLanguage";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
-import { getDidDoc, signEd25519, signSecp256k1 } from "../utils/utils";
-import DidDoc from "../components/didDoc";
+import WalletInfo from "../components/walletInfo";
 // const { makeWallet, makeClient } = require("@ixo/client-sdk");
 
 declare global {
@@ -27,7 +26,7 @@ export default function Home() {
   const [qrData, setQrData] = useState(null);
   const [isScan, setIsScan] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [showDidDoc, setShowDidDoc] = useState(false);
+  const [isWallterError, setIsWallterError] = useState(false);
 
   const router = useRouter();
   let customLocale;
@@ -44,6 +43,7 @@ export default function Home() {
     "continue",
     "continue",
     "pledge",
+    "continue",
     "playGame",
     "show",
     "done",
@@ -55,7 +55,7 @@ export default function Home() {
     const tempPage = Number(
       new URL(location.href)?.searchParams?.get("page") ?? 0
     );
-    let page = tempPage > 9 || isNaN(tempPage) ? 0 : tempPage;
+    let page = tempPage > 10 || isNaN(tempPage) ? 0 : tempPage;
     if (page === 0 && config[getCountry()].lang.length < 2) {
       page = 1;
     }
@@ -66,7 +66,7 @@ export default function Home() {
       <div className="container">
         <Header />
 
-        {currentStep > 1 && currentStep < 6 && (
+        {currentStep > 1 && currentStep < 7 && (
           <div>
             <div className="inLine">
               <MultiStepProgressBar currentStep={currentStep - 2} />
@@ -78,17 +78,21 @@ export default function Home() {
           <Logo />
           <div className="txt-header">
             <div>
-              {currentStep === 7 ? (
+              {currentStep === 8 ? (
                 <CustomQRCode isScan={false} />
-              ) : currentStep === 8 ? (
+              ) : currentStep === 9 ? (
                 <CustomQRCode
                   isScan={true}
                   ondata={(data) => {
                     setQrData(data);
                   }}
                 />
-              ) : showDidDoc ? (
-                <DidDoc />
+              ) : currentStep === 5 ? (
+                <WalletInfo
+                  onError={() => {
+                    setIsWallterError(true);
+                  }}
+                />
               ) : (
                 <CustomTextBox currentStep={currentStep} />
               )}
@@ -112,16 +116,16 @@ export default function Home() {
               {t(btnText[currentStep])}
             </button>
             <br />
-            {currentStep > 5 && currentStep < 9 && (
+            {currentStep > 6 && currentStep < 10 && (
               <button
                 type="button"
                 disabled={isLoading}
-                className={"bttn " + (currentStep > 6 ? "sec" : null)}
+                className={"bttn " + (currentStep > 7 ? "sec" : null)}
                 onClick={(event) => {
                   onCLick(event, true);
                 }}
               >
-                {currentStep === 6 ? t("scan") : t("exit")}
+                {currentStep === 7 ? t("scan") : t("exit")}
               </button>
             )}
           </div>
@@ -132,7 +136,7 @@ export default function Home() {
   function onCLick(event, isExit = false) {
     event.preventDefault();
     if (isExit) {
-      if (currentStep === 6) {
+      if (currentStep === 7) {
         onScanQR();
         return;
       }
@@ -146,17 +150,18 @@ export default function Home() {
       case 1:
       case 2:
       case 3:
-      case 5:
+      case 6:
         onContinue();
         break;
       case 4:
+      case 5:
         onPledge();
         break;
-      case 6:
+      case 7:
         onShowQR();
         break;
-      case 7:
       case 8:
+      case 9:
         onPlayGame();
         break;
       default:
@@ -193,13 +198,15 @@ export default function Home() {
   }
 
   async function onPledge() {
-    if (showDidDoc) {
-      setShowDidDoc(false);
-
-      await onContinue();
-    } else {
-      setShowDidDoc(true);
+    // if (showDidDoc) {
+    //   setShowDidDoc(false);
+    if (isWallterError) {
+      await onContinue(0);
+      setIsWallterError(false);
+      return;
     }
+    await onContinue();
+
     // setIsLoading(true);
     // getDidDoc();
     // // await broadcastTransaction();
@@ -240,7 +247,7 @@ export default function Home() {
   }
 
   async function onExit() {
-    onContinue(9);
+    onContinue(10);
   }
 }
 

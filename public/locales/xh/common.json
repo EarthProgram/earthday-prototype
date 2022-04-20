@@ -27,5 +27,6 @@
   "sendToken": "Thumela uMqondiso om-1",
   "title": "Usuku Lomhlaba",
   "unableToShowQR": "Unable to Show the QR code",
-  "unableToReadQR": "Unable to read the QR code"
+  "unableToReadQR": "Unable to read the QR code",
+  "walletError": "Please activate your Opera wallet."
 }
