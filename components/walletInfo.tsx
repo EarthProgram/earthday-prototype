@@ -42,6 +42,7 @@ export default function WalletInfo({ onError }) {
       setDidId(tempDidId);
       setSignEd25519(tempSignEd25519);
       setSignSecp256k1(tempSignSecp256k1);
+      setIsLoading(false);
     } catch (error) {
       console.log("error", error);
       setIsError(true);
