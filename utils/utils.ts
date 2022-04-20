@@ -7,8 +7,8 @@ let didId;
 let pubKey;
 let address;
 let signEd25519;
-let accountNumber;
-let sequence;
+let accountNumber = String('1');
+let sequence = String('1');
 
 export function getDidId() {
     // did: FMZFSG1T36MGfC3wJYnD6W
