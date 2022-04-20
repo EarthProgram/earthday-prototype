@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 // import { didId } from "../pages/welcome";
 import { useTranslation } from "next-i18next";
-import { getAddress } from "../utils/utils";
+import { getAddress, getBalance } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
@@ -11,17 +11,18 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation("common");
-
+  let timeoutID;
   useEffect(() => {
     //sample data
-    setTimeout(() => {
-      if (data == null && isScan) {
+    timeoutID = setTimeout(function () {
+      if (data == null && isScan && !error) {
+        console.log("data", data, "error", error);
         setError(t("unableToReadQR"));
-        // ondata("ixo1pspawwsr8n00w30wnyuhdxcrslw2tyz6x5kg3c");
       }
     }, 5000);
     if (isScan) {
-      setIsLoading(false);
+      // setIsLoading(false);
+      getBalanceData();
     } else {
       getPubkey1();
     }
@@ -35,7 +36,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
         ) : (
           <QRCodeSVG value={address ?? ""} size={200} />
         ))}
-      {isScan && (
+      {isScan && !isLoading && (
         <>
           <QrReader
             videoStyle={{ height: "80%" }}
@@ -44,6 +45,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
                 console.log("on text", result.getText());
                 if (result.getText() != null) {
                   setData(result?.getText());
+                  clearTimeout(timeoutID);
                   ondata(result?.getText());
                   setError(null);
                 }
@@ -61,6 +63,16 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
       <p className="error">{error}</p>
     </div>
   );
+  async function getBalanceData() {
+    const bal = (await getBalance()) ?? 0;
+    if (!bal || bal < 1) {
+      setError(t("noBalance"));
+      clearTimeout(timeoutID);
+      return;
+    }
+    setIsLoading(false);
+  }
+
   async function getPubkey1() {
     console.log("fetching..");
     try {

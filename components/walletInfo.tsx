@@ -19,7 +19,7 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
       <p className="error">{t("walletError")}</p>
     ) : (
       <div className="did-doc">
-        <h2>didId</h2>
+        <h2>Your Opera wallet DID</h2>
         <p>{didId}</p>
         {/* <h2>signEd25519</h2>
         <p>{signEd25519Id}</p>

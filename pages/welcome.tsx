@@ -21,7 +21,7 @@ declare global {
 // let wallet;
 // let client;
 
-export default function Home({ airtableApiKey, airtabelKey }) {
+export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [qrData, setQrData] = useState(null);
@@ -95,7 +95,15 @@ export default function Home({ airtableApiKey, airtabelKey }) {
                   }}
                 />
               ) : (
-                <CustomTextBox currentStep={currentStep} />
+                <CustomTextBox
+                  currentStep={currentStep}
+                  onLoadStart={() => {
+                    setIsLoading(true);
+                  }}
+                  onLoadEnd={() => {
+                    setIsLoading(false);
+                  }}
+                />
               )}
               {currentStep === 0 &&
                 SelectLanguage(
@@ -110,7 +118,7 @@ export default function Home({ airtableApiKey, airtabelKey }) {
               type="button"
               className="bttn "
               disabled={
-                isLoading || (currentStep === 8 && isScan && qrData == null)
+                isLoading || (currentStep === 9 && isScan && qrData == null)
               }
               onClick={onCLick}
             >
@@ -155,8 +163,10 @@ export default function Home({ airtableApiKey, airtabelKey }) {
         onContinue();
         break;
       case 4:
-      case 5:
         onPledge();
+        break;
+      case 5:
+        onPledgeContinue();
         break;
       case 7:
         onShowQR();
@@ -198,28 +208,18 @@ export default function Home({ airtableApiKey, airtabelKey }) {
     );
   }
 
-  async function onPledge() {
-    // if (showDidDoc) {
-    //   setShowDidDoc(false);
-    if (currentStep === 4) {
-      setIsLoading(true);
-    }
-    if (isWallterError) {
-      await onContinue(0);
-      setIsWallterError(false);
-      setIsLoading(false);
-      return;
-    }
+  async function onPledgeContinue() {
+    // if (isWallterError) {
+    //   await onContinue(0);
+    //   setIsWallterError(false);
+    //   setIsLoading(false);
+    //   return;
+    // }
     await onContinue();
-
-    // setIsLoading(true);
-    // getDidDoc();
-    // // await broadcastTransaction();
-    // await signEd25519();
-    // await signSecp256k1();
-    // await onContinue();
-    // setIsLoading(false);
-    // router.push("/test");
+  }
+  async function onPledge() {
+    setIsLoading(true);
+    await onContinue();
   }
 
   async function onLanguageSelect() {

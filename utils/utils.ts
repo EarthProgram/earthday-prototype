@@ -124,3 +124,8 @@ export async function getAddress() {
     return address;
 
 }
+
+export async function getBalance(): Promise<number> {
+    await new Promise(f => setTimeout(f, 1000));
+    return 10;
+}
