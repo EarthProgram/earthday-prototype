@@ -20,8 +20,6 @@ declare global {
 }
 // let wallet;
 // let client;
-export let AIRTABLE_API_KEY: string;
-export let AIRTABLE_KEY: string;
 
 export default function Home({ airtableApiKey, airtabelKey }) {
   const [mounted, setMounted] = useState(false);
@@ -36,8 +34,6 @@ export default function Home({ airtableApiKey, airtabelKey }) {
 
   useEffect(() => {
     setMounted(true);
-    AIRTABLE_API_KEY = airtableApiKey;
-    AIRTABLE_KEY = airtabelKey;
     setCss();
   }, []);
   const { t } = useTranslation("common");
@@ -211,6 +207,7 @@ export default function Home({ airtableApiKey, airtabelKey }) {
     if (isWallterError) {
       await onContinue(0);
       setIsWallterError(false);
+      setIsLoading(false);
       return;
     }
     await onContinue();
@@ -263,8 +260,6 @@ export async function getStaticProps({ locale }) {
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common"])),
-      airtableApiKey: process.env.AIRTABLE_API_KEY,
-      airtabelKey: process.env.AIRTABLE_KEY,
     },
   };
 }

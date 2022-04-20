@@ -1,5 +1,4 @@
 import Airtable from "airtable";
-import { AIRTABLE_API_KEY, AIRTABLE_KEY } from "../pages/welcome";
 
 let didId;
 let pubKey;
@@ -110,7 +109,7 @@ export async function getAddress() {
     const data1 = await res.json();
     address = data1.result;
     if (address) {
-        const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_KEY);
+        const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
         base('Table 1').create({
             "Wallet": address,
         }
