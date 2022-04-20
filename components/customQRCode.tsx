@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 // import { didId } from "../pages/welcome";
 import { useTranslation } from "next-i18next";
-import { didId } from "../utils/utils";
+import { didId, getPubkey } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
@@ -24,7 +24,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     if (isScan) {
       setIsLoading(false);
     } else {
-      getPubkey();
+      getPubkey1();
     }
   }, []);
 
@@ -65,26 +65,17 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
       <p className="error">{error}</p>
     </div>
   );
-  async function getPubkey() {
+  async function getPubkey1() {
     console.log("fetching..");
     console.log("didID", didId);
     // setError("Unable to Show the QR code");
 
     if (!didId) {
       setError(t("unableToShowQR"));
-
       return;
     }
     try {
-      const res = await fetch(`https://testnet.ixo.world/did/${didId}`);
-      const data = await res.json();
-      const tempPubKey = data?.result?.value?.pubKey ?? "";
-      const res1 = await fetch(
-        `https://testnet.ixo.world/pubKeyToAddr/${tempPubKey}`
-      );
-      const data1 = await res1.json();
-      const pubKey = data1.result;
-      console.log("piubkey", pubKey);
+      const pubKey = await getPubkey();
       setPubKey(pubKey);
       setIsLoading(false);
     } catch (error) {
