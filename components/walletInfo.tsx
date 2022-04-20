@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAddress, getDidId } from "../utils/utils";
+import { broadcastTransaction, getAddress, getDidId, getSignEd25519 } from "../utils/utils";
 import { useTranslation } from "next-i18next";
 
 export default function WalletInfo({ onLoad = (isError) => {} }) {
