@@ -209,12 +209,12 @@ export default function Home() {
   }
 
   async function onPledgeContinue() {
-    // if (isWallterError) {
-    //   await onContinue(0);
-    //   setIsWallterError(false);
-    //   setIsLoading(false);
-    //   return;
-    // }
+    if (isWallterError) {
+      await onContinue(0);
+      setIsWallterError(false);
+      setIsLoading(false);
+      return;
+    }
     await onContinue();
   }
   async function onPledge() {

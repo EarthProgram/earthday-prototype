@@ -22,6 +22,8 @@
   "playGame": "Jogar",
   "done": "Pronto",
   "youHaveReceived": "Você recebeu um token EARTHDAY. Jogue o jogo do Dia da Terra para ganhar o prêmio!",
+  "earthDayBalance": "EARTHDAY balance: ",
+  "noBalance": "You don't have balance to send",
   "chooseLanguage": "Você pode escolher o seu idioma aqui. O inglês será o padrão caso não tivermos outros.",
   "select": "Selecionar",
   "sendToken": "Enviar 1 Token",
