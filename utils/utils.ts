@@ -7,7 +7,7 @@ export function getDidId() {
     // did: FMZFSG1T36MGfC3wJYnD6W
     if (!didId || !pubKey) {
         const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
-        const tempJson = JSON.parse(tempDid)
+        const tempJson = JSON.parse(tempDid ?? "{}")
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
             const reqType = "EcdsaSecp256k1VerificationKey2019"

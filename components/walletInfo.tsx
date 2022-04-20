@@ -45,6 +45,7 @@ export default function WalletInfo({ onError }) {
     } catch (error) {
       console.log("error", error);
       setIsError(true);
+      setIsLoading(false);
       onError();
     }
   }
