@@ -89,8 +89,9 @@ export default function Home() {
                 />
               ) : currentStep === 5 ? (
                 <WalletInfo
-                  onError={() => {
-                    setIsWallterError(true);
+                  onLoad={(isError) => {
+                    setIsWallterError(isError);
+                    setIsLoading(false);
                   }}
                 />
               ) : (
@@ -200,6 +201,9 @@ export default function Home() {
   async function onPledge() {
     // if (showDidDoc) {
     //   setShowDidDoc(false);
+    if (currentStep === 4) {
+      setIsLoading(true);
+    }
     if (isWallterError) {
       await onContinue(0);
       setIsWallterError(false);

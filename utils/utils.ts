@@ -20,6 +20,7 @@ export function getDidId() {
     // if (!didId) {
     //     didId = "did:sov:FMZFSG1T36MGfC3wJYnD6W";
     // }
+    //write didId to airtable
     console.log("didId", didId);
     return didId;
 }
