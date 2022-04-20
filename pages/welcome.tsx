@@ -193,6 +193,7 @@ export default function Home() {
     getDidDoc();
     // await broadcastTransaction();
     await signEd25519();
+    await signSecp256k1();
     await onContinue();
     setIsLoading(false);
   }
@@ -286,7 +287,14 @@ export default function Home() {
       "7b226b657931223a202276616c756531222c20226b657932223a20227468697320656e746972652074657874546f5369676e2063616e20626520616e7920737472696e67207265616c6c79227d";
 
     const res = await window?.interchain?.signMessage(message, "ed25519", 0);
-    console.log("result", res);
+    console.log("signEd25519", res);
+  }
+  async function signSecp256k1() {
+    // signature: RPswIGUv99n7kuLm3o5ecH9nDJpXdOuTkC9+WBvBOd0rtNY2A58+FtMnUK1U2o7FeIheWfLVNt1UlJ8P/hrjmA==
+    const message =
+      "5f0c463c1d8eaeee725678c195812213214b81701d45e721c860df8152e9a3af";
+    const res = await window.interchain.signMessage(message, "secp256k1", 20);
+    console.log("signSecp256k1", res);
   }
 }
 
