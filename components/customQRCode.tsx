@@ -1,8 +1,9 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
-import { didId } from "../pages/welcome";
+// import { didId } from "../pages/welcome";
 import { useTranslation } from "next-i18next";
+import { didId } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
