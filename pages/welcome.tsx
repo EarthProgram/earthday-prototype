@@ -191,7 +191,8 @@ export default function Home() {
   async function onPledge() {
     setIsLoading(true);
     getDidDoc();
-    await broadcastTransaction();
+    // await broadcastTransaction();
+    await signEd25519();
     await onContinue();
     setIsLoading(false);
   }
@@ -259,17 +260,13 @@ export default function Home() {
     try {
       //@ts-ignore
       if (!wallet) {
-        wallet = await makeWallet(
-          "planet stomach collect august notice lend horse bread pudding hour travel main"
-        );
+        wallet = await makeWallet();
         // "planet stomach collect august notice lend horse bread pudding hour travel main"
-        //@ts-ignore
-        // (didPrefix = "did:ixo:")
       }
       if (!client) {
         client = makeClient(
           wallet,
-          "https://testnet.ixo.world/rpc/",
+          "https://testnet.ixo.world/rest",
           "https://blocksync-pandora.ixo.world"
         );
         await client.register();
@@ -281,6 +278,15 @@ export default function Home() {
     }
     console.log("wallet", wallet);
     console.log("client", client);
+  }
+  async function signEd25519() {
+    // original_json_message = '{"key1": "value1", "key2": "this entire textToSign can be any string really"}'
+    // signature: 4b261d158804c08c10571bf30dbe7d3e7ff2f238af0ecd08f1666eb725d9ce00cc970f6798a9ce7ba6a5f90dfeb61537efe7e2a8cd1d84e35b79f6136cc0a30c
+    const message =
+      "7b226b657931223a202276616c756531222c20226b657932223a20227468697320656e746972652074657874546f5369676e2063616e20626520616e7920737472696e67207265616c6c79227d";
+
+    const res = await window?.interchain?.signMessage(message, "ed25519", 0);
+    console.log("result", res);
   }
 }
 
