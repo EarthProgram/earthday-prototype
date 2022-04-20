@@ -11,6 +11,7 @@ import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import { getDidDoc, signEd25519, signSecp256k1 } from "../utils/utils";
+import DidDoc from "../components/didDoc";
 // const { makeWallet, makeClient } = require("@ixo/client-sdk");
 
 declare global {
@@ -26,6 +27,7 @@ export default function Home() {
   const [qrData, setQrData] = useState(null);
   const [isScan, setIsScan] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDidDoc, setShowDidDoc] = useState(false);
 
   const router = useRouter();
   let customLocale;
@@ -85,6 +87,8 @@ export default function Home() {
                     setQrData(data);
                   }}
                 />
+              ) : showDidDoc ? (
+                <DidDoc />
               ) : (
                 <CustomTextBox currentStep={currentStep} />
               )}
@@ -189,13 +193,21 @@ export default function Home() {
   }
 
   async function onPledge() {
-    setIsLoading(true);
-    getDidDoc();
-    // await broadcastTransaction();
-    await signEd25519();
-    await signSecp256k1();
-    await onContinue();
-    setIsLoading(false);
+    if (showDidDoc) {
+      setShowDidDoc(false);
+
+      await onContinue();
+    } else {
+      setShowDidDoc(true);
+    }
+    // setIsLoading(true);
+    // getDidDoc();
+    // // await broadcastTransaction();
+    // await signEd25519();
+    // await signSecp256k1();
+    // await onContinue();
+    // setIsLoading(false);
+    // router.push("/test");
   }
 
   async function onLanguageSelect() {

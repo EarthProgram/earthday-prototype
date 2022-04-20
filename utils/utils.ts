@@ -12,6 +12,7 @@ export function getDidDoc() {
     //     didId = "did:sov:FMZFSG1T36MGfC3wJYnD6W";
     // }
     console.log("didId", didId);
+    return didId;
 }
 export async function broadcastTransaction() {
     // did: FMZFSG1T36MGfC3wJYnD6W
@@ -21,8 +22,6 @@ export async function broadcastTransaction() {
     } catch (error) {
         console.info(error);
     }
-    // console.log("wallet", wallet);
-    // console.log("client", client);
 }
 export async function signEd25519() {
     // original_json_message = '{"key1": "value1", "key2": "this entire textToSign can be any string really"}'
@@ -30,6 +29,7 @@ export async function signEd25519() {
     const message = didId;
     const res = await window?.interchain?.signMessage(message, "ed25519", 0);
     console.log("signEd25519", res);
+    return res;
 }
 export async function signSecp256k1() {
     // signature: RPswIGUv99n7kuLm3o5ecH9nDJpXdOuTkC9+WBvBOd0rtNY2A58+FtMnUK1U2o7FeIheWfLVNt1UlJ8P/hrjmA==
@@ -74,6 +74,8 @@ export async function signSecp256k1() {
     };
     const res = await window.interchain?.signMessage(message, "secp256k1", 20);
     console.log("signSecp256k1", res);
+    return res;
+
 }
 
 export async function getPubkey() {
