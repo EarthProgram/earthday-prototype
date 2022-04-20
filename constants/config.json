@@ -64,10 +64,6 @@
       {
         "name": "English",
         "code": "en-hk"
-      },
-      {
-        "name": "Cantonese",
-        "code": "ci"
       }
     ],
     "logo": "IDCC.jpg",
@@ -94,7 +90,7 @@
         "code": "en-ek"
       },
       {
-        "name": "Po",
+        "name": "Portuguese",
         "code": "po"
       }
     ],
