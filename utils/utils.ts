@@ -1,10 +1,14 @@
 import Airtable from "airtable";
+import BigNumber from 'bignumber.js';
+import Axios from 'axios';
+import * as base58 from 'bs58';
 
 let didId;
 let pubKey;
-let signEd25519;
-let secp256k1;
 let address;
+let signEd25519;
+let accountNumber = String('1');
+let sequence = String('1');
 
 export function getDidId() {
     // did: FMZFSG1T36MGfC3wJYnD6W
@@ -27,15 +31,6 @@ export function getDidId() {
     console.log("didId", didId);
     return didId;
 }
-export async function broadcastTransaction() {
-    // did: FMZFSG1T36MGfC3wJYnD6W
-    try {
-        //@ts-ignore
-
-    } catch (error) {
-        console.info(error);
-    }
-}
 export async function getSignEd25519() {
     // original_json_message = '{"key1": "value1", "key2": "this entire textToSign can be any string really"}'
     // signature: 4b261d158804c08c10571bf30dbe7d3e7ff2f238af0ecd08f1666eb725d9ce00cc970f6798a9ce7ba6a5f90dfeb61537efe7e2a8cd1d84e35b79f6136cc0a30c
@@ -46,53 +41,10 @@ export async function getSignEd25519() {
     console.log("signEd25519", signEd25519);
     return signEd25519;
 }
-export async function getSignSecp256k1() {
-    // signature: RPswIGUv99n7kuLm3o5ecH9nDJpXdOuTkC9+WBvBOd0rtNY2A58+FtMnUK1U2o7FeIheWfLVNt1UlJ8P/hrjmA==
-    if (!secp256k1) {
-        const message =
-        {
-            chainId: "pandora-4",
-            chainName: "ixo testnet",
-            rpc: "https://testnet.ixo.world/rpc",
-            rest: "https://testnet.ixo.world/rest",
-            stakeCurrency: {
-                coinDenom: "EARTHDAY",
-                coinMinimalDenom: "uearthday",
-                coinDecimals: 6,
-            },
-            bip44: {
-                coinType: 118,
-            },
-            bech32Config: {
-                bech32PrefixAccAddr: "ixo",
-                bech32PrefixAccPub: "ixopub",
-                bech32PrefixValAddr: "ixovaloper",
-                bech32PrefixValPub: "ixovaloperpub",
-                bech32PrefixConsAddr: "ixovalcons",
-                bech32PrefixConsPub: "ixovalconspub"
-            },
-            currencies: [{
-                coinDenom: "EARTHDAY",
-                coinMinimalDenom: "uearthday",
-                coinDecimals: 6,
-            }],
-            feeCurrencies: [{
-                coinDenom: "EARTHDAY",
-                coinMinimalDenom: "uearthday",
-                coinDecimals: 6,
-            }],
-            coinType: 118,
-            gasPriceStep: {
-                low: 0.01,
-                average: 0.025,
-                high: 0.04
-            }
-        };
-        secp256k1 = await window.interchain?.signMessage(message, "secp256k1", 20);
-        console.log("signSecp256k1", secp256k1);
-    }
+export async function getSignSecp256k1(message) {
+    let secp256k1 = await window.interchain?.signMessage(message, "secp256k1", 20);
+    console.log("signSecp256k1", secp256k1);
     return secp256k1;
-
 }
 
 export async function getAddress() {
@@ -124,8 +76,101 @@ export async function getAddress() {
     return address;
 
 }
+export async function getBalance() {
+    console.log("fetching balance..");
+    const res = await fetch(
+        `https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${address}/earthday`
+    );
+    const data1 = await res.json();
+    const balance = data1.balance.amount;
+    return balance;
+}
 
-export async function getBalance(): Promise<number> {
-    await new Promise(f => setTimeout(f, 1000));
-    return 10;
+export async function getAuthAccounts() {
+    console.log("fetching..");
+    const res = await fetch(
+        `https://testnet.ixo.world/auth/accounts/${address}`
+    );
+    const data1 = await res.json();
+    accountNumber = data1.result.value.account_number;
+    sequence = data1.result.value.sequence;
+
+    console.log("accountNumber", accountNumber);
+    console.log("sequence", sequence);
+
+    return;
+}
+
+export async function broadcastTransaction() {
+
+    getAuthAccounts();
+
+    const publicKey = base58.decode(pubKey).toString('base64')
+    const msg = {
+        type: 'cosmos-sdk/MsgSend',
+        value: {
+          amount: [{ amount: new BigNumber(1).times(new BigNumber(10).pow(6)).toString(), denom: 'uixo' }],
+          from_address: address,
+          to_address: 'ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc',
+        },
+    }
+    const fee = {
+        amount: [{ amount: String(5000), denom: 'uixo' }],
+        gas: String(200000),
+    }
+    const memo = ''
+    const payload = {
+        msgs: [msg],
+        chain_id: 'pandora-4',
+        fee,
+        memo,
+        account_number: accountNumber, //String('20'),
+        sequence: sequence, //String('749'),
+    }
+    const signatureValue = getSignSecp256k1(payload);
+
+    try {
+        console.log({
+            tx: {
+              msg: payload.msgs,
+              fee: payload.fee,
+              signatures: [
+                {
+                  account_number: payload.account_number,
+                  sequence: payload.sequence,
+                  signature: signatureValue,
+                  pub_key: {
+                    type: 'tendermint/PubKeyEd25519',
+                    value: publicKey,
+                  },
+                },
+              ],
+              memo: payload.memo,
+            },
+            mode: 'sync',
+          })
+
+        Axios.post(`https://testnet.ixo.world/txs`, {
+            tx: {
+              msg: payload.msgs,
+              fee: payload.fee,
+              signatures: [
+                {
+                  account_number: payload.account_number,
+                  sequence: payload.sequence, 
+                  signature: signatureValue,
+                  pub_key: {
+                    type: 'tendermint/PubKeyEd25519',
+                    value: publicKey,
+                  },
+                },
+              ],
+              memo: payload.memo,
+            },
+            mode: 'sync',
+          },
+        )
+    } catch (error) {
+        console.info(error);
+    }
 }
