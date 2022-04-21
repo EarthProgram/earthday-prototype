@@ -122,7 +122,7 @@ export async function broadcastTransaction(toAddress: string) {
         account_number: accountNumber, //String('20'),
         sequence: sequence, //String('749'),
     }
-    const signatureValue = getSignSecp256k1(payload);
+    const signatureValue = await getSignSecp256k1(payload);
 
     try {
         console.log({
