@@ -231,7 +231,7 @@ export default function Home() {
     setIsLoading(true);
     if (isScan) {
       // if (!client) {
-      await broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
+      await broadcastTransaction(qrData);
       // }
       if (qrData) {
         // const res = await client.sendTokens(qrData, 10);
