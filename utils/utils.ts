@@ -38,9 +38,6 @@ export async function getSECP256k1Signature(message) {
     return secp256k1Signature;
 }
 export async function getAddress() {
-    if (!pubKey) {
-        getDidId()
-    }
     console.log("fetching address");
     if (address) {
         return address;
