@@ -230,16 +230,12 @@ export default function Home() {
   async function onPlayGame() {
     setIsLoading(true);
     if (isScan) {
-      // if (!client) {
-      await broadcastTransaction(qrData);
-      // }
       if (qrData) {
-        // const res = await client.sendTokens(qrData, 10);
-        // console.log("result", res);
+        await broadcastTransaction(qrData);
       }
     }
-    await onContinue(6, null, customLocale);
     setIsLoading(false);
+    await onContinue(6, null, customLocale);
   }
 
   async function onShowQR() {
