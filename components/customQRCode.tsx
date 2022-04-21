@@ -37,7 +37,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
         ) : (
           <>
             <QRCodeSVG value={address ?? ""} size={200} />
-            <p className="txt"> {t("yourAddress") + address}</p>
+            <p className="txt txt-box"> {t("yourAddress") + address}</p>
           </>
         ))}
       {isScan && !isLoading && (
@@ -61,15 +61,15 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
             }}
             constraints={{ facingMode: "environment" }}
           />
-          <p className="txt">{data}</p>
+          <p className="txt txt-box">{data}</p>
         </>
       )}
       {!isLoading && (
-        <p className="txt">
+        <p className="txt txt-box">
           {(t("earthDayBalance") ?? "") + balance.toString() + " tokens"}
         </p>
       )}
-      <p className="error">{isScan && data ? "" : error}</p>
+      <p className="error txt-box">{isScan && data ? "" : error}</p>
     </div>
   );
   async function getBalanceData() {

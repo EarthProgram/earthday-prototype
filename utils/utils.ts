@@ -9,12 +9,14 @@ let address;
 let signEd25519;
 let accountNumber = String('1');
 let sequence = String('1');
+let rawDidId;
 
 export function getDidId() {
     // did: FMZFSG1T36MGfC3wJYnD6W
     if (!didId || !pubKey) {
         const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
         const tempJson = JSON.parse(tempDid ?? "{}")
+        rawDidId = tempJson.id;
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
             const reqType = "Ed25519VerificationKey2018"
@@ -42,9 +44,7 @@ export async function getSignSecp256k1(message) {
 }
 
 export async function getAddress() {
-    console.log("fetching..");
     if (!pubKey) {
-        // return null;
         getDidId()
     }
     if (address) {
@@ -59,6 +59,7 @@ export async function getAddress() {
         const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
         base('Table 1').create({
             "Wallet": address,
+            "DID": rawDidId ?? didId.replace("did:sov", "did:key")
         }
             , (err, records) => {
                 if (err) {
