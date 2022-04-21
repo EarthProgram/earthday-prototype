@@ -133,16 +133,16 @@ export async function broadcastTransaction(toAddress: string) {
                 signatures: [
                     {
                         signature: signatureValue,
-                        pub_key: {
-                            type: 'tendermint/PubKeyEd25519',
-                            value: pubKey,
-                        },
+//                         pub_key: {
+//                             type: 'tendermint/PubKeyEd25519',
+//                             value: pubKey,
+//                         },
                     },
                 ],
             },
             mode: 'sync',
-            account_number: payload.account_number,
-            sequence: payload.sequence,
+//             account_number: payload.account_number,
+//             sequence: payload.sequence,
         },
         )
         console.log('result', result)
