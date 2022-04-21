@@ -97,7 +97,7 @@ export async function broadcastTransaction(toAddress: string) {
     const msg = {
         type: 'cosmos-sdk/MsgSend',
         value: {
-            amount: [{ amount: new BigNumber(1).times(new BigNumber(10).pow(6)).toString(), denom: 'earthday' }],
+            amount: [{ amount: '1', denom: 'earthday' }],
             from_address: address,
             to_address: toAddress,
         },
