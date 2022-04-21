@@ -102,7 +102,7 @@ export async function broadcastTransaction(toAddress: string) {
         type: 'cosmos-sdk/MsgSend',
         value: {
             amount: [{ amount: String(1), denom: 'earthday' }],
-            from_address: address,
+            from_address: 'ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc',
             to_address: toAddress,
         },
     }
@@ -133,16 +133,16 @@ export async function broadcastTransaction(toAddress: string) {
                 signatures: [
                     {
                         signature: signatureValue,
-//                         pub_key: {
-//                             type: 'tendermint/PubKeyEd25519',
-//                             value: pubKey,
-//                         },
+                        account_number: payload.account_number,
+                        sequence: payload.sequence,
+                        pub_key: {
+                            type: 'tendermint/PubKeyEd25519',
+                            value: '2XWzmudJM43fF8L3R16NFc3chHTqHfdxGeW1488hYm1F',
+                        },
                     },
                 ],
             },
             mode: 'sync',
-//             account_number: payload.account_number,
-//             sequence: payload.sequence,
         },
         )
         console.log('result', result)
