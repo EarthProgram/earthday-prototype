@@ -11,10 +11,12 @@ let sequence = String('1');
 let rawDidId;
 
 export function getDidId() {
+    console.log("fetching getDidId");
     if (!didId || !pubKey) {
-        const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
-        const tempJson = JSON.parse(tempDid ?? "{}")
-        console.log(tempJson);
+        const didDoc = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+        console.log("didDoc", didDoc);
+        const tempJson = JSON.parse(didDoc ?? "{}")
+        console.log("tempJson", tempJson);
         rawDidId = tempJson.id;
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
