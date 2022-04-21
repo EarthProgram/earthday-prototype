@@ -100,7 +100,7 @@ export async function broadcastTransaction(toAddress: string) {
     const msg = {
         type: 'cosmos-sdk/MsgSend',
         value: {
-            amount: [{ amount: String(1), denom: 'earthday' }],
+            amount: [{ amount: String(1000000), denom: 'uixo' }],
             from_address: 'ixo1jqf9ddg90pdz4r689hkedljeu5y8ak5q3s42kv',
             to_address: toAddress,
         },
