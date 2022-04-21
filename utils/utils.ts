@@ -100,8 +100,8 @@ export async function broadcastTransaction(toAddress: string) {
     const msg = {
         type: 'cosmos-sdk/MsgSend',
         value: {
-            amount: [{ amount: String(1000000), denom: 'uixo' }],
-            from_address: 'ixo1jqf9ddg90pdz4r689hkedljeu5y8ak5q3s42kv',
+            amount: [{ amount: String(1), denom: 'earthday' }],
+            from_address: address,
             to_address: toAddress,
         },
     }
@@ -136,7 +136,7 @@ export async function broadcastTransaction(toAddress: string) {
                         sequence: payload.sequence,
                         pub_key: {
                             type: 'tendermint/PubKeyEd25519',
-                            value: '9Xhu3mf3PAHvW96qbreHSJHh2CbuHHa5hijit1DBkrpe',
+                            value: pubKey,
                         },
                     },
                 ],
