@@ -65,11 +65,11 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   );
   async function getBalanceData() {
     const bal = (await getBalance()) ?? 0;
-    if (!bal || bal < 1) {
-      setError(t("noBalance"));
-      clearTimeout(timeoutID);
-      return;
-    }
+    // if (!bal || bal < 1) {
+    //   setError(t("noBalance"));
+    //   clearTimeout(timeoutID);
+    //   return;
+    // }
     setIsLoading(false);
   }
 

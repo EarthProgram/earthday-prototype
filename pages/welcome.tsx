@@ -11,6 +11,7 @@ import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import WalletInfo from "../components/walletInfo";
+import { broadcastTransaction } from "../utils/utils";
 // const { makeWallet, makeClient } = require("@ixo/client-sdk");
 
 declare global {
@@ -230,7 +231,7 @@ export default function Home() {
     setIsLoading(true);
     if (isScan) {
       // if (!client) {
-      //   await broadcastTransaction();
+      await broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
       // }
       if (qrData) {
         // const res = await client.sendTokens(qrData, 10);
