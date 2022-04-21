@@ -6,12 +6,10 @@ import * as base58 from 'bs58';
 let didId;
 let pubKey;
 let address;
-let signEd25519;
 let accountNumber = String('1');
 let sequence = String('1');
 
 export function getDidId() {
-    // did: FMZFSG1T36MGfC3wJYnD6W
     if (!didId || !pubKey) {
         const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
         const tempJson = JSON.parse(tempDid ?? "{}")
@@ -27,28 +25,23 @@ export function getDidId() {
     console.log("didId", didId);
     return didId;
 }
-export async function getSignEd25519() {
-    if (!signEd25519) {
-        const message = didId;
-        signEd25519 = await window?.interchain?.signMessage(message, "ed25519", 0);
-    }
-    console.log("signEd25519", signEd25519);
-    return signEd25519;
+export async function getED25519Signature(message) {
+    let ed25519Signature = await window?.interchain?.signMessage(message, "ed25519", 0);
+    console.log("ed25519Signature", ed25519Signature);
+    return ed25519Signature;
 }
-export async function getSignSecp256k1(message) {
-    let secp256k1 = await window.interchain?.signMessage(message, "secp256k1", 20);
-    console.log("signSecp256k1", secp256k1);
-    return secp256k1;
+export async function getSECP256k1Signature(message) {
+    let secp256k1Signature = await window.interchain?.signMessage(message, "secp256k1", 20);
+    console.log("secp256k1Signature", secp256k1Signature);
+    return secp256k1Signature;
 }
-
 export async function getAddress() {
-    console.log("fetching..");
-    if (!pubKey) {
-        // return null;
-        getDidId()
-    }
+    console.log("fetching address");
     if (address) {
         return address;
+    }
+    if (!pubKey) {
+        getDidId()
     }
     const res = await fetch(
         `https://testnet.ixo.world/pubKeyToAddr/${pubKey}`
@@ -69,7 +62,6 @@ export async function getAddress() {
             });
     }
     return address;
-
 }
 export async function getBalance() {
     console.log("fetching balance..");
@@ -80,7 +72,6 @@ export async function getBalance() {
     const balance = data1.balance.amount;
     return balance;
 }
-
 export async function getAuthAccounts() {
     console.log("fetching..");
     const res = await fetch(
@@ -95,7 +86,6 @@ export async function getAuthAccounts() {
 
     return;
 }
-
 export async function broadcastTransaction(toAddress: string) {
 
     await getAuthAccounts();
@@ -119,32 +109,12 @@ export async function broadcastTransaction(toAddress: string) {
         chain_id: 'pandora-4',
         fee,
         memo,
-        account_number: accountNumber, //String('20'),
-        sequence: sequence, //String('749'),
+        account_number: accountNumber,
+        sequence: sequence,
     }
-    const signatureValue = await getSignSecp256k1(payload);
+    const signatureValue = await getED25519Signature(payload);
 
     try {
-        console.log({
-            tx: {
-                msg: payload.msgs,
-                fee: payload.fee,
-                signatures: [
-                    {
-                        account_number: payload.account_number,
-                        sequence: payload.sequence,
-                        signature: signatureValue,
-                        pub_key: {
-                            type: 'tendermint/PubKeyEd25519',
-                            value: publicKey,
-                        },
-                    },
-                ],
-                memo: payload.memo,
-            },
-            mode: 'sync',
-        })
-
         const result = await Axios.post(`https://testnet.ixo.world/txs`, {
             tx: {
                 msg: payload.msgs,
