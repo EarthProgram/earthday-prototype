@@ -14,7 +14,6 @@ let sequence;
 export function getDidId() {
     console.log("fetching getDidId");
     console.log("reqType", reqType);
-
     if (!didId || !pubKey) {
         const didDoc = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
         console.log("didDoc", didDoc);
@@ -102,7 +101,7 @@ export async function broadcastTransaction(toAddress: string) {
         type: 'cosmos-sdk/MsgSend',
         value: {
             amount: [{ amount: String(1), denom: 'earthday' }],
-            from_address: 'ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc',
+            from_address: 'ixo1jqf9ddg90pdz4r689hkedljeu5y8ak5q3s42kv',
             to_address: toAddress,
         },
     }
@@ -137,7 +136,7 @@ export async function broadcastTransaction(toAddress: string) {
                         sequence: payload.sequence,
                         pub_key: {
                             type: 'tendermint/PubKeyEd25519',
-                            value: '2XWzmudJM43fF8L3R16NFc3chHTqHfdxGeW1488hYm1F',
+                            value: '9Xhu3mf3PAHvW96qbreHSJHh2CbuHHa5hijit1DBkrpe',
                         },
                     },
                 ],
