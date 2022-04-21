@@ -1,13 +1,14 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
-// import { didId } from "../pages/welcome";
 import { useTranslation } from "next-i18next";
 import { getAddress, getBalance } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
   const [address, setAddress] = useState("");
+  const [balance, setBalance] = useState(0);
+
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation("common");
@@ -34,7 +35,10 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
         (isLoading ? (
           <div></div>
         ) : (
-          <QRCodeSVG value={address ?? ""} size={200} />
+          <>
+            <QRCodeSVG value={address ?? ""} size={200} />
+            <p className="txt"> {t("yourAddress") + address}</p>
+          </>
         ))}
       {isScan && !isLoading && (
         <>
@@ -57,10 +61,14 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
             }}
             constraints={{ facingMode: "environment" }}
           />
-          <p>{data}</p>
+          <p className="txt">{data}</p>
         </>
       )}
-
+      {!isLoading && (
+        <p className="txt">
+          {(t("earthDayBalance") ?? "") + balance.toString() + " tokens"}
+        </p>
+      )}
       <p className="error">{isScan && data ? "" : error}</p>
     </div>
   );
@@ -71,6 +79,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
       clearTimeout(timeoutID);
       return;
     }
+    setBalance(bal);
     setIsLoading(false);
   }
 
@@ -78,6 +87,8 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     console.log("fetching..");
     try {
       const addrss = await getAddress();
+      const bal = (await getBalance()) ?? 0;
+      setBalance(bal);
       if (!addrss) {
         setError(t("unableToShowQR"));
         return;

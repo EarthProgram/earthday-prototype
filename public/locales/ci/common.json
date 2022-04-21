@@ -30,5 +30,7 @@
   "title": "Earth Day",
   "unableToShowQR": "Unable to Show the QR code",
   "unableToReadQR": "Unable to read the QR code",
-  "walletError": "Please activate your Opera wallet."
+  "walletError": "There is a problem communicating with your Opera wallet. Please confirm that you are using the Opera browser on an Android device, have access to the Internet, and have activated your Opera crypto wallet..",
+  "connectedWallet": "Excellent! We have now connected to your Opera wallet. This is your own ixo.world address.",
+  "yourAddress": "Your Address: "
 }

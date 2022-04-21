@@ -1,10 +1,11 @@
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
-import { getBalance } from "../utils/utils";
+import { getAddress, getBalance } from "../utils/utils";
 
 export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
   const [isLoading, setIsLoading] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [pubAddress, setPubAddress] = useState(null);
 
   const data = [
     ["chooseLanguage"],
@@ -21,7 +22,7 @@ export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
   ];
   const { t } = useTranslation("common");
   useEffect(() => {
-    if (currentStep === 6) {
+    if (currentStep > 5) {
       getBalanceData();
     }
   }, []);
@@ -35,10 +36,15 @@ export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
             </p>
           ))}
 
-          {currentStep === 6 && (
-            <p className="txt">
-              {(t("earthDayBalance") ?? "") + balance.toString() + " tokens"}
-            </p>
+          {currentStep > 5 && (
+            <>
+              {currentStep !== 10 && (
+                <p className="txt"> {t("yourAddress") + pubAddress}</p>
+              )}
+              <p className="txt">
+                {(t("earthDayBalance") ?? "") + balance.toString() + " tokens"}
+              </p>
+            </>
           )}
         </div>
       </div>
@@ -47,7 +53,9 @@ export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
   async function getBalanceData() {
     setIsLoading(true);
     onLoadStart();
+    const tempAddress = (await getAddress()) ?? "";
     const bal = (await getBalance()) ?? 0;
+    setPubAddress(tempAddress);
     setBalance(bal);
     onLoadEnd();
     setIsLoading(false);

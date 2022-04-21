@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { broadcastTransaction, getAddress, getDidId, getSignEd25519 } from "../utils/utils";
+import {
+  getAddress,
+  getBalance,
+  getDidId,
+} from "../utils/utils";
 import { useTranslation } from "next-i18next";
 
 export default function WalletInfo({ onLoad = (isError) => {} }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [didId, setDidId] = useState(null);
+  const [balance, setBalance] = useState(0);
+  const [pubAddress, setPubAddress] = useState(null);
+
   // const [signEd25519Id, setSignEd25519] = useState(null);
   // const [signSecp256k1Id, setSignSecp256k1] = useState(null);
   const { t } = useTranslation("common");
@@ -19,36 +25,28 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
       <p className="error">{t("walletError")}</p>
     ) : (
       <div className="did-doc">
-        <h2>Your Opera wallet DID</h2>
-        <p>{didId}</p>
-        {/* <h2>signEd25519</h2>
-        <p>{signEd25519Id}</p>
-        <h2>signSecp2256k1</h2>
-        <p>{signSecp256k1Id}</p> */}
+        <h4 className="txt">{t("connectedWallet")}</h4>
+        <p className="txt">{pubAddress}</p>
+        <p className="txt">
+          {(t("earthDayBalance") ?? "") + balance.toString() + " tokens"}
+        </p>
       </div>
     ))
   );
   async function init() {
     try {
       const tempDidId = getDidId();
-      // const tempSignEd25519 = await getSignEd25519();
-      // const tempSignSecp256k1 = await getSignSecp256k1();
-//       const tempAddress = await getAddress();
-//       const tempBroadcast = await broadcastTransaction();
-
-      if (
-        !tempDidId
-        //  || !tempSignEd25519 || !tempSignSecp256k1
-      ) {
+      const tempAddress = await getAddress();
+      const tempBalance = await getBalance();
+      if (!tempDidId || !tempAddress || tempBalance == null) {
         setIsError(true);
         setIsLoading(false);
         onLoad(true);
         return;
       }
       await getAddress();
-      setDidId(tempDidId);
-      // setSignEd25519(tempSignEd25519);
-      // setSignSecp256k1(tempSignSecp256k1);
+      setBalance(tempBalance);
+      setPubAddress(tempAddress);
       setIsLoading(false);
       onLoad(false);
     } catch (error) {
