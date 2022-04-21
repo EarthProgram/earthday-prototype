@@ -14,6 +14,7 @@ export function getDidId() {
     if (!didId || !pubKey) {
         const tempDid = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
         const tempJson = JSON.parse(tempDid ?? "{}")
+        console.log(tempJson);
         rawDidId = tempJson.id;
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
