@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import Axios from 'axios';
 import * as base58 from 'bs58';
 
-// let reqType = "Ed25519VerificationKey2018";
-let reqType = "EcdsaSecp256k1VerificationKey2019";
+let reqType = "Ed25519VerificationKey2018";
+// let reqType = "EcdsaSecp256k1VerificationKey2019";
 let didId;
 let pubKey;
 let address;
@@ -104,7 +104,6 @@ export async function broadcastTransaction(toAddress: string) {
 
     await getAuthAccounts();
 
-    const publicKey = base58.decode(pubKey).toString('base64')
     const msg = {
         type: 'cosmos-sdk/MsgSend',
         value: {
@@ -126,8 +125,8 @@ export async function broadcastTransaction(toAddress: string) {
         account_number: accountNumber,
         sequence: sequence,
     }
-//     const signatureValue = await getED25519Signature(payload);
-    const signatureValue = await getSECP256k1Signature(payload);
+    const signatureValue = await getED25519Signature(payload);
+//     const signatureValue = await getSECP256k1Signature(payload);
 
     try {
         const result = await Axios.post(`https://testnet.ixo.world/txs`, {
@@ -141,7 +140,7 @@ export async function broadcastTransaction(toAddress: string) {
                         signature: signatureValue,
                         pub_key: {
                             type: 'tendermint/PubKeyEd25519',
-                            value: publicKey,
+                            value: pubKey,
                         },
                     },
                 ],
