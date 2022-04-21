@@ -10,47 +10,40 @@ let pubKey;
 let address;
 let accountNumber;
 let sequence;
-let rawDidId;
 
 export function getDidId() {
     console.log("fetching getDidId");
     console.log("reqType", reqType);
-    console.log("didId0", didId);
-    console.log("pubKey0", pubKey);
 
     if (!didId || !pubKey) {
         const didDoc = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
         console.log("didDoc", didDoc);
         const tempJson = JSON.parse(didDoc ?? "{}")
-        console.log("tempJson", tempJson);
         didId = tempJson.id?.replace("did:key", "did:sov");
-        console.log("didId1", didId);
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
             const verificationMethod = tempJson.verificationMethod.find(x => x.type == reqType)
             console.log("verificationMethod", verificationMethod);
             if (verificationMethod) {
                 pubKey = verificationMethod?.publicKeyBase58;
-                console.log("pubKey1", pubKey);
             }
         }
     }
-    console.log("didId2", didId);
-    console.log("pubKey2", pubKey);
+    console.log("didId", didId);
+    console.log("pubKey", pubKey);
     return didId;
 }
 export async function getED25519Signature(message) {
-    let ed25519Signature = await window?.interchain?.signMessage(message, "ed25519", 0);
+    let ed25519Signature = await window.interchain?.signMessage(message, "ed25519", 0);
     console.log("ed25519Signature", ed25519Signature);
     return ed25519Signature;
 }
 export async function getSECP256k1Signature(message) {
-    let secp256k1Signature = await window.interchain?.signMessage(message, "secp256k1", 20);
+    let secp256k1Signature = await window.interchain?.signMessage(message, "secp256k1", 0);
     console.log("secp256k1Signature", secp256k1Signature);
     return secp256k1Signature;
 }
 export async function getAddress() {
     console.log("fetching address");
-    console.log("address0", address);
     if (address) {
         return address;
     }
@@ -62,12 +55,11 @@ export async function getAddress() {
     );
     const data1 = await res.json();
     address = data1.result;
-    console.log("address1", address);
     if (address) {
         const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
         base('Table 1').create({
             "Wallet": address,
-            "DID": rawDidId ?? didId.replace("did:sov", "did:key")
+            "DID": didId
         }
             , (err, records) => {
                 if (err) {
@@ -77,7 +69,7 @@ export async function getAddress() {
                 console.log("records", records)
             });
     }
-    console.log("address2", address);
+    console.log("address", address);
     return address;
 }
 export async function getBalance() {
@@ -87,10 +79,11 @@ export async function getBalance() {
     );
     const data1 = await res.json();
     const balance = data1.balance.amount;
+    console.log("balance", balance);
     return balance;
 }
 export async function getAuthAccounts() {
-    console.log("fetching..");
+    console.log("fetching authAccounts");
     const res = await fetch(
         `https://testnet.ixo.world/auth/accounts/${await getAddress()}`
     );
@@ -98,20 +91,17 @@ export async function getAuthAccounts() {
     accountNumber = data1.result.value.account_number;
     sequence = data1.result.value.sequence;
     if (!sequence) sequence = '0';
-
     console.log("accountNumber", accountNumber);
     console.log("sequence", sequence);
-
     return;
 }
 export async function broadcastTransaction(toAddress: string) {
-
+    console.log("in broadcastTransaction");
     await getAuthAccounts();
-
     const msg = {
         type: 'cosmos-sdk/MsgSend',
         value: {
-            amount: [{ amount: '1', denom: 'earthday' }],
+            amount: [{ amount: String(1), denom: 'earthday' }],
             from_address: address,
             to_address: toAddress,
         },
@@ -121,9 +111,10 @@ export async function broadcastTransaction(toAddress: string) {
         gas: String(200000),
     }
     const memo = ''
+    const chainId = 'pandora-4'
     const payload = {
         msgs: [msg],
-        chain_id: 'pandora-4',
+        chainId,
         fee,
         memo,
         account_number: accountNumber,
@@ -136,21 +127,22 @@ export async function broadcastTransaction(toAddress: string) {
         const result = await Axios.post(`https://testnet.ixo.world/txs`, {
             tx: {
                 msg: payload.msgs,
+                chain_Id: payload.chainId,
                 fee: payload.fee,
+                memo: payload.memo,
                 signatures: [
                     {
-                        account_number: payload.account_number,
-//                         sequence: payload.sequence,
                         signature: signatureValue,
-//                         pub_key: {
-//                             type: 'tendermint/PubKeyEd25519',
-//                             value: pubKey,
-//                         },
+                        pub_key: {
+                            type: 'tendermint/PubKeyEd25519',
+                            value: pubKey,
+                        },
                     },
                 ],
-                memo: payload.memo,
             },
             mode: 'sync',
+            account_number: payload.account_number,
+            sequence: payload.sequence,
         },
         )
         console.log('result', result)
