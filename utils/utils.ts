@@ -140,12 +140,12 @@ export async function broadcastTransaction(toAddress: string) {
                 signatures: [
                     {
                         account_number: payload.account_number,
-                        sequence: payload.sequence,
+//                         sequence: payload.sequence,
                         signature: signatureValue,
-                        pub_key: {
-                            type: 'tendermint/PubKeyEd25519',
-                            value: pubKey,
-                        },
+//                         pub_key: {
+//                             type: 'tendermint/PubKeyEd25519',
+//                             value: pubKey,
+//                         },
                     },
                 ],
                 memo: payload.memo,
