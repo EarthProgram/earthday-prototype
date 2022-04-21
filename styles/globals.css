@@ -161,7 +161,8 @@ body {
   display: inline-table;
 }
 .txt-box {
-  max-width: 350px;
+  max-width: min(75vw, 350px);
+  word-wrap: break-word;
   text-align: center;
   display: inline-block;
 }
@@ -194,7 +195,7 @@ body {
 }
 .did-doc {
   word-wrap: break-word;
-  max-width: 75vw;
+  max-width: min(75vw, 350px);
   margin-left: auto;
   margin-right: auto;
 }
