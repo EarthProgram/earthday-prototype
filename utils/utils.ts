@@ -8,8 +8,8 @@ let reqType = "Ed25519VerificationKey2018";
 let didId;
 let pubKey;
 let address;
-let accountNumber = String('1');
-let sequence = String('1');
+let accountNumber;
+let sequence;
 let rawDidId;
 
 export function getDidId() {
@@ -50,6 +50,7 @@ export async function getSECP256k1Signature(message) {
 }
 export async function getAddress() {
     console.log("fetching address");
+    console.log("address0", address);
     if (address) {
         return address;
     }
@@ -61,6 +62,7 @@ export async function getAddress() {
     );
     const data1 = await res.json();
     address = data1.result;
+    console.log("address1", address);
     if (address) {
         const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
         base('Table 1').create({
@@ -75,6 +77,7 @@ export async function getAddress() {
                 console.log("records", records)
             });
     }
+    console.log("address2", address);
     return address;
 }
 export async function getBalance() {
@@ -94,6 +97,7 @@ export async function getAuthAccounts() {
     const data1 = await res.json();
     accountNumber = data1.result.value.account_number;
     sequence = data1.result.value.sequence;
+    if (!sequence) sequence = '0';
 
     console.log("accountNumber", accountNumber);
     console.log("sequence", sequence);
