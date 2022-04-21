@@ -235,7 +235,7 @@ export default function Home() {
       }
     }
     setIsLoading(false);
-    await onContinue(6, null, customLocale);
+    await onContinue(6);
   }
 
   async function onShowQR() {

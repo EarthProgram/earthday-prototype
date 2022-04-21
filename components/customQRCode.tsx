@@ -60,7 +60,8 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
           <p>{data}</p>
         </>
       )}
-      <p className="error">{error}</p>
+
+      <p className="error">{isScan && data ? "" : error}</p>
     </div>
   );
   async function getBalanceData() {
