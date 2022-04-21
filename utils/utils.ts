@@ -145,7 +145,7 @@ export async function broadcastTransaction(toAddress: string) {
             mode: 'sync',
         })
 
-        await Axios.post(`https://testnet.ixo.world/txs`, {
+        const result = await Axios.post(`https://testnet.ixo.world/txs`, {
             tx: {
                 msg: payload.msgs,
                 fee: payload.fee,
@@ -165,7 +165,8 @@ export async function broadcastTransaction(toAddress: string) {
             mode: 'sync',
         },
         )
+        console.log('result', result)
     } catch (error) {
-        console.info(error);
+        console.info("error", error);
     }
 }
