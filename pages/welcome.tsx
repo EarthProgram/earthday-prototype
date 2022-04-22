@@ -119,7 +119,7 @@ export default function Home() {
               type="button"
               className="bttn "
               disabled={
-                isLoading || (currentStep === 9 && isScan && qrData == null)
+                isLoading || currentStep === 4 || currentStep === 5 || (currentStep === 9 && isScan && qrData == null)
               }
               onClick={onCLick}
             >
@@ -167,14 +167,14 @@ export default function Home() {
         onPledge();
         break;
       case 5:
-        onPledgeContinue();
+        // onPledgeContinue();
         break;
       case 7:
-        onShowQR();
+        // onShowQR();
         break;
       case 8:
       case 9:
-        onPlayGame();
+        // onPlayGame();
         break;
       default:
         router.push("/");

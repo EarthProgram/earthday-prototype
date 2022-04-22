@@ -12,8 +12,6 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
   const [balance, setBalance] = useState(0);
   const [pubAddress, setPubAddress] = useState(null);
 
-  // const [signEd25519Id, setSignEd25519] = useState(null);
-  // const [signSecp256k1Id, setSignSecp256k1] = useState(null);
   const { t } = useTranslation("common");
 
   useEffect(() => {
