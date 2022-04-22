@@ -114,7 +114,7 @@ export default function Home() {
                 )}
             </div>
           </div>
-          {currentStep !== 5 (
+          {currentStep !== 5 &&
           <div className="btn-column">
             <button
               type="button"
@@ -140,7 +140,7 @@ export default function Home() {
               </button>
             )}
           </div>
-            )}
+            }
             </div>
       </div>
     )
