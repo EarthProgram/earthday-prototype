@@ -31,6 +31,6 @@
   "unableToShowQR": "Não foi possível mostrar o QR code.",
   "unableToReadQR": "Não foi possível ler o QR code.",
   "walletError": "Por favor, ative sua carteira Opera.",
-  "connectedWallet": "Excellent! We have now connected to your Opera wallet. This is your own ixo.world address.",
-  "yourAddress": "Your Address: "
+  "connectedWallet": "Excelente! Agora você está conectado à sua carteira Opera. Este é o seu endereço pessoal ixo.world.",
+  "yourAddress": "Seu endereço: "
 }
