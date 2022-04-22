@@ -114,12 +114,13 @@ export default function Home() {
                 )}
             </div>
           </div>
+          {currentStep != 5 (
           <div className="btn-column">
             <button
               type="button"
               className="bttn "
               disabled={
-                isLoading || currentStep === 4 || currentStep === 5 || (currentStep === 9 && isScan && qrData == null)
+                isLoading || (currentStep === 9 && isScan && qrData == null)
               }
               onClick={onCLick}
             >
@@ -139,7 +140,8 @@ export default function Home() {
               </button>
             )}
           </div>
-        </div>
+            )}
+            </div>
       </div>
     )
   );
