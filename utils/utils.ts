@@ -15,7 +15,7 @@ export function getDidId() {
     console.log("fetching getDidId");
     console.log("reqType", reqType);
     if (!didId || !pubKey) {
-        const didDoc = window.interchain?.getDidDoc("m / 44' / 118' / 0' / 0'");
+        const didDoc = window.interchain?.getDidDoc(0);
         console.log("didDoc", didDoc);
         const tempJson = JSON.parse(didDoc ?? "{}")
         didId = tempJson.id?.replace("did:key", "did:sov");
