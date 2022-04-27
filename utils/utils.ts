@@ -12,8 +12,6 @@ let accountNumber;
 let sequence;
 
 export function getDidId() {
-    console.log("fetching getDidId");
-    console.log("reqType", reqType);
     if (!didId || !pubKey) {
         const didDoc = window.interchain?.getDidDoc(0);
         console.log("didDoc", didDoc);
@@ -21,13 +19,11 @@ export function getDidId() {
         didId = tempJson.id?.replace("did:key", "did:sov");
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
             const verificationMethod = tempJson.verificationMethod.find(x => x.type == reqType)
-            console.log("verificationMethod", verificationMethod);
             if (verificationMethod) {
                 pubKey = verificationMethod?.publicKeyBase58;
             }
         }
     }
-    console.log("didId", didId);
     console.log("pubKey", pubKey);
     return didId;
 }
@@ -42,7 +38,6 @@ export async function getSECP256k1Signature(message) {
     return secp256k1Signature;
 }
 export async function getAddress() {
-    console.log("fetching address");
     if (address) {
         return address;
     }
