@@ -6,14 +6,14 @@ import * as base58 from 'bs58';
 // let reqType = "Ed25519VerificationKey2018";
 let reqType = "EcdsaSecp256k1VerificationKey2019";
 let didId;
-let pubKey;
+let publicKey;
 let address;
 let accountNumber;
 let sequence;
 
 export function getDidId() {
     console.log("reqType", reqType);
-    if (!didId || !pubKey) {
+    if (!didId || !publicKey) {
         const didDoc = window.interchain?.getDidDoc(0);
         console.log("didDoc", didDoc);
         const tempJson = JSON.parse(didDoc ?? "{}")
@@ -21,11 +21,11 @@ export function getDidId() {
         if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
             const verificationMethod = tempJson.verificationMethod.find(x => x.type == reqType)
             if (verificationMethod) {
-                pubKey = verificationMethod?.publicKeyBase58;
+                publicKey = verificationMethod?.publicKeyBase58;
             }
         }
     }
-    console.log("pubKey", pubKey);
+    console.log("pubKey returned by Opera", publicKey);
     return didId;
 }
 export async function getED25519Signature(message) {
@@ -42,29 +42,29 @@ export async function getAddress() {
     if (address) {
         return address;
     }
-    if (!pubKey) {
+    if (!publicKey) {
         getDidId()
     }
   
     const res = await fetch(
-        `https://testnet.ixo.world/pubKeyToAddr/${pubKey}`
+        `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
     );
     const data1 = await res.json();
     address = data1.result;
-    // if (address) {
-    //     const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
-    //     base('Table 1').create({
-    //         "Wallet": address,
-    //         "DID": didId
-    //     }
-    //         , (err, records) => {
-    //             if (err) {
-    //                 console.error(err);
-    //                 return;
-    //             }
-    //             console.log("records", records)
-    //         });
-    // }
+    if (address) {
+        const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
+        base('Table 1').create({
+            "Wallet": address,
+            "DID": didId
+        }
+            , (err, records) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log("records", records)
+            });
+    }
     console.log("address from blockchain API", address);
     return address;
 }
@@ -132,8 +132,8 @@ export async function broadcastTransaction(toAddress: string) {
                         account_number: payload.account_number,
                         sequence: payload.sequence,
                         pub_key: {
-                            type: 'tendermint/PubKeyEd25519',
-                            value: pubKey,
+                            type: 'tendermint/PublicKeyEd25519',
+                            value: publicKey,
                         },
                     },
                 ],
