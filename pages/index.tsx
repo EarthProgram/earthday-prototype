@@ -5,7 +5,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
-import { main } from "../utils/client";  //added to include the Opera test code
+import { main } from "../utils/operatest";  //added to include the Opera test code
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
