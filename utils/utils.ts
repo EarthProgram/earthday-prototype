@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js';
 import Axios from 'axios';
 import * as base58 from 'bs58';
 
-let reqType = "Ed25519VerificationKey2018";
-// let reqType = "EcdsaSecp256k1VerificationKey2019";
+// let reqType = "Ed25519VerificationKey2018";
+let reqType = "EcdsaSecp256k1VerificationKey2019";
 let didId;
 let pubKey;
 let address;
@@ -12,6 +12,7 @@ let accountNumber;
 let sequence;
 
 export function getDidId() {
+    console.log("reqType", reqType);
     if (!didId || !pubKey) {
         const didDoc = window.interchain?.getDidDoc(0);
         console.log("didDoc", didDoc);
@@ -44,26 +45,27 @@ export async function getAddress() {
     if (!pubKey) {
         getDidId()
     }
+  
     const res = await fetch(
         `https://testnet.ixo.world/pubKeyToAddr/${pubKey}`
     );
     const data1 = await res.json();
     address = data1.result;
-    if (address) {
-        const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
-        base('Table 1').create({
-            "Wallet": address,
-            "DID": didId
-        }
-            , (err, records) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log("records", records)
-            });
-    }
-    console.log("address", address);
+    // if (address) {
+    //     const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
+    //     base('Table 1').create({
+    //         "Wallet": address,
+    //         "DID": didId
+    //     }
+    //         , (err, records) => {
+    //             if (err) {
+    //                 console.error(err);
+    //                 return;
+    //             }
+    //             console.log("records", records)
+    //         });
+    // }
+    console.log("address from blockchain API", address);
     return address;
 }
 export async function getBalance() {
@@ -73,7 +75,7 @@ export async function getBalance() {
     );
     const data1 = await res.json();
     const balance = data1.balance.amount;
-    console.log("balance", balance);
+    console.log("balance from blockchain API", balance);
     return balance;
 }
 export async function getAuthAccounts() {
@@ -114,8 +116,8 @@ export async function broadcastTransaction(toAddress: string) {
         account_number: accountNumber,
         sequence: sequence,
     }
-    const signatureValue = await getED25519Signature(payload);
-//     const signatureValue = await getSECP256k1Signature(payload);
+    // const signatureValue = await getED25519Signature(payload);
+    const signatureValue = await getSECP256k1Signature(payload);
 
     try {
         const result = await Axios.post(`https://testnet.ixo.world/txs`, {

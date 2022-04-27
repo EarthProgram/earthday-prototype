@@ -11,16 +11,13 @@ import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import WalletInfo from "../components/walletInfo";
-import { broadcastTransaction } from "../utils/utils";
-// const { makeWallet, makeClient } = require("@ixo/client-sdk");
+// import { broadcastTransaction } from "../utils/utils";
 
 declare global {
   interface Window {
     interchain: any;
   }
 }
-// let wallet;
-// let client;
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -189,8 +186,6 @@ export default function Home() {
     props = {},
     locale = router.locale
   ) {
-    // setCurrentStep(currentStep + 1);
-    // broadcastTransaction();
     await router.push(
       {
         pathname: "/welcome",
@@ -233,7 +228,7 @@ export default function Home() {
     setIsLoading(true);
     if (isScan) {
       if (qrData) {
-        await broadcastTransaction(qrData);
+        // await broadcastTransaction(qrData);
       }
     }
     setIsLoading(false);

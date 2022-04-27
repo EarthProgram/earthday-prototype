@@ -5,9 +5,11 @@ const { Secp256k1HdWallet } = require('@cosmjs/amino')
 const derivateSecp256k1PubKey = async function () {
   const secp256k1 = await Secp256k1HdWallet.fromMnemonic(nemonic, {prefix: 'ixo'} )
   const accounts = await secp256k1.getAccounts()
+  console.log("operatest.account[0]", accounts[0])
+  console.log("operatest.accounts[0].pubKey", accounts[0].pubKey)
+  console.log("operatest.accounts[0].address", accounts[0].address)
   const pubkeyBase58 = base58.encode(accounts[0].pubkey)
-  console.log("pubkeyBase58", pubkeyBase58)
-  console.log("address", accounts[0].address)
+  console.log("operatest.pubkeyBase58", pubkeyBase58)
 }
 derivateSecp256k1PubKey()
 
