@@ -33,7 +33,7 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
   );
   async function init() {
     try {
-      const tempDidId = getDidId();
+      const tempDidId = getDIDId();
       const tempAddress = await getAddress();
       const tempBalance = await getBalance();
       if (!tempDidId || !tempAddress || tempBalance == null) {
