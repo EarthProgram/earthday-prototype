@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   getAddress,
   getBalance,
-  getDIDId,
 } from "../utils/utils";
 import { useTranslation } from "next-i18next";
 
@@ -33,10 +32,9 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
   );
   async function init() {
     try {
-      const tempDidId = getDIDId();
       const tempAddress = await getAddress();
       const tempBalance = await getBalance();
-      if (!tempDidId || !tempAddress || tempBalance == null) {
+      if (!tempAddress || tempBalance == null) {
         setIsError(true);
         setIsLoading(false);
         onLoad(true);
