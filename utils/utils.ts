@@ -17,7 +17,7 @@ function getDIDDocJSON() {
     console.log("didDoc", didDoc)
     const didDocJSON = JSON.parse(didDoc ?? "{}")
     console.log("didDocJSON", didDocJSON)
-    return didDoc
+    return didDocJSON
 }
 
 function getVerificationMethod() {
