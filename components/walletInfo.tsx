@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getAddress,
   getBalance,
-  getDidId,
+  getDIDId,
 } from "../utils/utils";
 import { useTranslation } from "next-i18next";
 

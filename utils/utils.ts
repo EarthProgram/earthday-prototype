@@ -7,6 +7,7 @@ import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType} from "@cosmjs/amino
 const prefix = 'ixo'
 const pubKeyTypeSECP256k1 = "EcdsaSecp256k1VerificationKey2019"
 const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
+const messageType = 'cosmos-sdk/MsgSend'
 
 function getDIDDoc() {
     const didDoc = window.interchain?.getDidDoc(0)
@@ -112,11 +113,10 @@ async function getAuthAccounts() {
     console.log("sequence", sequence);
     return;
 }
-export async function broadcastTransaction(toAddress: string) {
-    console.log("in broadcastTransaction");
-    await getAuthAccounts();
+
+function getPayload() {
     const msg = {
-        type: 'cosmos-sdk/MsgSend',
+        type: messageType,
         value: {
             amount: [{ amount: String(1), denom: 'earthday' }],
             from_address: address,
@@ -137,6 +137,13 @@ export async function broadcastTransaction(toAddress: string) {
         account_number: accountNumber,
         sequence: sequence,
     }
+    console.log("payload", payload)
+    return payload
+}
+
+export async function broadcastTransaction(toAddress: string) {
+    console.log("in broadcastTransaction");
+    await getAuthAccounts();
     // const signatureValue = await getED25519Signature(payload);
     const signatureValue = await getSECP256k1Signature(payload);
 
