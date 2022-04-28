@@ -17,7 +17,7 @@ const derivateSecp256k1PubKey = async function () {
   console.log("operatest.pubKeyUint8Array", pubKeyUint8Array)
   const secp256k1PubKey = encodeSecp256k1Pubkey(pubKeyUint8Array)
   console.log("operatest.secp256k1PubKey", secp256k1PubKey)
-  const addressFromCosmJSAmino = pubkeyToAddress(secp256k1PubKey)
+  const addressFromCosmJSAmino = pubkeyToAddress(secp256k1PubKey, 'ixo')
   console.log("operatest.addressFromCosmJSAmino", addressFromCosmJSAmino)
 }
 derivateSecp256k1PubKey()
