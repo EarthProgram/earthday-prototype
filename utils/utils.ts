@@ -51,6 +51,7 @@ export function getDIDId() {
 export async function getAddress() {
     const address = pubkeyToAddress(getPubKey(), prefix)
     console.log("address", address)
+    return address
 }
 
 export async function getBalance() {
