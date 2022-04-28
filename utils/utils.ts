@@ -1,8 +1,8 @@
-import Airtable from "airtable";
-import BigNumber from 'bignumber.js';
-import Axios from 'axios';
-import * as base58 from 'bs58';
-import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType} from "@cosmjs/amino";
+import Airtable from "airtable"
+import BigNumber from 'bignumber.js'
+import Axios from 'axios'
+import * as base58 from 'bs58'
+import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType} from "@cosmjs/amino"
 
 const prefix = 'ixo'
 const messageType = 'cosmos-sdk/MsgSend'
@@ -12,14 +12,16 @@ const signMethodSECP256k1 = "secp256k1"
 const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
 const signMethodED25519 = "ed25519"
 
-function getDIDDoc() {
+function getDIDDocJSON() {
     const didDoc = window.interchain?.getDidDoc(0)
     console.log("didDoc", didDoc)
+    const didDocJSON = JSON.parse(didDoc ?? "{}")
+    console.log("didDocJSON", didDocJSON)
     return didDoc
 }
 
 function getVerificationMethod() {
-    const verificationMethod = getDIDDoc().verificationMethod
+    const verificationMethod = getDIDDocJSON().verificationMethod
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }
@@ -51,7 +53,7 @@ function getFromAddress() {
 }
 
 function getDIDId() {
-    const didDoc = JSON.parse(getDIDDoc())
+    const didDoc = JSON.parse(getDIDDocJSON())
     console.log("didDoc.id",didDoc.id)
     return didDoc.id;
 }
