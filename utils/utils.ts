@@ -83,19 +83,19 @@ function addressAPICall() {
 }
 
 function writeToAirTable() {
-    const base = new Airtable(
-        { apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
-    base('Table 1').create({
-        "Wallet": getAddress(),
-        "DID": getDIDId()
-    }
-        , (err, records) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log("records", records)
-        });
+    // const base = new Airtable(
+    //     { apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
+    // base('Table 1').create({
+    //     "Wallet": getAddress(),
+    //     "DID": getDIDId()
+    // }
+    //     , (err, records) => {
+    //         if (err) {
+    //             console.error(err);
+    //             return;
+    //         }
+    //         console.log("records", records)
+    //     });
 }
 
 async function getAuthAccounts() {
