@@ -11,10 +11,10 @@ const derivateSecp256k1PubKey = async function () {
   const pubkeyBase58 = base58.encode(accounts[0].pubkey)
   console.log("operatest.pubkeyBase58", pubkeyBase58)
   
-  const { a } = require('@cosmjs/amino')
+  const { pubkeyToaddress } = require('@cosmjs/amino')
   const publickeyToaddress = async function (pubKey:String) {
     console.log("in publicKeyToAddress")
-    const address = await a.pubkeyToaddress(pubKey, {prefix: 'ixo'})
+    const address = await pubkeyToaddress(pubKey, {prefix: 'ixo'})
     console.log("operatest.publicKeyToAddress.address", address)
   }
   publickeyToaddress(pubkeyBase58)
