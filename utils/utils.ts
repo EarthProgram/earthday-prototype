@@ -20,18 +20,20 @@ function getDIDDocJSON() {
     return didDocJSON
 }
 
+function getPubKeyType() {
+    const pubkeyType = pubkeyType.secp256k1
+    console.log("pubkeyType", pubkeyType)
+    return pubkeyType
+}
+
 function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyType())
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }
 
-function getPubKeyType() {
-    return pubkeyType.secp256k1
-}
-
 function getPublicKeyBase58() {
-    const publicKeyBase58 = getVerificationMethod().find(x => x.type == getPubKeyType()).publicKeyBase58
+    const publicKeyBase58 = getVerificationMethod().publicKeyBase58
     console.log("publicKeyBase58", publicKeyBase58)
     return publicKeyBase58
 }
