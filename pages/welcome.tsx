@@ -159,16 +159,16 @@ export default function Home() {
       case 1:
       case 2:
       case 3:
+      case 6:
+        onContinue();
+        break;
       case 4:
         onPledge();
         break;
       case 5:
         // onPledgeContinue();
         break;
-      case 6:
-        // onContinue();
-        break;
-        case 7:
+      case 7:
         // onShowQR();
         break;
       case 8:
