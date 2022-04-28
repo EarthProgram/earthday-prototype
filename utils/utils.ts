@@ -131,7 +131,7 @@ function getAccountNumber(authAccounts) {
 }
 
 function getSequence(authAccounts) {
-    const sequence = authAccounts.result.value.sequence;
+    let sequence = authAccounts.result.value.sequence;
     if (!sequence) sequence = '0';
     console.log("sequence", sequence)
     return sequence
