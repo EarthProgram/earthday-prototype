@@ -2,73 +2,81 @@ import Airtable from "airtable";
 import BigNumber from 'bignumber.js';
 import Axios from 'axios';
 import * as base58 from 'bs58';
+import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType} from "@cosmjs/amino";
 
-// let reqType = "Ed25519VerificationKey2018";
-let reqType = "EcdsaSecp256k1VerificationKey2019";
-let didId;
-let publicKey;
-let address;
-let accountNumber;
-let sequence;
+const prefix = 'ixo'
+const pubKeyTypeSECP256k1 = "EcdsaSecp256k1VerificationKey2019"
+const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
 
-export function getDidId() {
-    console.log("reqType", reqType);
-    if (!didId || !publicKey) {
-        const didDoc = window.interchain?.getDidDoc(0);
-        console.log("didDoc", didDoc);
-        const tempJson = JSON.parse(didDoc ?? "{}")
-        didId = tempJson.id?.replace("did:key", "did:sov");
-        if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
-            const verificationMethod = tempJson.verificationMethod.find(x => x.type == reqType)
-            if (verificationMethod) {
-                publicKey = verificationMethod?.publicKeyBase58;
-            }
-        }
+function getDIDDoc() {
+    const didDoc = window.interchain?.getDidDoc(0)
+    console.log("didDoc", didDoc)
+    return didDoc
+}
+
+function getVerificationMethod() {
+    const verificationMethod = getDIDDoc().verificationMethod
+    console.log("verificationMethod", verificationMethod)
+    return verificationMethod
+}
+
+function getPubKeyType() {
+    return pubkeyType.secp256k1
+}
+
+function getPubKey() {
+    const publicKeyBase58 = getVerificationMethod().find(x => x.type == getPubKeyType()).publicKeyBase58
+    console.log("publicKeyBase58", publicKeyBase58)
+}
+
+export function getDIDId() {
+    const didDoc = JSON.parse(getDIDDoc())
+    console.log("didDoc.id",didDoc.id)
+    return didDoc.id;
+}
+
+export async function getAddress() {
+    pubkeyToAddress(getPubKey(), prefix)
+    // const res = await fetch(
+    //     `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
+    // );
+    // const data1 = await res.json();
+    // address = data1.result;
+    // if (address) {
+    //     const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
+    //     base('Table 1').create({
+    //         "Wallet": address,
+    //         "DID": didId
+    //     }
+    //         , (err, records) => {
+    //             if (err) {
+    //                 console.error(err);
+    //                 return;
+    //             }
+    //             console.log("records", records)
+    //         });
+    // }
+    // console.log("address from blockchain API", address);
+    // return address;
+}
+
+function get() {
+    if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
     }
     console.log("pubKey returned by Opera", publicKey);
     return didId;
 }
-export async function getED25519Signature(message) {
+async function getED25519Signature(message) {
     let ed25519Signature = await window.interchain?.signMessage(message, "ed25519", 0);
     console.log("ed25519Signature", ed25519Signature);
     return ed25519Signature;
 }
-export async function getSECP256k1Signature(message) {
+async function getSECP256k1Signature(message) {
     let secp256k1Signature = await window.interchain?.signMessage(message, "secp256k1", 0);
     console.log("secp256k1Signature", secp256k1Signature);
     return secp256k1Signature;
 }
-export async function getAddress() {
-    if (address) {
-        return address;
-    }
-    if (!publicKey) {
-        getDidId()
-    }
-  
-    const res = await fetch(
-        `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
-    );
-    const data1 = await res.json();
-    address = data1.result;
-    if (address) {
-        const base = new Airtable({ apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
-        base('Table 1').create({
-            "Wallet": address,
-            "DID": didId
-        }
-            , (err, records) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log("records", records)
-            });
-    }
-    console.log("address from blockchain API", address);
-    return address;
-}
-export async function getBalance() {
+async function getBalance() {
     console.log("fetching balance..");
     const res = await fetch(
         `https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${await getAddress()}/earthday`
@@ -78,7 +86,7 @@ export async function getBalance() {
     console.log("balance from blockchain API", balance);
     return balance;
 }
-export async function getAuthAccounts() {
+async function getAuthAccounts() {
     console.log("fetching authAccounts");
     const res = await fetch(
         `https://testnet.ixo.world/auth/accounts/${await getAddress()}`
