@@ -24,9 +24,22 @@ function getPubKeyType() {
     return pubkeyType.secp256k1
 }
 
-function getPubKey() {
+function getPublicKeyBase58() {
     const publicKeyBase58 = getVerificationMethod().find(x => x.type == getPubKeyType()).publicKeyBase58
     console.log("publicKeyBase58", publicKeyBase58)
+    return publicKeyBase58
+}
+
+function getPubKeyUint8Array() {
+    const pubKeyUint8Array = base58.decode(getPublicKeyBase58())
+    console.log("pubKeyUint8Array", pubKeyUint8Array)
+    return pubKeyUint8Array
+}
+
+function getPubKey() {
+    const pubKey = encodeSecp256k1Pubkey(getPubKeyUint8Array())
+    console.log("pubKey", pubKey)
+    return pubKey
 }
 
 export function getDIDId() {
@@ -36,7 +49,22 @@ export function getDIDId() {
 }
 
 export async function getAddress() {
-    pubkeyToAddress(getPubKey(), prefix)
+    const address = pubkeyToAddress(getPubKey(), prefix)
+    console.log("address", address)
+}
+
+export async function getBalance() {
+    const res = await fetch(
+        `https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${await getAddress()}/earthday`
+    );
+    const data1 = await res.json();
+    const balance = data1.balance.amount;
+    console.log("balance from blockchain API", balance);
+    return balance;
+}
+
+
+function addressAPICallAndAirTable() {
     // const res = await fetch(
     //     `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
     // );
@@ -60,12 +88,6 @@ export async function getAddress() {
     // return address;
 }
 
-function get() {
-    if (tempJson && tempJson.verificationMethod && tempJson.verificationMethod.length > 0) {
-    }
-    console.log("pubKey returned by Opera", publicKey);
-    return didId;
-}
 async function getED25519Signature(message) {
     let ed25519Signature = await window.interchain?.signMessage(message, "ed25519", 0);
     console.log("ed25519Signature", ed25519Signature);
@@ -75,16 +97,6 @@ async function getSECP256k1Signature(message) {
     let secp256k1Signature = await window.interchain?.signMessage(message, "secp256k1", 0);
     console.log("secp256k1Signature", secp256k1Signature);
     return secp256k1Signature;
-}
-async function getBalance() {
-    console.log("fetching balance..");
-    const res = await fetch(
-        `https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${await getAddress()}/earthday`
-    );
-    const data1 = await res.json();
-    const balance = data1.balance.amount;
-    console.log("balance from blockchain API", balance);
-    return balance;
 }
 async function getAuthAccounts() {
     console.log("fetching authAccounts");
