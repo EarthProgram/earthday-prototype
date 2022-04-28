@@ -9,8 +9,8 @@ const messageType = 'cosmos-sdk/MsgSend'
 const chainId = 'pandora-4'
 const pubKeyTypeSECP256k1 = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1 = "secp256k1"
-const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
-const signMethodED25519 = "ed25519"
+// const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
+// const signMethodED25519 = "ed25519"
 
 function getDIDDocJSON() {
     const didDoc = window.interchain?.getDidDoc(0)
@@ -20,14 +20,14 @@ function getDIDDocJSON() {
     return didDocJSON
 }
 
-function getPubKeyType() {
-    const pubkeyTypeBlockScope = pubkeyType.secp256k1
+function getPubKeyTypeForDIDDoc() {
+    const pubkeyTypeBlockScope = pubKeyTypeSECP256k1
     console.log("pubkeyTypeBlockScope", pubkeyTypeBlockScope)
     return pubkeyTypeBlockScope
 }
 
 function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyType())
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyTypeForDIDDoc())
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }

