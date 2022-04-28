@@ -2,6 +2,7 @@ const base58 = require('bs58')
 const nemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
 
 const { Secp256k1HdWallet } = require('@cosmjs/amino')
+const { encodeSecp256k1Pubkey } = require('@cosmjs/amino')
 const { pubkeyToAddress } = require('@cosmjs/amino')
 const derivateSecp256k1PubKey = async function () {
   const secp256k1 = await Secp256k1HdWallet.fromMnemonic(nemonic, {prefix: 'ixo'} )
@@ -11,8 +12,13 @@ const derivateSecp256k1PubKey = async function () {
   console.log("operatest.accounts[0].address", accounts[0].address)
   const pubkeyBase58 = base58.encode(accounts[0].pubkey)
   console.log("operatest.pubkeyBase58", pubkeyBase58)
-  const address = await pubkeyToAddress(pubkeyBase58)
-  console.log("operatest.address", address)
+
+  const pubKeyUint8Array = base58.decode(pubkeyBase58)
+  console.log("operatest.pubKeyUint8Array", pubKeyUint8Array)
+  const secp256k1PubKey = encodeSecp256k1Pubkey(pubKeyUint8Array)
+  console.log("operatest.secp256k1PubKey", secp256k1PubKey)
+  const addressFromCosmJSAmino = pubkeyToAddress(secp256k1PubKey)
+  console.log("operatest.addressFromCosmJSAmino", addressFromCosmJSAmino)
 }
 derivateSecp256k1PubKey()
 
