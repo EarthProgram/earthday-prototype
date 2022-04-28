@@ -21,9 +21,9 @@ function getDIDDocJSON() {
 }
 
 function getPubKeyType() {
-    const pubkeyType = pubkeyType.secp256k1
-    console.log("pubkeyType", pubkeyType)
-    return pubkeyType
+    const pubkeyTypeBlockScope = pubkeyType.secp256k1
+    console.log("pubkeyTypeBlockScope", pubkeyTypeBlockScope)
+    return pubkeyTypeBlockScope
 }
 
 function getVerificationMethod() {
