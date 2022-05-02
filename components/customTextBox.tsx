@@ -1,6 +1,6 @@
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
-import { getAddress, getBalance } from "../utils/utils";
+import { getAccountAddress, getEarthDayBalance } from "../utils/utils";
 
 export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,8 +53,8 @@ export default function CustomTextBox({ currentStep, onLoadStart, onLoadEnd }) {
   async function getBalanceData() {
     setIsLoading(true);
     onLoadStart();
-    const tempAddress = (await getAddress()) ?? "";
-    const bal = (await getBalance()) ?? 0;
+    const tempAddress = (await getAccountAddress()) ?? "";
+    const bal = (await getEarthDayBalance()) ?? 0;
     setPubAddress(tempAddress);
     setBalance(bal);
     onLoadEnd();
