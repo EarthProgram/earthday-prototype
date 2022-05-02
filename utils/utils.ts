@@ -38,9 +38,9 @@ function getDidDoc() {
 }
 
 function getDIDDocJSON() {
-    if (didDocJSON) return didDocJSON
     const localDidDoc = getDidDoc()
-    didDocJSON = JSON.parse(localDidDoc ?? "{}")
+    console.log("localDidDoc", localDidDoc)
+    const didDocJSON = JSON.parse(localDidDoc ?? "{}")
     console.log("didDocJSON", didDocJSON)
     return didDocJSON
 }
