@@ -2,7 +2,7 @@ import Airtable from "airtable"
 import BigNumber from 'bignumber.js'
 import Axios from 'axios'
 import * as base58 from 'bs58'
-import { encodeSecp256k1Pubkey, pubkeyToAddress, P} from "@cosmjs/amino"
+import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType } from "@cosmjs/amino"
 
 const prefix = 'ixo'
 const EARTHDAY = 'earthday'
