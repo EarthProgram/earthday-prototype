@@ -128,27 +128,33 @@ function getSequence(authAccounts) {
 }
 
 function getPayload(toAddress: string) {
+    const fromAddress = getFromAddress()
     const authAccounts = getAuthAccounts()
+    const accountNumber = getAccountNumber(authAccounts)
+    const sequence = getSequence(authAccounts)
     const msg = {
         type: messageType,
         value: {
             amount: [{ amount: String(1), denom: 'earthday' }],
-            from_address: getFromAddress(),
+            from_address: fromAddress,
             to_address: toAddress,
         },
     }
+    console.log("msg", msg)
     const fee = {
         amount: [{ amount: String(5000), denom: 'uixo' }],
         gas: String(200000),
     }
+    console.log("fee", fee)
     const memo = ''
+    console.log("memo", memo)
     const payload = {
         msgs: [msg],
         chainId,
         fee,
         memo,
-        account_number: getAccountNumber(authAccounts),
-        sequence: getSequence(authAccounts),
+        account_number: accountNumber,
+        sequence: sequence,
     }
     console.log("payload", payload)
     return payload
