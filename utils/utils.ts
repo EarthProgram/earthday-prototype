@@ -32,7 +32,6 @@ function getSignMethod() {
 }
 
 function getDidDoc() {
-    if (didDoc) return didDoc
     didDoc = window.interchain.getDidDoc(0)
     console.log("didDoc", didDoc)
 }
