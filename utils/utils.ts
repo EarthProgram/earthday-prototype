@@ -32,14 +32,16 @@ function getSignMethod() {
 }
 
 function getDidDoc() {
+    if (didDoc) return didDoc
     didDoc = window.interchain.getDidDoc(0)
     console.log("didDoc", didDoc)
+    return didDoc
 }
 
 function getDIDDocJSON() {
+    if (didDocJSON) return didDocJSON
     const localDidDoc = getDidDoc()
-    console.log("localDidDoc", localDidDoc)
-    const didDocJSON = JSON.parse(localDidDoc ?? "{}")
+    didDocJSON = JSON.parse(localDidDoc ?? "{}")
     console.log("didDocJSON", didDocJSON)
     return didDocJSON
 }
