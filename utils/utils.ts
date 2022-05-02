@@ -151,8 +151,8 @@ async function getPayload(toAddress: string) {
 async function broadcast(toAddress: string) {
     const payload = await getPayload(toAddress)
     const signatureValue = await signMessage(payload)
-    const localPubKeyType = getPubKey().type
-    const localPubKeyValue = getPubKey().value
+    const localPubKeyType = getPubKeyType()
+    const localPubKeyValue = getPublicKeyBase58()
     const postResult = await Axios.post(`https://testnet.ixo.world/txs`, {
         tx: {
             msg: payload.msgs,
