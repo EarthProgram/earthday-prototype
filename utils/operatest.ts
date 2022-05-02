@@ -1,12 +1,14 @@
 const base58 = require('bs58')
-const nemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
+const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
 
 const { Secp256k1HdWallet } = require('@cosmjs/amino')
 const { encodeSecp256k1Pubkey } = require('@cosmjs/amino')
 const { pubkeyToAddress } = require('@cosmjs/amino')
+const { makeSignDoc } = require('@cosmjs/amino')
+
 const derivateSecp256k1PubKey = async function () {
-  const secp256k1 = await Secp256k1HdWallet.fromMnemonic(nemonic, {prefix: 'ixo'} )
-  const accounts = await secp256k1.getAccounts()
+  const secp256k1HdWallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: 'ixo'} )
+  const accounts = await secp256k1HdWallet.getAccounts()
   console.log("operatest.account[0]", accounts[0])
   console.log("operatest.accounts[0].pubKey", accounts[0].pubKey)
   console.log("operatest.accounts[0].address", accounts[0].address)
@@ -19,7 +21,32 @@ const derivateSecp256k1PubKey = async function () {
   console.log("operatest.secp256k1PubKey", secp256k1PubKey)
   const addressFromCosmJSAmino = pubkeyToAddress(secp256k1PubKey, 'ixo')
   console.log("operatest.addressFromCosmJSAmino", addressFromCosmJSAmino)
+
+  const chainId = "pandora-4";
+  const msg: AminoMsg = {
+    type: "cosmos-sdk/MsgSend",
+    value: {
+      from_address: accounts[0].address,
+      to_address: 'ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc',
+      amount: [{ amount: "1", denom: "earthday" }],
+    },
+  };
+  const fee = {
+    amount: [{ amount: "5000", denom: "uixo" }],
+    gas: "200000",
+  };
+  const memo = "";
+  const accountNumber = 4675;
+  const sequence = 0;
+
+  const stdSignDoc = makeSignDoc([msg], fee, chainId, memo, accountNumber, sequence);
+  console.log("operatest.stdSignDoc", stdSignDoc);
+
+  const { signed, signature } = await secp256k1HdWallet.signAmino(accounts[0].address, stdSignDoc);
+  console.log("operatest.signed", signed);
+  console.log("operatest.signature", signature);
 }
+
 derivateSecp256k1PubKey()
 
 

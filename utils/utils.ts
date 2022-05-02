@@ -15,7 +15,6 @@ const signMethodSECP256k1 = "secp256k1"
 // const signMethodED25519 = "ed25519"
 let didDoc
 let didDocJSON
-let didId
 let pubKey
 let address
 
