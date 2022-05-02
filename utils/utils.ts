@@ -11,6 +11,7 @@ const pubKeyTypeSECP256k1 = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1 = "secp256k1"
 // const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
 // const signMethodED25519 = "ed25519"
+let address
 
 function getDIDDocJSON() {
     const didDoc = window.interchain?.getDidDoc(0)
@@ -154,7 +155,8 @@ function getPayload(toAddress: string) {
 }
 
 export async function getAddress() {
-    const address = pubkeyToAddress(getPubKey(), prefix)
+    if (address) return address
+    address = pubkeyToAddress(getPubKey(), prefix) 
     console.log("address", address)
     return address
 }
