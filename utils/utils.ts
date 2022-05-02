@@ -95,30 +95,30 @@ async function getAuthAccountsJSON() {
     return authAccountsJSON;
 }
 
-async function getAccountNumber(authAccountsJSON) {
+function getAccountNumber(authAccountsJSON) {
     const accountNumber = authAccountsJSON.result.value.account_number;
     console.log("accountNumber", accountNumber)
     return accountNumber
 }
 
-async function getSequence(authAccountsJSON) {
+function getSequence(authAccountsJSON) {
     let sequence = authAccountsJSON.result.value.sequence;
     if (!sequence) sequence = '0';
     console.log("sequence", sequence)
     return sequence
 }
 
-function signMessage(payload) {
-    const signedMessage = window.interchain.signMessage(payload, getSignMethod(), addressIndex)
+async function signMessage(payload) {
+    const signedMessage = await window.interchain.signMessage(payload, getSignMethod(), addressIndex)
     console.log("signedMessage", signedMessage)
     return signedMessage
 }
 
-function getPayload(toAddress: string) {
+async function getPayload(toAddress: string) {
     const fromAddress = getFromAddress()
     const authAccountsJSON = await getAuthAccountsJSON()
-    const accountNumber = await getAccountNumber(authAccountsJSON)
-    const sequence = await getSequence(authAccountsJSON)
+    const accountNumber = getAccountNumber(authAccountsJSON)
+    const sequence = getSequence(authAccountsJSON)
     const msg = {
         type: messageType,
         value: {
