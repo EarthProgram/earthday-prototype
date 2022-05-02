@@ -2,7 +2,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { QrReader } from "react-qr-reader";
 import { useTranslation } from "next-i18next";
-import { getAddress, getBalance } from "../utils/utils";
+import { getAccountAddress, getEarthDayBalance } from "../utils/utils";
 
 export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   const [data, setData] = useState(null);
