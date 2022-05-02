@@ -2,33 +2,51 @@ import Airtable from "airtable"
 import BigNumber from 'bignumber.js'
 import Axios from 'axios'
 import * as base58 from 'bs58'
-import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType} from "@cosmjs/amino"
+import { encodeSecp256k1Pubkey, pubkeyToAddress, P} from "@cosmjs/amino"
 
 const prefix = 'ixo'
+const EARTHDAY = 'earthday'
 const messageType = 'cosmos-sdk/MsgSend'
 const chainId = 'pandora-4'
+const addressIndex = 0
 const pubKeyTypeSECP256k1 = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1 = "secp256k1"
-// const pubKeyTypeED25519 = "Ed25519VerificationKey2018"
+// const PED25519 = "Ed25519VerificationKey2018"
 // const signMethodED25519 = "ed25519"
+let didDoc
+let didDocJSON
+let didId
+let pubKey
 let address
 
-function getDIDDocJSON() {
-    const didDoc = window.interchain?.getDidDoc(0)
+function getPubKeyType() {
+    const localPubKeyType = pubKeyTypeSECP256k1
+    console.log("localPubKeyType", localPubKeyType)
+    return localPubKeyType
+}
+
+function getSignMethod() {
+    const signMethod = signMethodSECP256k1
+    console.log("signMethod", signMethod)
+    return signMethod
+}
+
+function getDidDoc() {
+    if (didDoc) return didDoc
+    didDoc = window.interchain.getDidDoc(0)
     console.log("didDoc", didDoc)
-    const didDocJSON = JSON.parse(didDoc ?? "{}")
+}
+
+function getDIDDocJSON() {
+    if (didDocJSON) return didDocJSON
+    const localDidDoc = getDidDoc()
+    didDocJSON = JSON.parse(localDidDoc ?? "{}")
     console.log("didDocJSON", didDocJSON)
     return didDocJSON
 }
 
-function getPubKeyTypeForDIDDoc() {
-    const pubkeyTypeBlockScope = pubKeyTypeSECP256k1
-    console.log("pubkeyTypeBlockScope", pubkeyTypeBlockScope)
-    return pubkeyTypeBlockScope
-}
-
 function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyTypeForDIDDoc())
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyType())
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }
@@ -46,92 +64,61 @@ function getPubKeyUint8Array() {
 }
 
 function getPubKey() {
-    const pubKey = encodeSecp256k1Pubkey(getPubKeyUint8Array())
+    if (pubKey) return pubKey
+    pubKey = encodeSecp256k1Pubkey(getPubKeyUint8Array())
     console.log("pubKey", pubKey)
     return pubKey
+}
+
+function getAddress() {
+    if (address) return address
+    address = pubkeyToAddress(getPubKey(), prefix) 
+    console.log("address", address)
+    return address
 }
 
 function getFromAddress() {
     return getAddress()
 }
 
-function getDIDId() {
-    const didDoc = JSON.parse(getDIDDocJSON())
-    console.log("didDoc.id",didDoc.id)
-    return didDoc.id;
+async function getBalance(denom) {
+    const fetchResult = await fetch(`https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${getAddress()}/${denom}`)
+    const balanceJSON = await fetchResult.json()
+    console.log("balanceJSON", balanceJSON)
+    return balanceJSON.balance.amount
 }
 
-function addressAPICall() {
-    // const res = await fetch(
-    //     `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
-    // );
-    // const data1 = await res.json();
-    // address = data1.result;
-    // if (address) {
-    // console.log("address from blockchain API", address);
-    // return address;
+async function getAuthAccountsJSON() {
+    const fetchResult = await fetch(`https://testnet.ixo.world/auth/accounts/${await getAddress()}`)
+    const authAccountsJSON = await fetchResult.json()
+    console.log("authAccountsJSON", authAccountsJSON)
+    return authAccountsJSON;
 }
 
-function writeToAirTable() {
-    // const base = new Airtable(
-    //     { apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
-    // base('Table 1').create({
-    //     "Wallet": getAddress(),
-    //     "DID": getDIDId()
-    // }
-    //     , (err, records) => {
-    //         if (err) {
-    //             console.error(err);
-    //             return;
-    //         }
-    //         console.log("records", records)
-    //     });
-}
-
-async function getAuthAccounts() {
-    const fetchResult = await fetch(`https://testnet.ixo.world/auth/accounts/${await getAddress()}`);
-    console.log("fetchResult", fetchResult)
-    const authAccounts = await fetchResult.json();
-    console.log("authAccounts", authAccounts)
-    return authAccounts;
-}
-
-function getSignMethod() {
-    const signMethod = signMethodSECP256k1
-    console.log("signMethod", signMethod)
-    return signMethod
-}
-
-function getAddressIndex() {
-    const addressIndex = 0
-    console.log("addressIndex", addressIndex)
-    return addressIndex
-}
-
-function signMessage(payload) {
-    const signedMessage = window.interchain.signMessage(payload, getSignMethod(), getAddressIndex())
-    console.log("signedMessage", signedMessage)
-    return signedMessage
-}
-
-async function getAccountNumber(authAccounts) {
-    const accountNumber = authAccounts.result.value.account_number;
+async function getAccountNumber(authAccountsJSON) {
+    const accountNumber = authAccountsJSON.result.value.account_number;
     console.log("accountNumber", accountNumber)
     return accountNumber
 }
 
-async function getSequence(authAccounts) {
-    let sequence = authAccounts.result.value.sequence;
+async function getSequence(authAccountsJSON) {
+    let sequence = authAccountsJSON.result.value.sequence;
     if (!sequence) sequence = '0';
     console.log("sequence", sequence)
     return sequence
 }
 
+function signMessage(payload) {
+    const signedMessage = window.interchain.signMessage(payload, getSignMethod(), addressIndex)
+    console.log("signedMessage", signedMessage)
+    return signedMessage
+}
+
 function getPayload(toAddress: string) {
     const fromAddress = getFromAddress()
-    const authAccounts = getAuthAccounts()
-    const accountNumber = getAccountNumber(authAccounts)
-    const sequence = getSequence(authAccounts)
+    const authAccountsJSON = await getAuthAccountsJSON()
+    const accountNumber = await getAccountNumber(authAccountsJSON)
+    const sequence = await getSequence(authAccountsJSON)
     const msg = {
         type: messageType,
         value: {
@@ -160,26 +147,11 @@ function getPayload(toAddress: string) {
     return payload
 }
 
-export async function getAddress() {
-    if (address) return address
-    address = pubkeyToAddress(getPubKey(), prefix) 
-    console.log("address", address)
-    return address
-}
-
-export async function getBalance() {
-    const res = await fetch(`https://testnet.ixo.world/cosmos/bank/v1beta1/balances/${getAddress()}/earthday`);
-    const data1 = await res.json();
-    const balance = data1.balance.amount;
-    console.log("balance from blockchain API", balance);
-    return balance;
-}
-
-export async function broadcastTransaction(toAddress: string) {
-    const payload = getPayload(toAddress)
-    const signatureValue = signMessage(payload)
-    const pubKeyType = getPubKey().type
-    const pubKeyValue = getPubKey().value
+async function broadcast(toAddress: string) {
+    const payload = await getPayload(toAddress)
+    const signatureValue = await signMessage(payload)
+    const localPubKeyType = getPubKey().type
+    const localPubKeyValue = getPubKey().value
     const postResult = await Axios.post(`https://testnet.ixo.world/txs`, {
         tx: {
             msg: payload.msgs,
@@ -192,8 +164,8 @@ export async function broadcastTransaction(toAddress: string) {
                     account_number: payload.account_number,
                     sequence: payload.sequence,
                     pub_key: {
-                        type: pubKeyType,
-                        value: pubKeyValue,
+                        type: localPubKeyType,
+                        value: localPubKeyValue,
                     },
                 },
             ],
@@ -202,4 +174,42 @@ export async function broadcastTransaction(toAddress: string) {
     },
     )
     console.log('postResult', postResult)
+}
+export async function getAccountAddress() {
+    return getAddress()
+}
+
+export async function getEarthDayBalance() {
+    return getBalance(EARTHDAY);
+}
+
+export async function broadcastTransaction(toAddress: string) {
+    return broadcast(toAddress)
+}
+
+function addressAPICall() {
+    // const res = await fetch(
+    //     `https://testnet.ixo.world/publicKeyToAddr/${publicKey}`
+    // );
+    // const data1 = await res.json();
+    // address = data1.result;
+    // if (address) {
+    // console.log("address from blockchain API", address);
+    // return address;
+}
+
+function writeToAirTable() {
+    // const base = new Airtable(
+    //     { apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY }).base(process.env.NEXT_PUBLIC_AIRTABLE_KEY);
+    // base('Table 1').create({
+    //     "Wallet": getAddress(),
+    //     "DID": getDIDId()
+    // }
+    //     , (err, records) => {
+    //         if (err) {
+    //             console.error(err);
+    //             return;
+    //         }
+    //         console.log("records", records)
+    //     });
 }
