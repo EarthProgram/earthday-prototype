@@ -73,7 +73,7 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
     </div>
   );
   async function getBalanceData() {
-    const bal = (await getBalance()) ?? 0;
+    const bal = (await getEarthDayBalance()) ?? 0;
     if (!bal || bal < 1) {
       setError(t("noBalance"));
       clearTimeout(timeoutID);
@@ -86,8 +86,8 @@ export default function CustomQRCode({ isScan = true, ondata = (data) => {} }) {
   async function getPubkey1() {
     console.log("fetching..");
     try {
-      const addrss = await getAddress();
-      const bal = (await getBalance()) ?? 0;
+      const addrss = await getAccountAddress();
+      const bal = (await getEarthDayBalance()) ?? 0;
       setBalance(bal);
       if (!addrss) {
         setError(t("unableToShowQR"));
