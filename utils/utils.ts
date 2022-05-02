@@ -114,13 +114,13 @@ function signMessage(payload) {
     return signedMessage
 }
 
-function getAccountNumber(authAccounts) {
+async function getAccountNumber(authAccounts) {
     const accountNumber = authAccounts.result.value.account_number;
     console.log("accountNumber", accountNumber)
     return accountNumber
 }
 
-function getSequence(authAccounts) {
+async function getSequence(authAccounts) {
     let sequence = authAccounts.result.value.sequence;
     if (!sequence) sequence = '0';
     console.log("sequence", sequence)
