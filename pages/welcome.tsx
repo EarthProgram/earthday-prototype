@@ -11,7 +11,7 @@ import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import WalletInfo from "../components/walletInfo";
-// import { broadcastTransaction } from "../utils/utils";
+import { broadcastTransaction } from "../utils/utils";
 
 declare global {
   interface Window {
@@ -228,7 +228,7 @@ export default function Home() {
     setIsLoading(true);
     if (isScan) {
       if (qrData) {
-        // await broadcastTransaction(qrData);
+        await broadcastTransaction(qrData);
       }
     }
     setIsLoading(false);

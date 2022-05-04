@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 import Axios from 'axios'
 import * as base58 from 'bs58'
 import { encodeSecp256k1Pubkey, pubkeyToAddress, pubkeyType } from "@cosmjs/amino"
+import { signPayloadWithCosmJSAmino } from "./operatest"
 
 const prefix = 'ixo'
 const EARTHDAY = 'earthday'
@@ -63,7 +64,7 @@ function getPubKeyUint8Array() {
     return pubKeyUint8Array
 }
 
-function getPubKey() {
+function encodeSecp256k1PubkeyLocal() {
     if (pubKey) return pubKey
     pubKey = encodeSecp256k1Pubkey(getPubKeyUint8Array())
     console.log("pubKey", pubKey)
@@ -72,7 +73,7 @@ function getPubKey() {
 
 function getAddress() {
     if (address) return address
-    address = pubkeyToAddress(getPubKey(), prefix) 
+    address = pubkeyToAddress(encodeSecp256k1PubkeyLocal(), prefix) 
     console.log("address", address)
     return address
 }
@@ -108,10 +109,15 @@ function getSequence(authAccountsJSON) {
     return sequence
 }
 
-async function signMessage(payload) {
+async function signPayloadWithOpera(payload) {
     const signedMessage = await window.interchain.signMessage(payload, getSignMethod(), addressIndex)
     console.log("signedMessage", signedMessage)
     return signedMessage
+}
+
+async function signPayload(payload, isOpera: boolean) {
+    if (isOpera) return await signPayloadWithOpera(payload)
+    return await signPayloadWithCosmJSAmino(payload)
 }
 
 async function getPayload(toAddress: string) {
@@ -147,9 +153,9 @@ async function getPayload(toAddress: string) {
     return payload
 }
 
-async function broadcast(toAddress: string) {
+async function broadcast(toAddress: string, isOpera: boolean) {
     const payload = await getPayload(toAddress)
-    const signatureValue = await signMessage(payload)
+    const signatureValue = await signPayload(payload, isOpera)
     const localPubKeyType = pubkeyType.secp256k1
     const localPubKeyValue = getPublicKeyBase58()
     const postResult = await Axios.post(`https://testnet.ixo.world/txs`, {
@@ -175,6 +181,7 @@ async function broadcast(toAddress: string) {
     )
     console.log('postResult', postResult)
 }
+
 export async function getAccountAddress() {
     return getAddress()
 }
@@ -184,7 +191,9 @@ export async function getEarthDayBalance() {
 }
 
 export async function broadcastTransaction(toAddress: string) {
-    return broadcast(toAddress)
+    await broadcast(toAddress, true) //Opera signature
+    await broadcast(toAddress, false) //@cosmjs/amino signature
+    return
 }
 
 function addressAPICall() {

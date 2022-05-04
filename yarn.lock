@@ -9,7 +9,7 @@
   dependencies:
     "regenerator-runtime" "^0.13.4"
 
-"@cosmjs/amino@0.27.1":
+"@cosmjs/amino@^0.27.1", "@cosmjs/amino@0.27.1":
   "integrity" "sha512-w56ar/nK9+qlvWDpBPRmD0Blk2wfkkLqRi1COs1x7Ll1LF0AtkIBUjbRKplENLbNovK0T3h+w8bHiFm+GBGQOA=="
   "resolved" "https://registry.npmjs.org/@cosmjs/amino/-/amino-0.27.1.tgz"
   "version" "0.27.1"
@@ -131,14 +131,14 @@
   "resolved" "https://registry.npmjs.org/@next/env/-/env-12.1.4.tgz"
   "version" "12.1.4"
 
-"@next/swc-win32-x64-msvc@12.1.0":
-  "integrity" "sha512-aBvcbMwuanDH4EMrL2TthNJy+4nP59Bimn8egqv6GHMVj0a44cU6Au4PjOhLNqEh9l+IpRGBqMTzec94UdC5xg=="
-  "resolved" "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-12.1.0.tgz"
+"@next/swc-darwin-x64@12.1.0":
+  "integrity" "sha512-ieAz0/J0PhmbZBB8+EA/JGdhRHBogF8BWaeqR7hwveb6SYEIJaDNQy0I+ZN8gF8hLj63bEDxJAs/cEhdnTq+ug=="
+  "resolved" "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-12.1.0.tgz"
   "version" "12.1.0"
 
-"@next/swc-win32-x64-msvc@12.1.4":
-  "integrity" "sha512-JtYuWzKXKLDMgE/xTcFtCm1MiCIRaAc5XYZfYX3n/ZWSI1SJS/GMm+Su0SAHJgRFavJh6U/p998YwO/iGTIgqQ=="
-  "resolved" "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-12.1.4.tgz"
+"@next/swc-darwin-x64@12.1.4":
+  "integrity" "sha512-p1lwdX0TVjaoDXQVuAkjtxVBbCL/urgxiMCBwuPDO7TikpXtSRivi+mIzBj5q7ypgICFmIAOW3TyupXeoPRAnA=="
+  "resolved" "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-12.1.4.tgz"
   "version" "12.1.4"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -161,6 +161,13 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
+
+"@types/bs58@^4.0.1":
+  "integrity" "sha512-yfAgiWgVLjFCmRv8zAcOIHywYATEwiTVccTLnRp6UxTNavT55M9d/uhK3T03St/+8/z/wW+CRjGKUNmEqoHHCA=="
+  "resolved" "https://registry.npmjs.org/@types/bs58/-/bs58-4.0.1.tgz"
+  "version" "4.0.1"
+  dependencies:
+    "base-x" "^3.0.6"
 
 "@types/hoist-non-react-statics@^3.3.1":
   "integrity" "sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA=="
@@ -303,7 +310,7 @@
   dependencies:
     "follow-redirects" "^1.14.0"
 
-"base-x@^3.0.2":
+"base-x@^3.0.2", "base-x@^3.0.6":
   "integrity" "sha512-H7JU6iBHTal1gp56aKoaa//YUxEaAOUiydvrV/pILqIHXTtqxSkATOnDA2u+jZ/61sD+L/412+7kzXRtWukhpQ=="
   "resolved" "https://registry.npmjs.org/base-x/-/base-x-3.0.9.tgz"
   "version" "3.0.9"
@@ -735,6 +742,11 @@
   "integrity" "sha512-YEexkCpL4j03jn5SxaMHqcO6IuWuqm8JFUYhyCep7Ao89JIYmB8xoKhK7zXXJ9cCaNXpyNH5L3QtAmoxjoHW2w=="
   "resolved" "https://registry.npmjs.org/fs-memo/-/fs-memo-1.2.0.tgz"
   "version" "1.2.0"
+
+"fsevents@~2.3.2":
+  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
+  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
+  "version" "2.3.2"
 
 "gauge@~2.7.3":
   "integrity" "sha1-LANAXHU4w51+s3sxcCLjJfsBi/c="
