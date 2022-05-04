@@ -191,8 +191,16 @@ export async function getEarthDayBalance() {
 }
 
 export async function broadcastTransaction(toAddress: string) {
-    await broadcast(toAddress, true) //Opera signature
-    await broadcast(toAddress, false) //@cosmjs/amino signature
+    try {
+        await broadcast(toAddress, true) //Opera signature
+    } catch (error) {
+        console.log("error", error);          
+    }
+    try {
+        await broadcast(toAddress, false) //@cosmjs/amino signature
+    } catch (error) {
+        console.log("error", error);          
+    }
     return
 }
 
