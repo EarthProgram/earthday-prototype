@@ -56,3 +56,6 @@ export async function broadcastTransaction(toAddress: string) {
         console.log("utils.error - Opera - Base64", error)
     }
 }
+
+export async function getAccountAddress() { return ""}
+export async function getEarthDayBalance() {return 0}
