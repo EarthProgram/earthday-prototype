@@ -40,54 +40,48 @@ export async function getPayload(toAddress: string, fromAddress: string) {
     const authAccountsJSON = await getAuthAccountsJSON(fromAddress)
     const accountNumber = getAccountNumber(authAccountsJSON)
     const sequence = getSequence(authAccountsJSON)
-    const msg = {
-        type: messageType,
-        value: {
-            amount: [{ amount: String(1), denom: 'earthday' }],
-            from_address: fromAddress,
-            to_address: toAddress,
-        },
-    }
     const fee = {
         amount: [{ amount: String(5000), denom: 'uixo' }],
         gas: String(200000),
     }
-    const memo = ''
+    const msg = {
+        type: messageType,
+        value: {
+            amount: [{ amount: String(10), denom: 'uixo' }],
+            from_address: fromAddress,
+            to_address: toAddress,
+        },
+    }
     const payload = {
-        msgs: [msg],
-        chainId,
         fee,
-        memo,
+        msgs: [msg],
         account_number: accountNumber,
         sequence: sequence,
     }
     console.log("ixohelper.msg", msg)
     console.log("ixohelper.fee", fee)
-    console.log("ixohelper.memo", memo)
     console.log("ixohelper.payload", payload)
     return payload
 }
 
 export async function postTransaction(payload, signatureValue: string, localPubKeyValue: string) {
-    return await Axios.post(`https://testnet.ixo.world/txs`, {
+    return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
+        mode: 'sync',
         tx: {
-            msg: payload.msgs,
             fee: payload.fee,
+            msg: payload.msgs,
             signatures: [
                 {
                     account_number: payload.account_number,
-                    sequence: payload.sequence,
-                    signature: signatureValue,
                     pub_key: {
-                        type: pubkeyType.ed25519,
+                        type: pubkeyType.secp256k1,
                         value: localPubKeyValue,
                     },
+                    sequence: payload.sequence,
+                    signature: signatureValue,
                 },
             ],
-            memo: payload.memo,
-            // chain_Id: payload.chainId,
         },
-        mode: 'sync',
     }
     )
 }

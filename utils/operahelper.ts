@@ -4,11 +4,11 @@ import { encodeSecp256k1Pubkey, Pubkey, pubkeyToAddress } from "@cosmjs/amino"
 
 let didDoc
 let didDocJSON
-let pubkeyBase58
+let pubkeyBase58: string
 let pubkeyUint8Array: Buffer
 let pubkey: Pubkey
-let pubkeyBase64
-let address 
+let pubkeyBase64: string
+let address: string
 
 const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
@@ -85,7 +85,7 @@ export function getOperaAddress() {
     return address
 }
 
-export async function signPayloadWithOpera(payload, ) {
+export async function signPayloadWithOpera(payload) {
     const signatureValue = await window.interchain.signMessage(payload, getSignMethod(), addressIndex)
     console.log("signatureValue", signatureValue)
     return signatureValue

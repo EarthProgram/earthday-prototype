@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@cosmjs/amino": "^0.27.1",
+    "@cosmjs/encoding": "^0.28.4",
     "@cosmjs/launchpad": "^0.27.1",
+    "@ixo/client-sdk": "^1.11.1",
     "airtable": "^0.11.3",
     "bignumber.js": "^9.0.1",
     "bs58": "^4.0.1",

@@ -1,33 +1,29 @@
-import { Secp256k1HdWallet } from '@cosmjs/amino'
+import * as amino from '@cosmjs/amino'
+import * as encoding from '@cosmjs/encoding'
 import * as base58 from 'bs58'
-const { Base64 } = require('js-base64')
 
 const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
 const prefix = 'ixo'
 
-let secp256k1HdWallet
-let pubKey
-let pubkeyBase58
-let pubkeyBase64
-let address
+let secp256k1HdWallet: amino.Secp256k1HdWallet
+let pubkeyBase58: string
+let pubkeyBase64: string
+let address: string
 
 async function init() {
-  secp256k1HdWallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: prefix} )
+  secp256k1HdWallet = await amino.Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: prefix})
   const accounts = await secp256k1HdWallet.getAccounts()
-  pubKey = accounts[0].pubkey
-  pubkeyBase58 = base58.encode(pubKey)
+  const pubkey = accounts[0].pubkey
+  pubkeyBase58 = base58.encode(pubkey)
+  pubkeyBase64 = Buffer.from(pubkey).toString('base64')
   address = accounts[0].address
 
+  console.log("aminohelper.secp256k1HdWallet", secp256k1HdWallet)
   console.log("aminohelper.account[0]", accounts[0])
-  console.log("aminohelper.accounts[0].pubKey", pubKey)
-  console.log("aminohelper.base58.encode(accounts[0].pubkey)", pubkeyBase58)
-  console.log("aminohelper.accounts[0].address", address)
-}
-
-export async function getAminoPubKey() {
-  if (pubKey) return pubKey
-  await init()
-  return pubKey
+  console.log("aminohelper.pubkey", pubkey)
+  console.log("aminohelper.pubkeyBase58)", pubkeyBase58)
+  console.log("aminohelper.pubkeyBase64)", pubkeyBase64)
+  console.log("aminohelper.address", address)
 }
 
 export async function getAminoPubKeyBase58() {
@@ -39,8 +35,6 @@ export async function getAminoPubKeyBase58() {
 export async function getAminoPubKeyBase64() {
     if (pubkeyBase64) return pubkeyBase64
     await init()
-    pubkeyBase64 = Base64.fromUint8Array(Uint8Array.from(pubKey))
-    console.log("aminohelper.Base64.fromUint8Array)", pubkeyBase64)
     return pubkeyBase64
   }
   
@@ -50,16 +44,9 @@ export async function getAminoAddress() {
   return address
 }
 
-export async function signPayloadWithAmino(payload) {
-    console.log("aminohelper.signPayloadWithAmino")
+export async function signPayloadWithAmino(addressLocal, payload) {
     try {
-    const accounts = await secp256k1HdWallet.getAccounts()
-
-    console.log("secp256k1HdWallet",secp256k1HdWallet)
-    console.log("accounts[0]",accounts[0])
-    console.log("accounts[0].address",accounts[0].address)
-
-    const { signed, signature } = await secp256k1HdWallet.signAmino(accounts[0].address, payload);
+    const { signed, signature } = await secp256k1HdWallet.signAmino(addressLocal, payload);
 
     console.log("aminohelper.signed", signed)
     console.log("aminohelper.signature", signature)
