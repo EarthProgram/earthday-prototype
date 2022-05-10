@@ -18,13 +18,13 @@ const prefix = 'ixo'
 const addressIndex = 0
 
 function getPubKeyType() {
-    const localPubKeyType = pubKeyTypeED25519Opera
+    const localPubKeyType = pubKeyTypeSECP256k1Opera
     console.log("localPubKeyType", localPubKeyType)
     return localPubKeyType
 }
 
 export function getSignMethod() {
-    const signMethod = signMethodED25519Opera
+    const signMethod = signMethodSECP256k1Opera
     console.log("signMethod", signMethod)
     return signMethod
 }
