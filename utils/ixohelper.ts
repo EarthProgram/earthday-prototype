@@ -66,8 +66,11 @@ export async function getStdSignDoc(toAddress: string, fromAddress: string) {
   }
   
 export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
+    console.log("ixohelper.signatureValue", signatureValue)
+
     let pubkey
     let signature
+
     if (!signatureValue.pub_key) {
         pubkey = {
             pub_key: {
@@ -76,9 +79,10 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
             }
         }
     } else pubkey = signatureValue.pub_key
-    console.log("signatureValue", signatureValue)
-    console.log("signatureValue.signature", signatureValue.signature)
+    console.log("ixohelper.pubkey", pubkey)
+
     if (!signatureValue.signature) {signature = signatureValue} else {signature = signatureValue.signature}
+    console.log("ixohelper.signature", signature)
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
