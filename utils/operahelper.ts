@@ -25,7 +25,7 @@ export function getOperaPubKeyBase58() {
     return pubkeyBase58
 }
 
-export function getOperaPubKeyUint8Array() {
+function getOperaPubKeyUint8Array() {
     if (pubkeyUint8Array) return pubkeyUint8Array
     pubkeyUint8Array = base58.decode(getOperaPubKeyBase58())
     console.log("pubKeyUint8Array", pubkeyUint8Array)
@@ -67,7 +67,7 @@ function encodeSecp256k1PubkeyLocal() {
     return pubkey
 }
 
-export function getOperaAddress() {
+function getAddress() {
     if (address) return address
     address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
     console.log("address", address)
@@ -75,10 +75,9 @@ export function getOperaAddress() {
 }
 
 export async function signOpera(toAddress: string) {
-    const signed = await ixohelper.getStdSignDoc(toAddress, address)
+    const signed = await ixohelper.getStdSignDoc(toAddress, getAddress())
     const sha256msg = sha256(amino.serializeSignDoc(signed))
     const hexValue = Buffer.from(sha256msg).toString("hex")
-    console.log("operahelper.stdSignDoc.hexValue", hexValue)
     const signatureValue = await window.interchain.signMessage(hexValue, signMethodSECP256k1Opera, addressIndex)
     console.log("signatureValue", signatureValue)
     return { signed, signatureValue }
