@@ -1,9 +1,6 @@
 import * as amino from '@cosmjs/amino'
-import * as encoding from '@cosmjs/encoding'
 import * as base58 from 'bs58'
-
-const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
-const prefix = 'ixo'
+import * as ixohelper from './ixohelper'
 
 let secp256k1HdWallet: amino.Secp256k1HdWallet
 let pubkeyBase58: string
@@ -11,7 +8,7 @@ let pubkeyBase64: string
 let address: string
 
 async function init() {
-  secp256k1HdWallet = await amino.Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: prefix})
+  secp256k1HdWallet = await amino.Secp256k1HdWallet.fromMnemonic(ixohelper.mnemonic, {prefix: ixohelper.prefix})
   const accounts = await secp256k1HdWallet.getAccounts()
   const pubkey = accounts[0].pubkey
   pubkeyBase58 = base58.encode(pubkey)
@@ -44,14 +41,15 @@ export async function getAminoAddress() {
   return address
 }
 
-export async function signPayloadWithAmino(addressLocal, payload) {
+export async function signAmino(toAddress: string) {
     try {
-    const { signed, signature } = await secp256k1HdWallet.signAmino(addressLocal, payload);
+      const { signed, signature } = 
+        await secp256k1HdWallet.signAmino(address, await ixohelper.getStdSignDoc(toAddress, address))
 
-    console.log("aminohelper.signed", signed)
-    console.log("aminohelper.signature", signature)
+      console.log("aminohelper.signed", signed)
+      console.log("aminohelper.signature", signature)
 
-    return signature.signature;
+    return { signed, signature}
   } catch (error) {
     console.log("error", error)
     return error

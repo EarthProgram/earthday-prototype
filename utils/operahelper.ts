@@ -1,12 +1,14 @@
 import * as base58 from 'bs58'
 const { Base64 } = require('js-base64')
-import { encodeSecp256k1Pubkey, Pubkey, pubkeyToAddress } from "@cosmjs/amino"
+import * as amino from "@cosmjs/amino"
+import * as ixohelper from './ixohelper'
+const {sha256} =  require("@cosmjs/crypto");
 
 let didDoc
 let didDocJSON
 let pubkeyBase58: string
 let pubkeyUint8Array: Buffer
-let pubkey: Pubkey
+let pubkey: amino.Pubkey
 let pubkeyBase64: string
 let address: string
 
@@ -14,20 +16,7 @@ const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
 const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
-const prefix = 'ixo'
-const addressIndex = 0
-
-function getPubKeyType() {
-    const localPubKeyType = pubKeyTypeSECP256k1Opera
-    console.log("localPubKeyType", localPubKeyType)
-    return localPubKeyType
-}
-
-export function getSignMethod() {
-    const signMethod = signMethodSECP256k1Opera
-    console.log("signMethod", signMethod)
-    return signMethod
-}
+const addressIndex = 20
 
 export function getOperaPubKeyBase58() {
     if (pubkeyBase58) return pubkeyBase58
@@ -66,27 +55,31 @@ function getDIDDocJSON() {
 }
 
 function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == getPubKeyType())
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyTypeSECP256k1Opera)
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }
 
 function encodeSecp256k1PubkeyLocal() {
     if (pubkey) return pubkey
-    pubkey = encodeSecp256k1Pubkey(getOperaPubKeyUint8Array())
+    pubkey = amino.encodeSecp256k1Pubkey(getOperaPubKeyUint8Array())
     console.log("pubKey", pubkey)
     return pubkey
 }
 
 export function getOperaAddress() {
     if (address) return address
-    address = pubkeyToAddress(encodeSecp256k1PubkeyLocal(), prefix) 
+    address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
     console.log("address", address)
     return address
 }
 
-export async function signPayloadWithOpera(payload) {
-    const signatureValue = await window.interchain.signMessage(payload, getSignMethod(), addressIndex)
+export async function signOpera(toAddress: string) {
+    const signed = await ixohelper.getStdSignDoc(toAddress, address)
+    const sha256msg = sha256(amino.serializeSignDoc(signed))
+    const hexValue = Buffer.from(sha256msg).toString("hex")
+    console.log("operahelper.stdSignDoc.hexValue", hexValue)
+    const signatureValue = await window.interchain.signMessage(hexValue, signMethodSECP256k1Opera, addressIndex)
     console.log("signatureValue", signatureValue)
-    return signatureValue
+    return { signed, signatureValue }
 }

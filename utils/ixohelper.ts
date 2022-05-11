@@ -1,9 +1,11 @@
 import Axios from 'axios'
-import { pubkeyType } from "@cosmjs/amino"
+import * as amino from "@cosmjs/amino"
 
-const messageType = 'cosmos-sdk/MsgSend'
-const chainId = 'pandora-4'
-const EARTHDAY = 'earthday'
+export const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
+export const messageType = 'cosmos-sdk/MsgSend'
+export const chainId = 'pandora-4'
+export const EARTHDAY = 'earthday'
+export const prefix = 'ixo'
 
 export async function getEarthDayBalance(address: string) {
     return getBalance(address, EARTHDAY);
@@ -17,29 +19,30 @@ async function getBalance(address: string, denom) {
 }
 
 export async function getAuthAccountsJSON(address: string) {
-    const fetchResult = await fetch(`https://testnet.ixo.world/auth/accounts/${address}`)
+    const fetchResult = await fetch(`https://testnet.ixo.world/cosmos/auth/v1beta1/accounts/${address}`)
     const authAccountsJSON = await fetchResult.json()
     console.log("ixohelper.authAccountsJSON", authAccountsJSON)
     return authAccountsJSON;
 }
 
 export function getAccountNumber(authAccountsJSON) {
-    const accountNumber = authAccountsJSON.result.value.account_number;
+    const accountNumber = authAccountsJSON.account.account_number;
     console.log("ixohelper.accountNumber", accountNumber)
     return accountNumber
 }
 
 export function getSequence(authAccountsJSON) {
-    let sequence = authAccountsJSON.result.value.sequence;
+    let sequence = authAccountsJSON.account.sequence;
     if (!sequence) sequence = '0';
     console.log("ixohelper.sequence", sequence)
     return sequence
 }
 
-export async function getPayload(toAddress: string, fromAddress: string) {
+export async function getStdSignDoc(toAddress: string, fromAddress: string) {
     const authAccountsJSON = await getAuthAccountsJSON(fromAddress)
     const accountNumber = getAccountNumber(authAccountsJSON)
     const sequence = getSequence(authAccountsJSON)
+    const memo = ""
     const fee = {
         amount: [{ amount: String(5000), denom: 'uixo' }],
         gas: String(200000),
@@ -52,33 +55,38 @@ export async function getPayload(toAddress: string, fromAddress: string) {
             to_address: toAddress,
         },
     }
-    const payload = {
-        fee,
-        msgs: [msg],
-        account_number: accountNumber,
-        sequence: sequence,
+    return {
+    msgs: [msg],
+    fee: fee,
+    chain_id: chainId,
+    memo: memo,
+    account_number: accountNumber,
+    sequence: sequence,
     }
-    console.log("ixohelper.msg", msg)
-    console.log("ixohelper.fee", fee)
-    console.log("ixohelper.payload", payload)
-    return payload
-}
+  }
+  
+export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
+    let pubkey
+    if (!signatureValue.pub_key) {
+        pubkey = {
+            pub_key: {
+                type: amino.pubkeyType.secp256k1,
+                value: localPubKeyValue
+            }
+        }
+    } else pubkey = signatureValue.pub_key
 
-export async function postTransaction(payload, signatureValue: string, localPubKeyValue: string) {
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
         tx: {
-            fee: payload.fee,
-            msg: payload.msgs,
+            fee: signed.fee,
+            msg: signed.msgs,
             signatures: [
                 {
-                    account_number: payload.account_number,
-                    pub_key: {
-                        type: pubkeyType.secp256k1,
-                        value: localPubKeyValue,
-                    },
-                    sequence: payload.sequence,
-                    signature: signatureValue,
+                    account_number: signed.account_number,
+                    pub_key: pubkey,
+                    sequence: signed.sequence,
+                    signature: signatureValue.signature,
                 },
             ],
         },
