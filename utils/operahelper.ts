@@ -16,7 +16,7 @@ const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
 const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
-const addressIndex = 20
+const addressIndex = 0
 
 export function getOperaPubKeyBase58() {
     if (pubkeyBase58) return pubkeyBase58
@@ -79,6 +79,6 @@ export async function signOpera(toAddress: string) {
     const sha256msg = sha256(amino.serializeSignDoc(signed))
     const hexValue = Buffer.from(sha256msg).toString("hex")
     const signatureValue = await window.interchain.signMessage(hexValue, signMethodSECP256k1Opera, addressIndex)
-    console.log("signatureValue", signatureValue)
+    console.log("operahelper.signatureValue", signatureValue)
     return { signed, signatureValue }
 }
