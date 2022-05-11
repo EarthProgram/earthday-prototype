@@ -73,10 +73,8 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
 
     if (!signatureValue.pub_key) {
         pubkey = {
-            pub_key: {
                 type: amino.pubkeyType.secp256k1,
                 value: localPubKeyValue
-            }
         }
     } else pubkey = signatureValue.pub_key
     console.log("ixohelper.pubkey", pubkey)
