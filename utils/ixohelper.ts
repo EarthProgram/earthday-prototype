@@ -76,8 +76,9 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
             }
         }
     } else pubkey = signatureValue.pub_key
-
-    if (!signatureValue.signature) {signature = signatureValue.signature} else {signature = signatureValue}
+    console.log("signatureValue", signatureValue)
+    console.log("signatureValue.signature", signatureValue.signature)
+    if (!signatureValue.signature) {signature = signatureValue} else {signature = signatureValue.signature}
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
