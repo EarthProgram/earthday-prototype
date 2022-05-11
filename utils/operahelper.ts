@@ -81,7 +81,7 @@ export async function signOpera(toAddress: string) {
     console.log("operahelper.sha256msg", sha256msg)
     const hexValue = Buffer.from(sha256msg).toString("hex")
     console.log("operahelper.hexValue", hexValue)
-    const signatureValue = await window.interchain.signMessage(sha256msg, signMethodSECP256k1Opera, addressIndex)
+    const signatureValue = await window.interchain.signMessage(hexValue, signMethodSECP256k1Opera, addressIndex)
     console.log("operahelper.signatureValue", signatureValue)
     return { signed: stdSignDoc, signatureValue }
 }
