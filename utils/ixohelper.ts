@@ -89,7 +89,7 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
                     account_number: signed.account_number,
                     pub_key: pubkey,
                     sequence: signed.sequence,
-                    signature: signatureValue.signature,
+                    signature: signature,
                 },
             ],
         },
