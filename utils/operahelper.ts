@@ -75,13 +75,13 @@ function getAddress() {
 }
 
 export async function signOpera(toAddress: string) {
-    const signed = await ixohelper.getStdSignDoc(toAddress, getAddress())
-    console.log("operahelper.signatureValue", signed)
-    const sha256msg = sha256(amino.serializeSignDoc(signed))
-    console.log("operahelper.signatureValue", sha256msg)
-    // const hexValue = Buffer.from(sha256msg).toString("hex")
-    // console.log("operahelper.signatureValue", hexValue)
+    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddress())
+    console.log("operahelper.stdSignDoc", stdSignDoc)
+    const sha256msg = sha256(amino.serializeSignDoc(stdSignDoc))
+    console.log("operahelper.sha256msg", sha256msg)
+    const hexValue = Buffer.from(sha256msg).toString("hex")
+    console.log("operahelper.hexValue", hexValue)
     const signatureValue = await window.interchain.signMessage(sha256msg, signMethodSECP256k1Opera, addressIndex)
     console.log("operahelper.signatureValue", signatureValue)
-    return { signed, signatureValue }
+    return { signed: stdSignDoc, signatureValue }
 }

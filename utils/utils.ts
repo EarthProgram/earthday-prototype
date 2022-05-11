@@ -21,7 +21,7 @@ export async function broadcastTransaction(toAddress: string) {
         // console.log(" -------- Amino sign - MsgSend Base64 pubKey --------")
         // const publicKeyLocal = await aminohelper.getAminoPubKeyBase64()
         // const { signed, signature } = await aminohelper.signAmino(toAddress)
-        // const postResult = await ixohelper.postTransaction( signed, signature , publicKeyLocal)
+        // const postResult = await ixohelper.postTransaction(signed, signature , publicKeyLocal)
         // console.log("postResult", postResult)
     } catch (error) {
         console.log("utils.error - Amino - Base64", error)
@@ -31,7 +31,7 @@ export async function broadcastTransaction(toAddress: string) {
         console.log(" -------- Opera sign - MsgSend Base64 pubKey --------")
         const publicKeyLocal = await operahelper.getOperaPubKeyBase64()
         const { signed, signatureValue } = await operahelper.signOpera(toAddress)
-        const postResult = await ixohelper.postTransaction( signed, signatureValue , publicKeyLocal)
+        const postResult = await ixohelper.postTransaction(signed, signatureValue , publicKeyLocal)
         console.log("postResult", postResult)
     } catch (error) {
         console.log("utils.error - Opera - Base64", error)

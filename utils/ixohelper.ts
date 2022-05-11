@@ -66,8 +66,6 @@ export async function getStdSignDoc(toAddress: string, fromAddress: string) {
   }
   
 export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
-    console.log("ixohelper.signatureValue", signatureValue)
-
     let pubkey
     let signature
 
