@@ -44,7 +44,7 @@ export async function getAminoAddress() {
 export async function signAmino(toAddress: string) {
     try {
       const { signed, signature } = 
-        await secp256k1HdWallet.signAmino(address, await ixohelper.getStdSignDoc(toAddress, address))
+        await secp256k1HdWallet.signAmino(address, await ixohelper.getStdSignDoc(toAddress, address, ixohelper.messageTypeMsgSend))
 
       console.log("aminohelper.signed", signed)
       console.log("aminohelper.signature", signature)

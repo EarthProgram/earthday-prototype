@@ -6,11 +6,8 @@ const {sha256} =  require("@cosmjs/crypto");
 
 let didDoc
 let didDocJSON
-let pubkeyBase58: string
-let pubkeyUint8Array: Buffer
-let pubkey: amino.Pubkey
-let pubkeyBase64: string
-let address: string
+let pubKeyType: string
+let signMethod: string
 
 const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
@@ -19,22 +16,19 @@ const signMethodED25519Opera = "ed25519"
 const addressIndex = 0
 
 export function getOperaPubKeyBase58() {
-    if (pubkeyBase58) return pubkeyBase58
-    pubkeyBase58 = getVerificationMethod().publicKeyBase58
+    const pubkeyBase58 = getVerificationMethod().publicKeyBase58
     console.log("pubkeyBase58", pubkeyBase58)
     return pubkeyBase58
 }
 
 function getOperaPubKeyUint8Array() {
-    if (pubkeyUint8Array) return pubkeyUint8Array
-    pubkeyUint8Array = base58.decode(getOperaPubKeyBase58())
+    const pubkeyUint8Array = base58.decode(getOperaPubKeyBase58())
     console.log("pubKeyUint8Array", pubkeyUint8Array)
     return pubkeyUint8Array
 }
 
 export async function getOperaPubKeyBase64() {
-    if (pubkeyBase64) return pubkeyBase64
-    pubkeyBase64 = Base64.fromUint8Array(getOperaPubKeyUint8Array())
+    const pubkeyBase64 = Base64.fromUint8Array(getOperaPubKeyUint8Array())
     console.log("aminohelper.Base64.fromUint8Array)", pubkeyBase64)
     return pubkeyBase64
   }
@@ -55,27 +49,28 @@ function getDIDDocJSON() {
 }
 
 function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyTypeSECP256k1Opera)
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyType)
     console.log("verificationMethod", verificationMethod)
     return verificationMethod
 }
 
 function encodeSecp256k1PubkeyLocal() {
-    if (pubkey) return pubkey
-    pubkey = amino.encodeSecp256k1Pubkey(getOperaPubKeyUint8Array())
+    const pubkey = amino.encodeSecp256k1Pubkey(getOperaPubKeyUint8Array())
     console.log("pubKey", pubkey)
     return pubkey
 }
 
 function getAddress() {
-    if (address) return address
-    address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
+    const address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
     console.log("address", address)
     return address
 }
 
-
+/* With thanks to Benzhe of Opera! */
 function transformSignature(signatureOperaBase64) {
+    
+    if (signMethod === signMethodED25519Opera) return signatureOperaBase64
+
     const rawArray = Base64.toUint8Array(signatureOperaBase64)
     console.log("rawSignature", rawArray)
 
@@ -107,16 +102,30 @@ function transformSignature(signatureOperaBase64) {
     return signatureCosmjsBase64
 }
 
-export async function signOpera(toAddress: string) {
-    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddress())
+async function signOpera(toAddress: string, messageType: string) {
+    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddress(), messageType)
     console.log("operahelper.stdSignDoc", stdSignDoc)
     const sha256msg = sha256(amino.serializeSignDoc(stdSignDoc))
     console.log("operahelper.sha256msg", sha256msg)
     const hexValue = Buffer.from(sha256msg).toString("hex")
     console.log("operahelper.hexValue", hexValue)
-    const signatureOpera = await window.interchain.signMessage(hexValue, signMethodSECP256k1Opera, addressIndex)
+    const signatureOpera = await window.interchain.signMessage(hexValue, signMethod, addressIndex)
     console.log("operahelper.signatureOpera", signatureOpera)
     const signatureValue = transformSignature(signatureOpera)
     console.log("operahelper.signatureValue", signatureValue)
     return { signed: stdSignDoc, signatureValue }
+}
+
+export async function signOperaSECP256k1(toAddress: string) {
+    pubKeyType = pubKeyTypeSECP256k1Opera
+    signMethod = signMethodSECP256k1Opera
+    const messageType = ixohelper.messageTypeMsgSend
+    return await signOpera(toAddress, messageType)
+}
+
+export async function signOperaED25519(toAddress: string) {
+    pubKeyType = pubKeyTypeED25519Opera
+    signMethod = signMethodED25519Opera
+    const messageType = ixohelper.messageTypeMsgBuy
+    return await signOpera(toAddress, messageType)
 }

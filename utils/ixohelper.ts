@@ -2,7 +2,8 @@ import Axios from 'axios'
 import * as amino from "@cosmjs/amino"
 
 export const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
-export const messageType = 'cosmos-sdk/MsgSend'
+export const messageTypeMsgSend = 'cosmos-sdk/MsgSend'
+export const messageTypeMsgBuy = 'bonds/MsgBuy'
 export const chainId = 'pandora-4'
 export const EARTHDAY = 'earthday'
 export const prefix = 'ixo'
@@ -38,7 +39,7 @@ export function getSequence(authAccountsJSON) {
     return sequence
 }
 
-export async function getStdSignDoc(toAddress: string, fromAddress: string) {
+export async function getStdSignDoc(toAddress: string, fromAddress: string, messageType: string) {
     const authAccountsJSON = await getAuthAccountsJSON(fromAddress)
     const accountNumber = getAccountNumber(authAccountsJSON)
     const sequence = getSequence(authAccountsJSON)
@@ -47,14 +48,8 @@ export async function getStdSignDoc(toAddress: string, fromAddress: string) {
         amount: [{ amount: String(5000), denom: 'uixo' }],
         gas: String(200000),
     }
-    const msg = {
-        type: messageType,
-        value: {
-            amount: [{ amount: String(10), denom: 'uixo' }],
-            from_address: fromAddress,
-            to_address: toAddress,
-        },
-    }
+    const msg = createMessage(messageType, fromAddress, toAddress)
+
     return {
     msgs: [msg],
     fee: fee,
@@ -63,9 +58,32 @@ export async function getStdSignDoc(toAddress: string, fromAddress: string) {
     account_number: accountNumber,
     sequence: sequence,
     }
-  }
-  
-export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
+}
+
+function createMessage(messageType: string, fromAddress: string, toAddress: string) {
+    let value
+    if (messageType === messageTypeMsgSend) {
+        value = {
+            amount: [{ amount: String(10), denom: 'uixo' }],
+            from_address: fromAddress,
+            to_address: toAddress,
+        }
+    } else if (messageType === messageTypeMsgBuy) {
+        value = {
+        buyer_did: fromAddress,
+        amount: [{ amount: String(22), denom: 'uixo' }],
+        max_prices: [{ amount: String(1), denom: "xusd" }],
+        bond_did: "did:ixo:75SZoisuNpsDezmYURaBb7"
+        }
+    } else {
+        value = {
+            error: "no messageType defined"
+        }
+    }
+    return { type: messageType, value }
+}
+
+async function getPostParams(signed, signatureValue, localPubKeyValue: string) {
     let pubkey
     let signature
 
@@ -79,6 +97,11 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
 
     if (!signatureValue.signature) {signature = signatureValue} else {signature = signatureValue.signature}
     console.log("ixohelper.signature", signature)
+    return { pubkey, signature }
+}
+
+export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
+    const { pubkey, signature } = await getPostParams(signed, signatureValue, localPubKeyValue)
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
@@ -97,3 +120,24 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
     }
     )
 }
+
+export async function postTransactionED(signed, signatureValue, localPubKeyValue: string) {
+    const { pubkey, signature } = await getPostParams(signed, signatureValue, localPubKeyValue)
+
+    return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
+        mode: 'sync',
+        tx: {
+            fee: signed.fee,
+            msg: signed.msgs,
+            signatures: [
+                {
+                    account_number: signed.account_number,
+                    pub_key: pubkey,
+                    sequence: signed.sequence,
+                    signature: signature,
+                },
+            ],
+        },
+    }
+    )
+ }

