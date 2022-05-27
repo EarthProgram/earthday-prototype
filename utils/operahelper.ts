@@ -15,6 +15,16 @@ const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
 const addressIndex = 0
 
+export function setSignMethodSECP256k1() {
+    pubKeyType = pubKeyTypeSECP256k1Opera
+    signMethod = signMethodSECP256k1Opera
+}
+
+export function setSignMethodED25519() {
+    pubKeyType = pubKeyTypeED25519Opera
+    signMethod = signMethodED25519Opera
+}
+
 export function getOperaPubKeyBase58() {
     const pubkeyBase58 = getVerificationMethod().publicKeyBase58
     console.log("pubkeyBase58", pubkeyBase58)
@@ -117,15 +127,11 @@ async function signOpera(toAddress: string, messageType: string) {
 }
 
 export async function signOperaSECP256k1(toAddress: string) {
-    pubKeyType = pubKeyTypeSECP256k1Opera
-    signMethod = signMethodSECP256k1Opera
     const messageType = ixohelper.messageTypeMsgSend
     return await signOpera(toAddress, messageType)
 }
 
 export async function signOperaED25519(toAddress: string) {
-    pubKeyType = pubKeyTypeED25519Opera
-    signMethod = signMethodED25519Opera
     const messageType = ixohelper.messageTypeMsgBuy
     return await signOpera(toAddress, messageType)
 }
