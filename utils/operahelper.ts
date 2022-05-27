@@ -11,7 +11,7 @@ let signMethod: string
 
 const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
-const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
+export const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
 const addressIndex = 0
 
@@ -24,24 +24,6 @@ export function setSignMethodED25519() {
     pubKeyType = pubKeyTypeED25519Opera
     signMethod = signMethodED25519Opera
 }
-
-export function getOperaPubKeyBase58() {
-    const pubkeyBase58 = getVerificationMethod().publicKeyBase58
-    console.log("pubkeyBase58", pubkeyBase58)
-    return pubkeyBase58
-}
-
-function getOperaPubKeyUint8Array() {
-    const pubkeyUint8Array = base58.decode(getOperaPubKeyBase58())
-    console.log("pubKeyUint8Array", pubkeyUint8Array)
-    return pubkeyUint8Array
-}
-
-export async function getOperaPubKeyBase64() {
-    const pubkeyBase64 = Base64.fromUint8Array(getOperaPubKeyUint8Array())
-    console.log("aminohelper.Base64.fromUint8Array)", pubkeyBase64)
-    return pubkeyBase64
-  }
 
 function getDidDoc() {
     if (didDoc) return didDoc
@@ -58,19 +40,47 @@ function getDIDDocJSON() {
     return didDocJSON
 }
 
-function getVerificationMethod() {
-    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyType)
-    console.log("verificationMethod", verificationMethod)
+function getVerificationMethodSECP256k1() {
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyTypeSECP256k1Opera)
+    console.log("verificationMethodSECP256k1", verificationMethod)
     return verificationMethod
 }
 
+function getVerificationMethodED25519() {
+    const verificationMethod = getDIDDocJSON().verificationMethod.find(x => x.type == pubKeyTypeED25519Opera)
+    console.log("verificationMethodED25519", verificationMethod)
+    return verificationMethod
+}
+
+export function getOperaPubKeyBase58(pubKeyType_: string) {
+    const pubkeyBase58 = 
+        (pubKeyType_ == pubKeyTypeSECP256k1Opera 
+        ? getVerificationMethodSECP256k1() 
+        : getVerificationMethodED25519())
+        .publicKeyBase58
+    console.log("pubkeyBase58", pubkeyBase58)
+    return pubkeyBase58
+}
+
+function getOperaPubKeyUint8Array(pubKeyType_: string) {
+    const pubkeyUint8Array = base58.decode(getOperaPubKeyBase58(pubKeyType_))
+    console.log("pubKeyUint8Array", pubkeyUint8Array)
+    return pubkeyUint8Array
+}
+
+export async function getOperaPubKeyBase64(pubKeyType_: string) {
+    const pubkeyBase64 = Base64.fromUint8Array(getOperaPubKeyUint8Array(pubKeyType_))
+    console.log("aminohelper.Base64.fromUint8Array)", pubkeyBase64)
+    return pubkeyBase64
+}
+
 function encodeSecp256k1PubkeyLocal() {
-    const pubkey = amino.encodeSecp256k1Pubkey(getOperaPubKeyUint8Array())
+    const pubkey = amino.encodeSecp256k1Pubkey(getOperaPubKeyUint8Array(pubKeyTypeSECP256k1Opera))
     console.log("pubKey", pubkey)
     return pubkey
 }
 
-function getAddress() {
+function getAddressFromSECP256k1PubKey() {
     const address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
     console.log("address", address)
     return address
@@ -113,7 +123,7 @@ function transformSignature(signatureOperaBase64) {
 }
 
 async function signOpera(toAddress: string, messageType: string) {
-    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddress(), messageType)
+    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddressFromSECP256k1PubKey(), messageType)
     console.log("operahelper.stdSignDoc", stdSignDoc)
     const sha256msg = sha256(amino.serializeSignDoc(stdSignDoc))
     console.log("operahelper.sha256msg", sha256msg)
