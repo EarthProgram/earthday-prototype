@@ -133,19 +133,19 @@ export async function postTransactionED(signed, signatureValue, localPubKeyValue
     const { pubkey, signature } = await getPostParamsED(signatureValue, localPubKeyValue)
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
-        mode: 'sync',
         tx: {
-            fee: signed.fee,
             msg: signed.msgs,
+            fee: signed.fee,
             signatures: [
                 {
                     account_number: signed.account_number,
-                    pub_key: pubkey,
                     sequence: signed.sequence,
                     signature: signature,
+                    pub_key: pubkey,
                 },
             ],
         },
+        mode: 'sync'
     }
     )
  }
