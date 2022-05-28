@@ -70,8 +70,8 @@ function createMessage(messageType: string, fromAddress: string, toAddress: stri
         }
     } else if (messageType === messageTypeMsgBuy) {
         value = {
-        buyer_did: fromAddress,
-        amount: [{ amount: String(22), denom: 'uixo' }],
+        buyer_did: 'did:sov:CYCc2xaJKrp8Yt947Nc6jd',
+        amount: { amount: String(22), denom: 'uixo' },
         max_prices: [{ amount: String(1), denom: "xusd" }],
         bond_did: "did:ixo:75SZoisuNpsDezmYURaBb7"
         }
@@ -83,13 +83,13 @@ function createMessage(messageType: string, fromAddress: string, toAddress: stri
     return { type: messageType, value }
 }
 
-async function getPostParams(signed, signatureValue, localPubKeyValue: string) {
+async function getPostParams(pubkeyType:string, signatureValue, localPubKeyValue: string) {
     let pubkey
     let signature
 
     if (!signatureValue.pub_key) {
         pubkey = {
-                type: amino.pubkeyType.secp256k1,
+                type: pubkeyType,
                 value: localPubKeyValue
         }
     } else pubkey = signatureValue.pub_key
@@ -100,8 +100,16 @@ async function getPostParams(signed, signatureValue, localPubKeyValue: string) {
     return { pubkey, signature }
 }
 
+async function getPostParamsSECP(signatureValue, localPubKeyValue: string) {
+    return await getPostParams(amino.pubkeyType.secp256k1, signatureValue, localPubKeyValue)
+}
+
+async function getPostParamsED(signatureValue, localPubKeyValue: string) {
+    return await getPostParams(amino.pubkeyType.ed25519, signatureValue, localPubKeyValue)
+}
+
 export async function postTransaction(signed, signatureValue, localPubKeyValue: string) {
-    const { pubkey, signature } = await getPostParams(signed, signatureValue, localPubKeyValue)
+    const { pubkey, signature } = await getPostParamsSECP(signatureValue, localPubKeyValue)
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
@@ -122,7 +130,7 @@ export async function postTransaction(signed, signatureValue, localPubKeyValue: 
 }
 
 export async function postTransactionED(signed, signatureValue, localPubKeyValue: string) {
-    const { pubkey, signature } = await getPostParams(signed, signatureValue, localPubKeyValue)
+    const { pubkey, signature } = await getPostParamsED(signatureValue, localPubKeyValue)
 
     return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
         mode: 'sync',
