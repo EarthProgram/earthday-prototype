@@ -144,6 +144,7 @@ export async function postTransactionED(signed, signatureValue, localPubKeyValue
                     pub_key: pubkey,
                 },
             ],
+            memo: signed.memo
         },
         mode: 'sync'
     }
