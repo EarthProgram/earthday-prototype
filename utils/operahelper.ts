@@ -3,13 +3,14 @@ const { Base64 } = require('js-base64')
 import * as amino from "@cosmjs/amino"
 import * as ixohelper from './ixohelper'
 const {sha256} =  require("@cosmjs/crypto");
+import {fromHex} from "@cosmjs/encoding";
 
 let didDoc
 let didDocJSON
 let pubKeyType: string
 let signMethod: string
 
-const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
+export const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
 export const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
@@ -87,11 +88,16 @@ function getAddressFromSECP256k1PubKey() {
 }
 
 /* With thanks to Benzhe of Opera! */
-function transformSignature(signatureOperaBase64) {
-    
-    if (signMethod === signMethodED25519Opera) return signatureOperaBase64
+function transformSignature(signatureOpera) {
 
-    const rawArray = Base64.toUint8Array(signatureOperaBase64)
+    let rawArray
+    if (signMethod === signMethodED25519Opera) {
+        rawArray = fromHex(signatureOpera)
+    } else if (signMethod === signMethodSECP256k1Opera) {
+        rawArray = Base64.toUint8Array(signatureOpera)
+    } else {
+        return null
+    }
     console.log("rawSignature", rawArray)
 
     if (rawArray.length < 64 || rawArray.length > 66) {
@@ -102,7 +108,7 @@ function transformSignature(signatureOperaBase64) {
     let signatureCosmjsBase64 = ""
 
     if (rawArray.length == 64) {
-        signatureCosmjsBase64 = signatureOperaBase64
+        signatureCosmjsBase64 = signatureOpera
     } else if (rawArray.length == 65) {
         if (rawArray[0] == 0x00) {
             signatureCosmjsBase64 = Base64.fromUint8Array(rawArray.slice(1, 65))

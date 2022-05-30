@@ -22,7 +22,7 @@ export default function Home() {
         locale: config[tempCode].lang[0].code,
       });
     }, 1500);
-    // init();
+    init();
   }, []);
   console.log("countryCode", countryCode);
   return (

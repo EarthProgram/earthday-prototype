@@ -417,6 +417,16 @@
     "pbkdf2" "^3.0.9"
     "randombytes" "^2.0.1"
 
+"bip39@3.0.2":
+  "integrity" "sha512-J4E1r2N0tUylTKt07ibXvhpT2c5pyAFgvuA5q1H9uDy6dEGpjV8jmymh3MTYJDLCNbIVClSB9FbND49I6N24MQ=="
+  "resolved" "https://registry.npmjs.org/bip39/-/bip39-3.0.2.tgz"
+  "version" "3.0.2"
+  dependencies:
+    "@types/node" "11.11.6"
+    "create-hash" "^1.1.0"
+    "pbkdf2" "^3.0.9"
+    "randombytes" "^2.0.1"
+
 "bl@^4.0.3":
   "integrity" "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="
   "resolved" "https://registry.npmjs.org/bl/-/bl-4.1.0.tgz"
@@ -597,7 +607,7 @@
     "ripemd160" "^2.0.1"
     "sha.js" "^2.4.0"
 
-"create-hmac@^1.1.4":
+"create-hmac@^1.1.4", "create-hmac@1.1.7":
   "integrity" "sha512-MJG9liiZ+ogc4TzUwuvbER1JRdgvUFSB5+VR/g5h82fGaIRWMWddtKBHi7/sVhfjQZ6SehlyhvQYrcYkaUIpLg=="
   "resolved" "https://registry.npmjs.org/create-hmac/-/create-hmac-1.1.7.tgz"
   "version" "1.1.7"
@@ -693,6 +703,15 @@
   "version" "3.0.1"
   dependencies:
     "path-type" "^4.0.0"
+
+"ed25519-hd-key@^1.2.0":
+  "integrity" "sha512-pwES3tQ4Z8g3sfIBZEgtuTwFtHq5AlB9L8k9a48k7qPn74q2OmgrrgkdwyJ+P2GVTOBVCClAC7w21Wpksso3gw=="
+  "resolved" "https://registry.npmjs.org/ed25519-hd-key/-/ed25519-hd-key-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "bip39" "3.0.2"
+    "create-hmac" "1.1.7"
+    "tweetnacl" "1.0.3"
 
 "elliptic@^6.5.3":
   "integrity" "sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ=="
@@ -1976,7 +1995,7 @@
   dependencies:
     "safe-buffer" "^5.0.1"
 
-"tweetnacl@^1.0.0":
+"tweetnacl@^1.0.0", "tweetnacl@1.0.3":
   "integrity" "sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw=="
   "resolved" "https://registry.npmjs.org/tweetnacl/-/tweetnacl-1.0.3.tgz"
   "version" "1.0.3"
