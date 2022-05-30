@@ -3,7 +3,7 @@ const { Base64 } = require('js-base64')
 import * as amino from "@cosmjs/amino"
 import * as ixohelper from './ixohelper'
 const {sha256} =  require("@cosmjs/crypto");
-import {fromHex} from "@cosmjs/encoding";
+import * as encoding from "@cosmjs/encoding";
 
 let didDoc
 let didDocJSON
@@ -92,16 +92,18 @@ function transformSignature(signatureOpera) {
 
     let rawArray
     if (signMethod === signMethodED25519Opera) {
-        rawArray = fromHex(signatureOpera)
+        rawArray = encoding.fromHex(signatureOpera)
+        signatureOpera = encoding.toBase64(rawArray)
+        console.log("signatureOpera = encoding.toBase64(rawArray)", signatureOpera)
     } else if (signMethod === signMethodSECP256k1Opera) {
         rawArray = Base64.toUint8Array(signatureOpera)
     } else {
         return null
     }
-    console.log("rawSignature", rawArray)
+    console.log("operahelper.rawArray", rawArray)
 
     if (rawArray.length < 64 || rawArray.length > 66) {
-        console.log("invalid length")
+        console.log("operahelper.invalid length")
         return
     }
 
@@ -115,16 +117,16 @@ function transformSignature(signatureOpera) {
         } else if (rawArray[32] == 0x00) {
             signatureCosmjsBase64 = Base64.fromUint8Array([rawArray.slice(0, 32), rawArray.slice(33, 65)])
         } else {
-            console.log("invalid signature array, length 65")
+            console.log("operahelper.invalid signature array, length 65")
         }
     } else if (rawArray.length == 66) {
         if (rawArray[0] == 0x00 && rawArray[33] == 0x00) {
             signatureCosmjsBase64 = Base64.fromUint8Array([rawArray.slice(1, 33), rawArray.slice(34, 66)])
         } else {
-            console.log("invalid signature array, length 66")
+            console.log("operahelper.invalid signature array, length 66")
         }
     }
-    console.log("signatureCosmjsBase64", signatureCosmjsBase64)
+    console.log("operahelper.signatureCosmjsBase64", signatureCosmjsBase64)
     return signatureCosmjsBase64
 }
 
