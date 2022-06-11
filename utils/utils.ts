@@ -7,14 +7,21 @@ export async function broadcastTransaction(toAddress: string) {
 
     try {
         // console.log(" -------- ixoClient sign --------")
-        // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic)
+        // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
         // console.log("ixoClient.wallet", wallet)
         // const client = await ixoclient.makeClient(wallet)
         // console.log("ixoClient.client", client)
         // const sendTokensResult = await client.sendTokens(toAddress, 10)
         // console.log("ixoClient.sendTokensResult", sendTokensResult)
-        // const msgDelegate = await ixoclient.delegate('ixo12345', 10)
-        // const msgUndelegate = await ixoclient.undelegate('ixo12345', 5)
+
+        // const bondDid = "did:ixo:PK5dTV9hjoESxiqDKhHAGE"
+        // const bondToken = "gtest3"
+        // const reserveToken = "xusd"
+        // const amount = 1.0
+        // const maxPrice = 100.0
+        // const msgBuy = await client.bonds.buy({bondDid, bondToken, reserveToken, amount, maxPrice})
+        // console.log("ixoClient.msgBuy", msgBuy)
+
     } catch (error) {
         console.log("ixoClient sign --------", error)
     }
@@ -30,6 +37,12 @@ export async function broadcastTransaction(toAddress: string) {
     }
 
     try {
+        // console.log(" -------- Amino sign - MsgBuy ED25519 --------")
+    } catch (error) {
+        console.log("utils.error - Amino - MsgBuy ED25519", error)
+    }
+
+    try {
         // console.log(" -------- Opera sign - MsgSend Base64 pubKey - SECP256k1 --------")
         // const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeSECP256k1Opera)
         // const { signed, signatureValue } = await operahelper.signOperaSECP256k1(toAddress)
@@ -41,12 +54,12 @@ export async function broadcastTransaction(toAddress: string) {
 
     try {
         //ED25519 MsgBuy for ED check - use CYC DID
-        console.log(" -------- Opera sign - MsgBuy Base64 pubKey - ED25519 --------")
-        operahelper.setSignMethodED25519()
-        const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeED25519Opera)
-        const { signed, signatureValue } = await operahelper.signOperaED25519(toAddress)
-        const postResult = await ixohelper.postTransactionED(signed, signatureValue , publicKeyLocal)
-        console.log("postResult", postResult)
+        // console.log(" -------- Opera sign - MsgBuy Base64 pubKey - ED25519 --------")
+        // operahelper.setSignMethodED25519()
+        // const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeED25519Opera)
+        // const { signed, signatureValue } = await operahelper.signOperaED25519(toAddress)
+        // const postResult = await ixohelper.postTransactionED(signed, signatureValue , publicKeyLocal)
+        // console.log("postResult", postResult)
     } catch (error) {
         console.log("utils.error - Opera - MsgBuy Base64 pubKey - ED25519", error)
     }

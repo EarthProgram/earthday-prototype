@@ -8,7 +8,7 @@ let pubkeyBase64: string
 let address: string
 
 async function init() {
-  secp256k1HdWallet = await amino.Secp256k1HdWallet.fromMnemonic(ixohelper.mnemonic, {prefix: ixohelper.prefix})
+  secp256k1HdWallet = await amino.Secp256k1HdWallet.fromMnemonic(ixohelper.mnemonic_opera, {prefix: ixohelper.prefix})
   const accounts = await secp256k1HdWallet.getAccounts()
   const pubkey = accounts[0].pubkey
   pubkeyBase58 = base58.encode(pubkey)

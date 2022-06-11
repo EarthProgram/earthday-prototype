@@ -11,7 +11,6 @@ import Header from "../components/header";
 import { getCountry, setCss } from "../components/setStyles";
 import config from "../constants/config.json";
 import WalletInfo from "../components/walletInfo";
-// import { broadcastTransaction } from "../utils/utils";
 import { initScriptLoader } from "next/script";
 
 declare global {
@@ -60,8 +59,6 @@ export default function Home() {
     }
     setCurrentStep(page);
   });
-
-  init();
 
   return (
     mounted && (
@@ -146,10 +143,6 @@ export default function Home() {
       </div>
     )
   );
-
-async function init() {
-  // broadcastTransaction("ixo1wfvqcamfzqq6y0j75r3n9ascj3tuvup3jqtnwc");
-}
 
 function onCLick(event, isExit = false) {
   event.preventDefault();

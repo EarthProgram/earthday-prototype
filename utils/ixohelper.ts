@@ -1,7 +1,8 @@
 import Axios from 'axios'
 import * as amino from "@cosmjs/amino"
 
-export const mnemonic = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
+export const mnemonic_opera = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
+export const mnemonic_CYC = "basket mechanic myself capable shoe then home magic cream edge seminar artefact"
 export const messageTypeMsgSend = 'cosmos-sdk/MsgSend'
 export const messageTypeMsgBuy = 'bonds/MsgBuy'
 export const chainId = 'pandora-4'
