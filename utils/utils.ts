@@ -2,66 +2,76 @@ import * as ixoclient from '@ixo/client-sdk'
 import * as aminohelper from "./aminohelper"
 import * as operahelper from "./operahelper"
 import * as ixohelper from "./ixohelper"
+import * as ed25519helper from './ed25519helper'
 
 export async function broadcastTransaction(toAddress: string) {
+    const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
+    console.log("ixo-client-sdk.wallet", wallet)
+    const client = await ixoclient.makeClient(wallet)
+    console.log("ixo-client-sdk.client", client)
 
     try {
-        // console.log(" -------- ixoClient sign --------")
-        // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
-        // console.log("ixoClient.wallet", wallet)
-        // const client = await ixoclient.makeClient(wallet)
-        // console.log("ixoClient.client", client)
+        // console.log(" -------- ixo-client-sdk - MsgSend SECP256k1 --------")
         // const sendTokensResult = await client.sendTokens(toAddress, 10)
-        // console.log("ixoClient.sendTokensResult", sendTokensResult)
-
-        // const bondDid = "did:ixo:PK5dTV9hjoESxiqDKhHAGE"
-        // const bondToken = "gtest3"
-        // const reserveToken = "xusd"
-        // const amount = 1.0
-        // const maxPrice = 100.0
-        // const msgBuy = await client.bonds.buy({bondDid, bondToken, reserveToken, amount, maxPrice})
-        // console.log("ixoClient.msgBuy", msgBuy)
-
+        // console.log("ixo-client-sdk.sendTokensResult", sendTokensResult)
     } catch (error) {
-        console.log("ixoClient sign --------", error)
+        console.log("utils.error - ixo-client-sdk - MsgSend SECP256k1 --------", error)
     }
 
     try {
-        // console.log(" -------- Amino sign - MsgSend Base64 pubKey --------")
+        // console.log(" -------- cosmjs/amino - MsgSend SECP256k1 --------")
         // const publicKeyLocal = await aminohelper.getAminoPubKeyBase64()
         // const { signed, signature } = await aminohelper.signAmino(toAddress)
-        // const postResult = await ixohelper.postTransaction(signed, signature , publicKeyLocal)
-        // console.log("postResult", postResult)
+        // const postResult = await ixohelper.postTransactionSECP(signed, signature , publicKeyLocal)
+        // console.log("cosmjs/amino.postResult", postResult)
     } catch (error) {
-        console.log("utils.error - Amino - Base64", error)
+        console.log("utils.error - cosmjs/amino - MsgSend SECP256k1 ", error)
     }
 
     try {
-        // console.log(" -------- Amino sign - MsgBuy ED25519 --------")
-    } catch (error) {
-        console.log("utils.error - Amino - MsgBuy ED25519", error)
-    }
-
-    try {
-        // console.log(" -------- Opera sign - MsgSend Base64 pubKey - SECP256k1 --------")
+        // console.log(" -------- Opera - MsgSend SECP256k1 --------")
         // const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeSECP256k1Opera)
         // const { signed, signatureValue } = await operahelper.signOperaSECP256k1(toAddress)
-        // const postResult = await ixohelper.postTransaction(signed, signatureValue , publicKeyLocal)
-        // console.log("postResult", postResult)
+        // const postResult = await ixohelper.postTransactionSECP(signed, signatureValue , publicKeyLocal)
+        // console.log("opera.postResult", postResult)
     } catch (error) {
-        console.log("utils.error - Opera - MsgSend Base64 pubKey - SECP256k1", error)
+        console.log("utils.error - Opera - MsgSend SECP256k1 ", error)
     }
 
     try {
-        //ED25519 MsgBuy for ED check - use CYC DID
-        // console.log(" -------- Opera sign - MsgBuy Base64 pubKey - ED25519 --------")
-        // operahelper.setSignMethodED25519()
-        // const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeED25519Opera)
-        // const { signed, signatureValue } = await operahelper.signOperaED25519(toAddress)
-        // const postResult = await ixohelper.postTransactionED(signed, signatureValue , publicKeyLocal)
-        // console.log("postResult", postResult)
+        // console.log(" -------- ixo-client-sdk - MsgBuy ED25519 --------")
+        // const message = ixohelper.createMessage(ixohelper.messageTypeMsgBuy,'','')
+        // console.log("utils.message", message)
+        // const bondDid = message.value.bond_did
+        // const bondToken = message.value.amount.denom
+        // const reserveToken = message.value.max_prices[0].denom
+        // const amount = message.value.amount.amount
+        // const maxPrice = message.value.max_prices[0].amount
+        // const msgBuy = await client.bonds.buy({bondDid, bondToken, reserveToken, amount, maxPrice})
+        // console.log("ixo-client-sdk.msgBuy", msgBuy)
     } catch (error) {
-        console.log("utils.error - Opera - MsgBuy Base64 pubKey - ED25519", error)
+        console.log("utils.error - ixo-client-sdk - MsgBuy ED25519 --------", error)
+    }
+
+    try {
+        // console.log(" -------- cosmjs/crypto - MsgBuy ED25519 --------")
+        // const publicKeyLocal = await ed25519helper.getED25519PubKeyBase64()
+        // const { signed, signature } = await ed25519helper.signED25519(toAddress)
+        // const postResult = await ixohelper.postTransactionED(signed, signature , publicKeyLocal)
+        // console.log("cosmjs/crypto.postResult", postResult)
+    } catch (error) {
+        console.log("utils.error - cosmjs/crypto - MsgBuy ED25519", error)
+    }
+
+    try {
+        console.log(" -------- Opera - MsgBuy ED25519 --------")
+        operahelper.setSignMethodED25519()
+        const publicKeyLocal = await operahelper.getOperaPubKeyBase64(operahelper.pubKeyTypeED25519Opera)
+        const { signed, signatureValue } = await operahelper.signOperaED25519(toAddress)
+        const postResult = await ixohelper.postTransactionED(signed, signatureValue , publicKeyLocal)
+        console.log("opera.postResult", postResult)
+    } catch (error) {
+        console.log("utils.error - Opera - MsgBuy ED25519", error)
     }
 }
 

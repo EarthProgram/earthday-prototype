@@ -51,7 +51,7 @@ export async function signAmino(toAddress: string) {
 
     return { signed, signature}
   } catch (error) {
-    console.log("error", error)
+    console.log("aminohelper.error", error)
     return error
   }
 }
