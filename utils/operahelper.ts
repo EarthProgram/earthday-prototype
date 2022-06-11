@@ -81,10 +81,19 @@ function encodeSecp256k1PubkeyLocal() {
     return pubkey
 }
 
-function getAddressFromSECP256k1PubKey() {
-    const address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
-    console.log("address", address)
-    return address
+async function getAddress() {
+    let address: string
+    console.log("operahelper.signMethod ===", signMethod)
+    
+    if (signMethod === signMethodSECP256k1Opera) {
+        address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
+        return address
+    } else if (signMethod === signMethodED25519Opera) {
+        address = encoding.toBech32(ixohelper.prefix, sha256(base58.decode(await getOperaPubKeyBase64(pubKeyTypeED25519Opera))).slice(0, 20))
+        return address
+    } else {
+        return null
+    }
 }
 
 /* With thanks to Benzhe of Opera! */
@@ -131,7 +140,7 @@ function transformSignature(signatureOpera) {
 }
 
 async function signOpera(toAddress: string, messageType: string) {
-    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, getAddressFromSECP256k1PubKey(), messageType)
+    const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, await getAddress(), messageType)
     console.log("operahelper.stdSignDoc", stdSignDoc)
     const sha256msg = sha256(amino.serializeSignDoc(stdSignDoc))
     console.log("operahelper.sha256msg", sha256msg)

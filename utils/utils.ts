@@ -5,10 +5,10 @@ import * as ixohelper from "./ixohelper"
 import * as ed25519helper from './ed25519helper'
 
 export async function broadcastTransaction(toAddress: string) {
-    const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
-    console.log("ixo-client-sdk.wallet", wallet)
-    const client = await ixoclient.makeClient(wallet)
-    console.log("ixo-client-sdk.client", client)
+    // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
+    // console.log("ixo-client-sdk.wallet", wallet)
+    // const client = await ixoclient.makeClient(wallet)
+    // console.log("ixo-client-sdk.client", client)
 
     try {
         // console.log(" -------- ixo-client-sdk - MsgSend SECP256k1 --------")
