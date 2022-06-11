@@ -1,20 +1,25 @@
+import * as bip39 from 'bip39'
+import * as ed25519 from "ed25519-hd-key";
 import * as base58 from 'bs58'
 const { Base64 } = require('js-base64')
-import * as amino from "@cosmjs/amino"
+import * as amino from '@cosmjs/amino'
 import * as ixohelper from './ixohelper'
-const {sha256} =  require("@cosmjs/crypto");
-import * as encoding from "@cosmjs/encoding";
+import * as crypto from '@cosmjs/crypto'
+import * as encoding from '@cosmjs/encoding'
 
 let didDoc
 let didDocJSON
 let pubKeyType: string
 let signMethod: string
+let ed25519Keypair: crypto.Ed25519Keypair
 
 export const pubKeyTypeSECP256k1Opera = "EcdsaSecp256k1VerificationKey2019"
 const signMethodSECP256k1Opera = "secp256k1"
 export const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
 const addressIndex = 0
+const path = "m/44'/118'/0'/0'/0'"
+const mnemonic = ixohelper.mnemonic_CYC
 
 export function setSignMethodSECP256k1() {
     pubKeyType = pubKeyTypeSECP256k1Opera
@@ -90,12 +95,25 @@ async function getAddress() {
         console.log("operahelper.signMethodSECP256k1Opera.address ===", signMethod)
         return address
     } else if (signMethod === signMethodED25519Opera) {
-        address = encoding.toBech32(ixohelper.prefix, sha256(base58.decode(getOperaPubKeyBase58(pubKeyTypeED25519Opera))).slice(0, 20))
+        address = encoding.toBech32(ixohelper.prefix, (await getED25519Keypair()).pubkey)
         console.log("operahelper.signMethodED25519Opera.signMethod ===", signMethod)
         return address
     } else {
         return null
     }
+}
+
+/** Attempt at using @cosmjs/crypto but without success */
+async function getED25519Keypair() {
+    if (ed25519Keypair) return ed25519Keypair
+
+    const seed = bip39.mnemonicToSeedSync(mnemonic)
+    console.log("ed25519helper.seed",seed)
+    const derivedSeed = ed25519.derivePath(path, seed.toString("hex")).key;
+    console.log("ed25519helper.derivedSeed",derivedSeed)
+    ed25519Keypair = await crypto.Ed25519.makeKeypair((derivedSeed).slice(0, 32))
+    console.log("ed25519helper.ed25519Keypair",ed25519Keypair)
+    return ed25519Keypair
 }
 
 /* With thanks to Benzhe of Opera! */
@@ -144,7 +162,7 @@ function transformSignature(signatureOpera) {
 async function signOpera(toAddress: string, messageType: string) {
     const stdSignDoc = await ixohelper.getStdSignDoc(toAddress, await getAddress(), messageType)
     console.log("operahelper.stdSignDoc", stdSignDoc)
-    const sha256msg = sha256(amino.serializeSignDoc(stdSignDoc))
+    const sha256msg = crypto.sha256(amino.serializeSignDoc(stdSignDoc))
     console.log("operahelper.sha256msg", sha256msg)
     const hexValue = Buffer.from(sha256msg).toString("hex")
     console.log("operahelper.hexValue", hexValue)
