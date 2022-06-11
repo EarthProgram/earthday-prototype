@@ -54,7 +54,7 @@ function getVerificationMethodED25519() {
 }
 
 export function getOperaPubKeyBase58(pubKeyType_: string) {
-    const pubkeyBase58 = 
+    const pubkeyBase58:string = 
         (pubKeyType_ == pubKeyTypeSECP256k1Opera 
         ? getVerificationMethodSECP256k1() 
         : getVerificationMethodED25519())
@@ -71,7 +71,7 @@ function getOperaPubKeyUint8Array(pubKeyType_: string) {
 
 export async function getOperaPubKeyBase64(pubKeyType_: string) {
     const pubkeyBase64 = Base64.fromUint8Array(getOperaPubKeyUint8Array(pubKeyType_))
-    console.log("aminohelper.Base64.fromUint8Array)", pubkeyBase64)
+    console.log("pubkeyBase64)", pubkeyBase64)
     return pubkeyBase64
 }
 
@@ -87,9 +87,11 @@ async function getAddress() {
     
     if (signMethod === signMethodSECP256k1Opera) {
         address = amino.pubkeyToAddress(encodeSecp256k1PubkeyLocal(), ixohelper.prefix) 
+        console.log("operahelper.signMethodSECP256k1Opera.address ===", signMethod)
         return address
     } else if (signMethod === signMethodED25519Opera) {
-        address = encoding.toBech32(ixohelper.prefix, sha256(base58.decode(await getOperaPubKeyBase64(pubKeyTypeED25519Opera))).slice(0, 20))
+        address = encoding.toBech32(ixohelper.prefix, sha256(base58.decode(getOperaPubKeyBase58(pubKeyTypeED25519Opera))).slice(0, 20))
+        console.log("operahelper.signMethodED25519Opera.signMethod ===", signMethod)
         return address
     } else {
         return null
