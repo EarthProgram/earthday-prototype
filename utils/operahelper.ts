@@ -95,7 +95,7 @@ async function getAddress() {
         console.log("operahelper.signMethodSECP256k1Opera.address ===", signMethod)
         return address
     } else if (signMethod === signMethodED25519Opera) {
-        address = encoding.toBech32(ixohelper.prefix, (await getED25519Keypair()).pubkey)
+        address = encoding.toBech32(ixohelper.prefix, ((await getED25519Keypair()).pubkey).slice(0, 20))
         console.log("operahelper.signMethodED25519Opera.signMethod ===", signMethod)
         return address
     } else {
