@@ -9,7 +9,7 @@ import * as ixohelper from './ixohelper'
 import * as sovrin from 'sovrin-did'
 
 const path = "m/44'/118'/0'/0'/0'"
-const mnemonic = ixohelper.mnemonic_CYC
+const mnemonic = ixohelper.mnemonic_opera
 
 // let ed25519Keypair: crypto.Ed25519Keypair
 let didDoc: any

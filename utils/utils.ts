@@ -5,10 +5,12 @@ import * as ixohelper from "./ixohelper"
 import * as ed25519helper from './ed25519helper'
 
 export async function broadcastTransaction(toAddress: string) {
-    // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_CYC)
-    // console.log("ixo-client-sdk.wallet", wallet)
-    // const client = await ixoclient.makeClient(wallet)
-    // console.log("ixo-client-sdk.client", client)
+    const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_opera)
+    console.log("ixo-client-sdk.wallet", wallet)
+    const client = await ixoclient.makeClient(wallet)
+    console.log("ixo-client-sdk.client", client)
+    const agentAccounts = await wallet.agent.getAccounts()
+    console.log("utils.wallet.agentAccounts[0].address", agentAccounts[0].address)
 
     try {
         // console.log(" -------- ixo-client-sdk - MsgSend SECP256k1 --------")
@@ -54,13 +56,13 @@ export async function broadcastTransaction(toAddress: string) {
     }
 
     try {
-        // console.log(" -------- cosmjs/crypto - MsgBuy ED25519 --------")
+        // console.log(" -------- cosmjs/crypto-sovrin - MsgBuy ED25519 --------")
         // const publicKeyLocal = await ed25519helper.getED25519PubKeyBase64()
         // const { signed, signature } = await ed25519helper.signED25519(toAddress)
         // const postResult = await ixohelper.postTransactionED(signed, signature , publicKeyLocal)
-        // console.log("cosmjs/crypto.postResult", postResult)
+        // console.log("cosmjs/crypto-sovrin.postResult", postResult)
     } catch (error) {
-        console.log("utils.error - cosmjs/crypto - MsgBuy ED25519", error)
+        console.log("utils.error - cosmjs/crypto-sovrin - MsgBuy ED25519", error)
     }
 
     try {

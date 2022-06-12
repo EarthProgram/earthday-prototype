@@ -19,7 +19,7 @@ export const pubKeyTypeED25519Opera = "Ed25519VerificationKey2018"
 const signMethodED25519Opera = "ed25519"
 const addressIndex = 0
 const path = "m/44'/118'/0'/0'/0'"
-const mnemonic = ixohelper.mnemonic_CYC
+const mnemonic = ixohelper.mnemonic_opera
 
 export function setSignMethodSECP256k1() {
     pubKeyType = pubKeyTypeSECP256k1Opera

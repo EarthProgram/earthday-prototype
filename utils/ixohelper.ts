@@ -2,7 +2,7 @@ import Axios from 'axios'
 import * as amino from "@cosmjs/amino"
 
 export const mnemonic_opera = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
-export const mnemonic_CYC = "basket mechanic myself capable shoe then home magic cream edge seminar artefact"
+export const mnemonic_CY = "basket mechanic myself capable shoe then home magic cream edge seminar artefact"
 export const messageTypeMsgSend = 'cosmos-sdk/MsgSend'
 export const messageTypeMsgBuy = 'bonds/MsgBuy'
 export const chainId = 'pandora-4'
@@ -21,7 +21,6 @@ async function getBalance(address: string, denom) {
 }
 
 export async function getAuthAccountsJSON(address: string) {
-    console.log("ixohelper.address", address)
     let fetchResult, authAccountsJSON
     try {
         fetchResult = await fetch(`https://testnet.ixo.world/cosmos/auth/v1beta1/accounts/${address}`)
@@ -67,7 +66,7 @@ export async function getStdSignDoc(toAddress: string, fromAddress: string, mess
     }
 }
 
-export function createMessage(messageType: string, fromAddress: string, toAddress: string) {
+function createMessage(messageType: string, fromAddress: string, toAddress: string) {
     let value
     if (messageType === messageTypeMsgSend) {
         value = {
@@ -79,7 +78,7 @@ export function createMessage(messageType: string, fromAddress: string, toAddres
         value = {
         amount: { amount: String(22), denom: 'gtest3' },
         bond_did: 'did:ixo:PK5dTV9hjoESxiqDKhHAGE',
-        buyer_did: 'did:ixo:CYCc2xaJKrp8Yt947Nc6jd',
+        buyer_did:'did:ixo:8Du8pSuGie7o4kVWndManQ', //'did:ixo:CYCc2xaJKrp8Yt947Nc6jd',
         max_prices: [{ amount: String(1000), denom: "xusd" }]
         }
     } else {
