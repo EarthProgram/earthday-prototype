@@ -1,13 +1,13 @@
 import Axios from 'axios'
 import * as amino from "@cosmjs/amino"
 
-export const mnemonic_opera = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
-export const mnemonic_CY = "basket mechanic myself capable shoe then home magic cream edge seminar artefact"
-export const messageTypeMsgSend = 'cosmos-sdk/MsgSend'
-export const messageTypeMsgBuy = 'bonds/MsgBuy'
-export const chainId = 'pandora-4'
+export const mnemonic_ECO = "ecology tone orange sell expect live goddess banner dash exhaust wrap market"
+export const mnemonic_CYC = "basket mechanic myself capable shoe then home magic cream edge seminar artefact"
 export const EARTHDAY = 'earthday'
 export const prefix = 'ixo'
+export const bondDID = 'did:ixo:Xby8Ksyct1RnayXtNuakWG'//'did:ixo:PK5dTV9hjoESxiqDKhHAGE'
+export const buyerDID_CYC = 'did:ixo:CYCc2xaJKrp8Yt947Nc6jd'
+export const buyerDID_ECO = 'did:ixo:8Du8pSuGie7o4kVWndManQ'
 
 export async function getEarthDayBalance(address: string) {
     return getBalance(address, EARTHDAY);
@@ -20,7 +20,7 @@ async function getBalance(address: string, denom) {
     return balanceJSON.balance.amount
 }
 
-export async function getAuthAccountsJSON(address: string) {
+export async function getAuthAccount(address: string) {
     let fetchResult, authAccountsJSON
     try {
         fetchResult = await fetch(`https://testnet.ixo.world/cosmos/auth/v1beta1/accounts/${address}`)
@@ -29,64 +29,26 @@ export async function getAuthAccountsJSON(address: string) {
     }
     authAccountsJSON = await fetchResult.json()
     console.log("ixohelper.authAccountsJSON", authAccountsJSON)
-return authAccountsJSON;
+return { accountNumber: authAccountsJSON.account.account_number, sequence: authAccountsJSON.account.sequence };
 }
 
-export function getAccountNumber(authAccountsJSON) {
-    const accountNumber = authAccountsJSON.account.account_number;
-    console.log("ixohelper.accountNumber", accountNumber)
-    return accountNumber
-}
-
-export function getSequence(authAccountsJSON) {
-    let sequence = authAccountsJSON.account.sequence;
-    if (!sequence) sequence = '0';
-    console.log("ixohelper.sequence", sequence)
-    return sequence
-}
-
-export async function getStdSignDoc(toAddress: string, fromAddress: string, messageType: string) {
-    const authAccountsJSON = await getAuthAccountsJSON(fromAddress)
-    const accountNumber = getAccountNumber(authAccountsJSON)
-    const sequence = getSequence(authAccountsJSON)
-    const memo = ""
-    const fee = {
-        amount: [{ amount: String(5000), denom: 'uixo' }],
-        gas: String(200000),
-    }
-    const msg = createMessage(messageType, fromAddress, toAddress)
-
-    return {
-    msgs: [msg],
-    fee: fee,
-    chain_id: chainId,
-    memo: memo,
-    account_number: accountNumber,
-    sequence: sequence,
-    }
-}
-
-function createMessage(messageType: string, fromAddress: string, toAddress: string) {
-    let value
-    if (messageType === messageTypeMsgSend) {
-        value = {
-            amount: [{ amount: String(10), denom: 'uixo' }],
-            from_address: fromAddress,
-            to_address: toAddress,
+async function postTransaction(signed, pubkey, signature) {
+    return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
+            mode: 'sync',
+            tx: {
+                fee: signed.fee,
+                msg: signed.msgs,
+                signatures: [
+                    {
+                        account_number: signed.account_number,
+                        pub_key: pubkey,
+                        sequence: signed.sequence,
+                        signature: signature,
+                    },
+                ],
+            },
         }
-    } else if (messageType === messageTypeMsgBuy) {
-        value = {
-        amount: { amount: String(22), denom: 'gtest3' },
-        bond_did: 'did:ixo:PK5dTV9hjoESxiqDKhHAGE',
-        buyer_did:'did:ixo:8Du8pSuGie7o4kVWndManQ', //'did:ixo:CYCc2xaJKrp8Yt947Nc6jd',
-        max_prices: [{ amount: String(1000), denom: "xusd" }]
-        }
-    } else {
-        value = {
-            error: "no messageType defined"
-        }
-    }
-    return { type: messageType, value }
+    )
 }
 
 async function getPostParams(pubkeyType:string, signatureValue, localPubKeyValue: string) {
@@ -106,53 +68,12 @@ async function getPostParams(pubkeyType:string, signatureValue, localPubKeyValue
     return { pubkey, signature }
 }
 
-async function getPostParamsSECP(signatureValue, localPubKeyValue: string) {
-    return await getPostParams(amino.pubkeyType.secp256k1, signatureValue, localPubKeyValue)
-}
-
-async function getPostParamsED(signatureValue, localPubKeyValue: string) {
-    return await getPostParams(amino.pubkeyType.ed25519, signatureValue, localPubKeyValue)
-}
-
 export async function postTransactionSECP(signed, signatureValue, localPubKeyValue: string) {
-    const { pubkey, signature } = await getPostParamsSECP(signatureValue, localPubKeyValue)
-
-    return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
-        mode: 'sync',
-        tx: {
-            fee: signed.fee,
-            msg: signed.msgs,
-            signatures: [
-                {
-                    account_number: signed.account_number,
-                    pub_key: pubkey,
-                    sequence: signed.sequence,
-                    signature: signature,
-                },
-            ],
-        },
-    }
-    )
+    const { pubkey, signature } = await getPostParams(amino.pubkeyType.secp256k1, signatureValue, localPubKeyValue)
+    return await postTransaction(signed, pubkey, signature)
 }
 
 export async function postTransactionED(signed, signatureValue, localPubKeyValue: string) {
-    const { pubkey, signature } = await getPostParamsED(signatureValue, localPubKeyValue)
-
-    return await Axios.post(`https://testnet.ixo.world/rest/txs`, {
-        mode: 'sync',
-        tx: {
-            msg: signed.msgs,
-            fee: signed.fee,
-            signatures: [
-                {
-                    account_number: signed.account_number,
-                    pub_key: pubkey,
-                    sequence: signed.sequence,
-                    signature: signature,
-                },
-            ],
-            memo: signed.memo
-        }
-    }
-    )
+    const { pubkey, signature } = await getPostParams(amino.pubkeyType.ed25519, signatureValue, localPubKeyValue)
+    return await postTransaction(signed, pubkey, signature)
  }
