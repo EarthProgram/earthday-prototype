@@ -23,6 +23,15 @@ export async function init(prefix) {
     pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
     secp256k1Pubkey = amino.encodeSecp256k1Pubkey(pubkeyByteArray)
     address = amino.pubkeyToAddress(secp256k1Pubkey, prefix) 
+
+    console.log("operaSECP256k1helper.didDocJSON",didDocJSON)
+    console.log("operaSECP256k1helper.verificationMethod",verificationMethod)
+    console.log("operaSECP256k1helper.pubkeyBase58",pubkeyBase58)
+    console.log("operaSECP256k1helper.pubkeyByteArray",pubkeyByteArray)
+    console.log("operaSECP256k1helper.pubkeyBase64",pubkeyBase64)
+    console.log("operaSECP256k1helper.secp256k1Pubkey",secp256k1Pubkey)
+    console.log("operaSECP256k1helper.address",address)
+
 }
 
 export async function sign(stdSignDoc: amino.StdSignDoc) {

@@ -23,6 +23,13 @@ export async function init(prefix) {
     pubkeyByteArray = base58.decode(pubkeyBase58)
     pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
     address = encoding.toBech32(prefix, crypto.sha256(base58.decode(pubkeyBase58)).slice(0, 20))
+    
+    console.log("operaED25519helper.didDocJSON",didDocJSON)
+    console.log("operaED25519helper.verificationMethod",verificationMethod)
+    console.log("operaED25519helper.pubkeyBase58",pubkeyBase58)
+    console.log("operaED25519helper.pubkeyByteArray",pubkeyByteArray)
+    console.log("operaED25519helper.pubkeyBase64",pubkeyBase64)
+    console.log("operaED25519helper.address",address)
 }
 
 export async function sign(stdSignDoc: amino.StdSignDoc) {
