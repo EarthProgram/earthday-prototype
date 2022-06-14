@@ -19,7 +19,7 @@ export async function init(prefix: string) {
     pubkeyBase64 = Base64.fromUint8Array(pubkeyByteArray)
     const pubkey = {
         type: amino.pubkeyType.secp256k1,
-        value: pubkeyBase58,
+        value: pubkeyBase64,
     }
     address = amino.pubkeyToAddress(pubkey, prefix)
 
