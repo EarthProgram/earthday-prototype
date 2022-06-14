@@ -15,8 +15,13 @@ export async function init(prefix: string) {
     const verificationMethod = didDocJSON.verificationMethod.find(x => x.type == pubKeyType)
     const pubkeyBase58 = verificationMethod.publicKeyBase58
     const pubkeyByteArray = base58.decode(pubkeyBase58)
+    // const secp256k1Pubkey = amino.encodeSecp256k1Pubkey(pubkeyByteArray)
     pubkeyBase64 = Base64.fromUint8Array(pubkeyByteArray)
-    address = operahelper.getAddressFromPubKey(pubkeyByteArray, prefix)
+    const pubkey = {
+        type: amino.pubkeyType.secp256k1,
+        value: pubkeyBase58,
+    }
+    address = amino.pubkeyToAddress(pubkey, prefix)
 
     console.log("operaSECP256k1helper.didDocJSON",didDocJSON)
     console.log("operaSECP256k1helper.verificationMethod",verificationMethod)

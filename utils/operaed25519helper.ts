@@ -18,7 +18,11 @@ export async function init(prefix) {
     const pubkeyBase58 = verificationMethod.publicKeyBase58
     const pubkeyByteArray = base58.decode(pubkeyBase58)
     pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
-    address = operahelper.getAddressFromPubKey(pubkeyByteArray, prefix)
+    const pubkey = {
+        type: amino.pubkeyType.ed25519,
+        value: pubkeyBase58,
+    }
+    address = amino.pubkeyToAddress(pubkey, prefix)
     // address = encoding.toBech32(prefix, crypto.sha256(base58.decode(pubkeyBase58)).slice(0, 20))
     
     console.log("operaED25519helper.didDocJSON",didDocJSON)

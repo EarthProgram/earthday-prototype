@@ -12,10 +12,6 @@ export function getDIDDocJSON() {
     return didDocJSON
 }
 
-export function getAddressFromPubKey(pubkeyByteArray: Buffer, prefix: string) {
-    return amino.pubkeyToAddress(amino.encodeSecp256k1Pubkey(pubkeyByteArray), prefix) 
-}
-
 export async function sign(stdSignDoc: amino.StdSignDoc, signMethod, addressIndex) {
     const sha256msg = crypto.sha256(amino.serializeSignDoc(stdSignDoc))
     const hexValue = Buffer.from(sha256msg).toString("hex")
