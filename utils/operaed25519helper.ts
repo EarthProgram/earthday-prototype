@@ -11,18 +11,15 @@ const pubKeyType = "Ed25519VerificationKey2018"
 
 export let address
 export let pubkeyBase64
-let didDocJSON
-let verificationMethod
-let pubkeyBase58
-let pubkeyByteArray
 
 export async function init(prefix) {
-    didDocJSON = operahelper.getDIDDocJSON()
-    verificationMethod = didDocJSON.verificationMethod.find(x => x.type == pubKeyType)
-    pubkeyBase58 = verificationMethod.publicKeyBase58
-    pubkeyByteArray = base58.decode(pubkeyBase58)
+    const didDocJSON = operahelper.getDIDDocJSON()
+    const verificationMethod = didDocJSON.verificationMethod.find(x => x.type == pubKeyType)
+    const pubkeyBase58 = verificationMethod.publicKeyBase58
+    const pubkeyByteArray = base58.decode(pubkeyBase58)
     pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
-    address = encoding.toBech32(prefix, crypto.sha256(base58.decode(pubkeyBase58)).slice(0, 20))
+    address = operahelper.getAddressFromPubKey(pubkeyByteArray, prefix)
+    // address = encoding.toBech32(prefix, crypto.sha256(base58.decode(pubkeyBase58)).slice(0, 20))
     
     console.log("operaED25519helper.didDocJSON",didDocJSON)
     console.log("operaED25519helper.verificationMethod",verificationMethod)
