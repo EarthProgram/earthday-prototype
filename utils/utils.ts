@@ -6,8 +6,55 @@ import * as sovrinhelper from './sovrinhelper'
 import * as messagehelper from './messagehelper'
 import * as operasecp256k1helper from './operasecp256k1helper'
 import * as operaed25519helper from './operaed25519helper'
+import * as b64 from 'js-base64'
+import * as ed25519tweetnacltest from './ed25519-tweetnacl-test'
+import * as amino from '@cosmjs/amino'
+import * as base58 from 'bs58'
+import * as base64 from 'js-base64'
 
 export async function broadcastTransaction(toAddress: string) {
+
+    //Opera DID returns this publicKey for ecology wallet:
+    //"publicKeyBase58": "3ZczBcavdqQT7b7y1tUe6ov7nLJgpcbU8ZxDG6ScFxK5"
+    // const pubkeyBase58_opera = "3ZczBcavdqQT7b7y1tUe6ov7nLJgpcbU8ZxDG6ScFxK5"
+    // console.log("pubkeyBase58_opera", pubkeyBase58_opera)
+    // let pubkeyByteArray = base58.decode(pubkeyBase58_opera)
+    // console.log("pubkeyByteArray", pubkeyByteArray)
+    // let pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
+    // console.log("pubkeyBase64", pubkeyBase64)
+    // let pubkey = {
+    //     type: amino.pubkeyType.ed25519,
+    //     value: pubkeyBase64,
+    // }
+    // console.log("pubkey", pubkey)
+    // let address = amino.pubkeyToAddress(pubkey, ixohelper.prefix)
+    // console.log("address", address)
+    // try {
+    //     console.log("getAuthAccount", await ixohelper.getAuthAccount(address))
+    // } catch (error) {
+    //     console.log("error", error)
+    // }
+//--------------------------------------------------------------------------------------------------
+    //ixo returns this publicKey:
+    //"4wKDie3XxdUzA9nsr2j8WBFqEfgJsPCewvyd1LWWXsss"
+    // const pubkeyBase58_ixo = "4wKDie3XxdUzA9nsr2j8WBFqEfgJsPCewvyd1LWWXsss"
+    // console.log("pubkeyBase58_ixo", pubkeyBase58_ixo)
+    // pubkeyByteArray = base58.decode(pubkeyBase58_ixo)
+    // console.log("pubkeyByteArray", pubkeyByteArray)
+    // pubkeyBase64 = base64.fromUint8Array(pubkeyByteArray)
+    // console.log("pubkeyBase64", pubkeyBase64)
+    // pubkey = {
+    //     type: amino.pubkeyType.ed25519,
+    //     value: pubkeyBase64,
+    // }
+    // console.log("pubkey", pubkey)
+    // address = amino.pubkeyToAddress(pubkey, ixohelper.prefix)
+    // console.log("address", address)
+    // try {
+    //     console.log("getAuthAccount", await ixohelper.getAuthAccount(address))
+    // } catch (error) {
+    //     console.log("error", error)
+    // }
 
 /**************************** ixo-client-sdk ****************************/
     // const wallet = await ixoclient.makeWallet(ixohelper.mnemonic_opera)
@@ -87,7 +134,7 @@ export async function broadcastTransaction(toAddress: string) {
         console.log(" -------- Opera - MsgBuy ED25519 --------")
         await operaed25519helper.init(ixohelper.prefix)
         const { signed, signature } = await operaed25519helper.sign(
-            await messagehelper.getMsgBuyStdSignDoc(operaed25519helper.address, ixohelper.bondDID, ixohelper.buyerDID_CYC))
+            await messagehelper.getMsgBuyStdSignDoc(operaed25519helper.address, ixohelper.bondDID, ixohelper.buyerDID_ECO))
         const postResult = await ixohelper.postTransactionED(signed, signature, operaed25519helper.pubkeyBase64)
         console.log("opera.postResult", postResult)
     } catch (error) {

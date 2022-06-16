@@ -8,6 +8,26 @@ export const prefix = 'ixo'
 export const bondDID = 'did:ixo:Xby8Ksyct1RnayXtNuakWG'//'did:ixo:PK5dTV9hjoESxiqDKhHAGE'
 export const buyerDID_CYC = 'did:ixo:CYCc2xaJKrp8Yt947Nc6jd'
 export const buyerDID_ECO = 'did:ixo:8Du8pSuGie7o4kVWndManQ'
+/** Useful CYC details
+ * PublicKey as per curl --location --request GET 'https://blocksync-pandora.ixo.earth/api/did/getByDid/did:sov:CYCc2xaJKrp8Yt947Nc6jd'
+ * {
+    "_id": "5f15b84e9b19cc00195f5cc5",
+    "did": "did:sov:CYCc2xaJKrp8Yt947Nc6jd",
+    "publicKey": "7HjjYKd4SoBv26MqXp1SzmvDiouQxarBZ2ryscZLK22x",
+    "credentials": [],
+    "__v": 0
+}
+ */
+/** Useful ecology Opera details
+ * PublicKey as per curl --location --request GET 'https://blocksync-pandora.ixo.earth/api/did/getByDid/did:sov:8Du8pSuGie7o4kVWndManQ'
+ * {
+    "_id": "6291f90d3541d00019a8c289",
+    "did": "did:sov:8Du8pSuGie7o4kVWndManQ",
+    "publicKey": "4wKDie3XxdUzA9nsr2j8WBFqEfgJsPCewvyd1LWWXsss",
+    "credentials": [],
+    "__v": 0
+}
+ */
 
 export async function getEarthDayBalance(address: string) {
     return getBalance(address, EARTHDAY);

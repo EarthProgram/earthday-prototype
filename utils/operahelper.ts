@@ -8,7 +8,6 @@ const path = "m/44'/118'/0'/0'/0'"
 export function getDIDDocJSON() {
     const didDoc = window.interchain.getDidDoc(0)
     didDocJSON = JSON.parse(didDoc ?? "{}")
-    console.log("didDocJSON", didDocJSON)
     return didDocJSON
 }
 
