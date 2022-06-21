@@ -9,7 +9,7 @@ export const prefix = 'ixo'
 export const bondDID = 'did:ixo:QBQCs879Pi7cE1Z5QkaNAc'//'did:ixo:Xby8Ksyct1RnayXtNuakWG'//'did:ixo:PK5dTV9hjoESxiqDKhHAGE'
 export const buyerDID_CYC = 'did:ixo:CYCc2xaJKrp8Yt947Nc6jd'
 export const buyerDID_ECO = 'did:sov:8Du8pSuGie7o4kVWndManQ'
-export const buyerDID_user4_investor = 'did:ixo:5QGPvckwJGLLniQ2BSMFm6'
+export const buyerDID_user4_investor = 'did:sov:5QGPvckwJGLLniQ2BSMFm6'
 /** Useful CYC details
  * PublicKey as per curl --location --request GET 'https://blocksync-pandora.ixo.earth/api/did/getByDid/did:sov:CYCc2xaJKrp8Yt947Nc6jd'
  * {
