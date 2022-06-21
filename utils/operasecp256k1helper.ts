@@ -15,7 +15,6 @@ export async function init(prefix: string) {
     const verificationMethod = didDocJSON.verificationMethod.find(x => x.type == pubKeyType)
     const pubkeyBase58 = verificationMethod.publicKeyBase58
     const pubkeyByteArray = base58.decode(pubkeyBase58)
-    // const secp256k1Pubkey = amino.encodeSecp256k1Pubkey(pubkeyByteArray)
     pubkeyBase64 = Base64.fromUint8Array(pubkeyByteArray)
     const pubkey = {
         type: amino.pubkeyType.secp256k1,
